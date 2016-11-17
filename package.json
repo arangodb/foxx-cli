@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "dist": "babel --out-dir lib src",
-    "lint": "snazzy src"
+    "lint": "snazzy 'src/**/*'"
   },
   "repository": {
     "type": "git",
