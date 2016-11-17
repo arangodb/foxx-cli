@@ -2,6 +2,7 @@
   "name": "foxx-cli",
   "version": "0.0.0",
   "description": "CLI for ArangoDB Foxx.",
+  "preferGlobal": true,
   "bin": {
     "foxx": "bin/foxx"
   },
