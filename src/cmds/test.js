@@ -1,4 +1,4 @@
-import {unsplat} from '../util/array'
+// import {unsplat} from '../util/array'
 import {common} from '../util/cli'
 
 export const command = 'test <mount-path>'
@@ -26,5 +26,5 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
 
 export function handler (argv) {
   console.log(command, JSON.stringify(argv, null, 2))
-  const reporter = unsplat(argv.reporter)
+  // const reporter = unsplat(argv.reporter)
 }

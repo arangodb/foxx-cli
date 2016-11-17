@@ -1,4 +1,4 @@
-import {red, yellow, white, bold} from 'chalk'
+import {red, yellow, bold} from 'chalk'
 import {format, isError} from 'util'
 import packageJson from '../../package.json'
 

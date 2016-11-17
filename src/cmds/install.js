@@ -1,10 +1,9 @@
 import {bold, white} from 'chalk'
-import {common} from '../util/cli'
+import {common, validateServiceArgs} from '../util/cli'
 import client from '../util/client'
 import {fatal} from '../util/log'
 import {resolveToFileStream} from '../util/fs'
 import {inline as il} from '../util/text'
-import {validateServiceArgs} from '../util/cli'
 import resolveMount from '../resolveMount'
 
 export const command = 'install <mount-path> [source]'
