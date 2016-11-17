@@ -132,6 +132,7 @@ You can also create a `.foxxignore` file in the current directory using the `ign
 
 ```
 $ foxx ignore # creates a file pre-populated with the defaults
+
 $ foxx ignore --force # creates an empty file
 ```
 
@@ -139,6 +140,7 @@ To add individual patterns to the `.foxxignore` file just pass them as additiona
 
 ```
 $ foxx ignore .git/ .svn/ # you can pass multiple patterns at once
+
 $ foxx ignore \*.swp # make sure to escape special characters
 ```
 
