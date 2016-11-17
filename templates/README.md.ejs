@@ -1,0 +1,42 @@
+# <%- name -%>
+
+<%- description ? '\n' + description + '\n' : '' -%>
+<% if (provides) { %>
+This service provides the following Foxx dependencies:
+<% Object.keys(provides).sort().forEach(function (key) { %>
+* **<%- key %>**: `<%- provides[key] %>`
+<% }); %>
+<% } -%>
+<% if (configuration) { -%>
+
+## Configuration
+
+This service has the following configuration options:
+
+<% Object.keys(configuration).sort().forEach(function (key) {var cfg = configuration[key]; -%>
+* **<%- key %>**: `<%- cfg.type %>`<%-
+  cfg.default
+  ? ' (Default: `' + cfg.default + '`)'
+  : (cfg.required ? '' : ' (optional)')
+%>
+<%- cfg.description ? '\n  ' + cfg.description.replace(/\n/g, '\n  ') + '\n' : '' %>
+<% }); -%>
+<% } -%>
+<% if (dependencies) { -%>
+
+## Dependencies
+
+This service uses the following Foxx dependencies:
+
+<% Object.keys(dependencies).sort().forEach(function (key) {var dep = dependencies[key] -%>
+* **<%- dep.name %>**: `<%- dep.version %>`<%- dep.required ? '' : ' (optional)' %>
+<%- dep.description ? '\n  ' + dep.description.replace(/\n/g, '\n  ') + '\n' : '' %>
+<% }); -%>
+<% } -%>
+
+## License
+<% if (license) { %>
+The <%- license.name %>.
+<% } else { %>
+Copyright (c) <%- new Date().getFullYear() %> <copyright holders>. All rights reserved.
+<% } -%>
