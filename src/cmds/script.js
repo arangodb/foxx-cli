@@ -65,7 +65,7 @@ async function listScripts (db, mount, raw) {
       console.log(name)
     }
   } else if (!names.length) {
-    console.log(gray('No scripts.'))
+    console.log(gray('No scripts available.'))
   } else {
     console.log(group(
       ...names.map((name) => [
