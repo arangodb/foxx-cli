@@ -27,12 +27,12 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
     type: 'boolean',
     default: false
   },
-  interactive: {
-    describe: 'Prompt for dependency values',
-    alias: 'i',
-    type: 'boolean',
-    default: false
-  },
+  // interactive: {
+  //   describe: 'Prompt for dependency values',
+  //   alias: 'i',
+  //   type: 'boolean',
+  //   default: false
+  // },
   raw: {
     describe: 'Output service dependencies as raw JSON',
     type: 'boolean',

@@ -25,12 +25,12 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
     type: 'boolean',
     default: false
   },
-  interactive: {
-    describe: 'Prompt for configuration values',
-    alias: 'i',
-    type: 'boolean',
-    default: false
-  },
+  // interactive: {
+  //   describe: 'Prompt for configuration values',
+  //   alias: 'i',
+  //   type: 'boolean',
+  //   default: false
+  // },
   raw: {
     describe: 'Output service configuration as raw JSON',
     type: 'boolean',
