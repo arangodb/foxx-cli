@@ -1,6 +1,9 @@
-import {bold} from 'chalk'
+import {bold, white} from 'chalk'
 import {common} from '../util/cli'
+import client from '../util/client'
+import {fatal} from '../util/log'
 import {inline as il} from '../util/text'
+import resolveMount from '../resolveMount'
 
 export const command = 'config <mount-path> [options..]'
 export const description = 'Manage the configuration of a mounted service'
@@ -43,5 +46,29 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
 .example('$0 config /myfoxx -f', 'Clears the service configuration')
 
 export function handler (argv) {
-  console.log(command, JSON.stringify(argv, null, 2))
+  resolveMount(argv.mountPath)
+  .then((server) => {
+    if (!server.mount) {
+      fatal(il`
+        Not a valid mount path: "${white(argv.mountPath)}".
+        Make sure the mount path always starts with a leading slash.
+      `)
+    }
+    if (!server.url) {
+      fatal(il`
+        Not a valid server: "${white(server.name)}".
+        Make sure the mount path always starts with a leading slash.
+      `)
+    }
+    const db = client(server)
+    // TODO handle write
+    return showConfig(db, server.mount, argv)
+  })
+  .catch(fatal)
+}
+
+async function showConfig (db, mount, argv) {
+  const config = await db.getServiceConfiguration(mount)
+  // TODO prettyprint if !argv.raw
+  console.log(JSON.stringify(config, null, 2))
 }
