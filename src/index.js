@@ -43,9 +43,7 @@ common(yargs, {command: '<command>', describe: foxx})
   verbose: {
     describe: 'More output',
     alias: 'v',
-    type: 'boolean',
-    count: true,
-    default: false
+    type: 'count'
   }
 })
 .global('verbose')
