@@ -4,6 +4,23 @@ import packageJson from '../../package.json'
 
 const bugsUrl = packageJson.bugs.url
 
+export function indentable (start = 0) {
+  return {
+    level: start,
+    log (...messages) {
+      if (!messages.length) console.log()
+      else if (this.level <= 0) console.log(...messages)
+      else console.log(' '.repeat(this.level * 2 - 1), ...messages)
+    },
+    indent (level = 1) {
+      this.level += level
+    },
+    dedent (level = 1) {
+      this.level -= level
+    }
+  }
+}
+
 export function warn (message) {
   if (isError(message)) message = message.stack || message.message || message
   console.error(yellow(format(message)))
