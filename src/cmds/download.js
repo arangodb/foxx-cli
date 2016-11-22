@@ -66,7 +66,6 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
 .example('$0 download -x --delete /hello -o /tmp/hello', 'Extracts the bundle and removes any other existing files')
 
 export function handler (argv) {
-  console.log(command, JSON.stringify(argv, null, 2))
   argv.outfile = unsplat(argv.outfile)
   if (argv.delete && !argv.extract) {
     yargs.showHelp()
@@ -74,4 +73,5 @@ export function handler (argv) {
       Must use ${bold('--extract')} for ${bold('--delete')} to have any effect.
     `)
   }
+  console.log(command, JSON.stringify(argv, null, 2))
 }
