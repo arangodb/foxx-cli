@@ -23,7 +23,7 @@ export function fatal (err) {
     error(`Unexpected ArangoDB error (Code: ${
       err.errorNum || '?'
     }):\n${
-      err.errorMessage
+      err.message
     }`)
   } else {
     error(
