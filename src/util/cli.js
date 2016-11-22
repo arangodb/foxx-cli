@@ -49,6 +49,7 @@ export function validateServiceArgs (argv) {
 
       const name = cfg.slice(0, i)
       const value = cfg.slice(i + 1)
+
       try {
         configuration[name] = value ? JSON.parse(value) : null
       } catch (e) {
@@ -76,7 +77,15 @@ export function validateServiceArgs (argv) {
 
       const name = dep.slice(0, i)
       const value = dep.slice(i + 1)
-      dependencies[name] = value
+
+      if (dependencies[name]) {
+        if (!Array.isArray(dependencies[name])) {
+          dependencies[name] = [dependencies[name]]
+        }
+        dependencies[name].push(value)
+      } else {
+        dependencies[name] = value
+      }
     }
   }
   const opts = {configuration, dependencies}
