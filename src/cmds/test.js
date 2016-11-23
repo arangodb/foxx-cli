@@ -5,6 +5,18 @@ import {fatal, indentable as indentableLog} from '../util/log'
 import {group, inline as il} from '../util/text'
 import resolveMount from '../resolveMount'
 
+function attr (str) {
+  return String(str)
+  .replace(/&/g, '&amp;')
+  .replace(/"/g, '&quot;')
+}
+
+function cdata (str) {
+  return String(str)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+}
+
 export const command = 'test <mount-path>'
 export const description = 'Run the tests of a mounted service'
 export const aliases = ['tests', 'run-tests']
@@ -19,7 +31,8 @@ const describe = il`
   ['list', 'Simple list of test cases'],
   ['min', 'Just the summary and failures'],
   ['tap', 'Output suitable for Test-Anything-Protocol consumers'],
-  ['stream', 'Line-delimited JSON stream of "events" beginning with a single "start", followed by "pass" or "fail" for each test and ending with a single "end"']
+  ['stream', 'Line-delimited JSON stream of "events" beginning with a single "start", followed by "pass" or "fail" for each test and ending with a single "end"'],
+  ['xunit', 'Jenkins-compatible xUnit-style XML output']
 )
 
 const args = [
@@ -44,14 +57,14 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
       'list',
       'min',
       'tap',
-      'stream'
+      'stream',
+      'xunit'
     ],
     default: 'spec'
   }
 })
 
 export function handler (argv) {
-  // TODO sanity check argv
   resolveMount(argv.mountPath)
   .then((server) => {
     if (!server.mount) {
@@ -78,9 +91,15 @@ async function runTests (db, mount, {reporter: cliReporter, raw}) {
   if (cliReporter === 'spec') cliReporter = 'suite'
   else if (cliReporter === 'json') cliReporter = 'default'
   let apiReporter = cliReporter
-  if (cliReporter === 'list' || cliReporter === 'min' || cliReporter === 'tap') {
+  if (
+    cliReporter === 'list' ||
+    cliReporter === 'min' ||
+    cliReporter === 'tap' ||
+    cliReporter === 'xunit'
+  ) {
     apiReporter = 'default'
   }
+  const start = new Date().toISOString()
   const result = await db.runServiceTests(mount, {reporter: apiReporter})
   if (raw || cliReporter === 'default') {
     console.log(JSON.stringify(result, null, 2))
@@ -109,6 +128,10 @@ async function runTests (db, mount, {reporter: cliReporter, raw}) {
       break
     case 'tap':
       tapReporter(result)
+      break
+    case 'xunit':
+      const hostname = db._connection._baseUrl.hostname
+      xunitReporter(result, {start, mount, hostname})
       break
     default:
       throw new Error(`Unknown reporter type "${white(apiReporter)}".`)
@@ -147,6 +170,53 @@ function tapReporter (result) {
   logger.log('# tests', result.stats.tests)
   logger.log('# pass', result.stats.passes)
   logger.log('# fail', result.stats.failures)
+  process.exit(result.stats.failures ? 1 : 0)
+}
+
+function xunitReporter (result, {start, mount}) {
+  const logger = indentableLog(0)
+  logger.log('<?xml version="1.0" encoding="UTF-8"?>')
+  logger.log(il`
+    <testsuite
+    name="${attr(mount)}"
+    timestamp=${start}
+    tests="${result.stats.tests || 0}"
+    errors="0"
+    failures="${result.stats.failures || 0}"
+    skip="${result.stats.pending || 0}"
+    time="${result.stats.duration || 0}">
+  `)
+  logger.indent()
+  for (const test of result.tests) {
+    const parentName = test.fullTitle.slice(0, -(test.title.length + 1)) || 'global'
+    logger.log(il`
+      <testcase
+      classname="${attr(parentName)}"
+      name="${attr(test.title)}"
+      time="${test.duration || 0}"${test.err.stack ? '' : '/'}>
+    `)
+    if (test.err.stack) {
+      const [cause, ...stack] = test.err.stack.split('\n')
+      const [type, ...message] = cause.split(': ')
+      logger.indent()
+      logger.log(il`
+        <failure
+        type="${attr(type)}"
+        message="${attr(message.join(': '))}">
+      `)
+      logger.indent()
+      logger.log(cdata(cause))
+      for (const line of stack) {
+        logger.log(cdata(line))
+      }
+      logger.dedent()
+      logger.log('</failure>')
+      logger.dedent()
+      logger.log('</testcase>')
+    }
+  }
+  logger.dedent()
+  logger.log('</testsuite>')
   process.exit(result.stats.failures ? 1 : 0)
 }
 
