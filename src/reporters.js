@@ -55,7 +55,7 @@ export function xunit (result, {start, mount}) {
   logger.log(il`
     <testsuite
     name="${attr(mount)}"
-    timestamp=${start}
+    timestamp="${start}"
     tests="${result.stats.tests || 0}"
     errors="0"
     failures="${result.stats.failures || 0}"
