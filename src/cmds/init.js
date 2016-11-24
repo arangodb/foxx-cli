@@ -73,7 +73,14 @@ export function handler (argv) {
   })
   .then((answers) => {
     const files = generateFiles(answers)
-    console.log(JSON.stringify(files, null, 2))
+    for (const file of files) {
+      console.log()
+      console.log(file.name)
+      console.log('-'.repeat(file.name.length))
+      console.log(file.content)
+      console.log()
+    }
+    console.log(JSON.stringify(answers, null, 2))
   })
   .catch(fatal)
 }
