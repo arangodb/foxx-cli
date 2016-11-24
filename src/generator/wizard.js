@@ -27,12 +27,15 @@ export default async function wizard (options) {
   ])
 
   if (defineConfiguration) {
+    console.log()
+    console.log('Leave name empty to stop adding configuration options.')
     const config = await configWizard()
     if (Object.keys(config).length) {
       answers.configuration = config
     }
     console.log()
   }
+
   const {defineDependencies} = await prompt([
     {
       name: 'defineDependencies',
@@ -41,13 +44,17 @@ export default async function wizard (options) {
       default: false
     }
   ])
+
   if (defineDependencies) {
+    console.log()
+    console.log('Leave local alias empty to stop adding dependencies.')
     const deps = await depsWizard()
     if (Object.keys(deps).length) {
       answers.dependencies = deps
     }
     console.log()
   }
+
   const {defineProvided} = await prompt([
     {
       name: 'defineProvided',
@@ -56,13 +63,17 @@ export default async function wizard (options) {
       default: false
     }
   ])
+
   if (defineProvided) {
+    console.log()
+    console.log('Leave name empty to stop adding provided dependencies.')
     const provided = await providedWizard()
     if (Object.keys(provided).length) {
       answers.provides = provided
     }
     console.log()
   }
+
   return answers
 }
 
@@ -84,7 +95,7 @@ async function foxxWizard ({cwd, ...options}) {
     },
     {
       name: 'license',
-      message: `License (ex: ${gray('MIT')})`,
+      message: `License ${gray('(ex: MIT)')}`,
       default: options.license,
       filter: (answer) => licenseMap[answer.toUpperCase()] || answer,
       validate: (answer) => {
@@ -119,12 +130,12 @@ async function foxxWizard ({cwd, ...options}) {
     },
     {
       name: 'authorEmail',
-      message: `Author e-mail (ex: ${gray('jd@example.com')})`,
+      message: `Author e-mail ${gray('(ex: jd@example.com)')}`,
       default: options.authorEmail
     },
     {
       name: 'authorName',
-      message: `Author name (ex: ${gray('John Doe')})`,
+      message: `Author name ${gray('(ex: John Doe)')}`,
       default: (answers) => options.authorName || (
         answers.authorEmail
         ? answers.authorEmail.split('@')[0]
@@ -147,7 +158,7 @@ async function foxxWizard ({cwd, ...options}) {
     },
     {
       name: 'documentCollections',
-      message: `Document collection names (ex: ${gray('foo, bar')})`,
+      message: `Document collection names ${gray('(ex: foo, bar)')}`,
       default: options.documentCollections,
       filter: (answer) => {
         const names = uniq(
@@ -179,7 +190,7 @@ async function foxxWizard ({cwd, ...options}) {
     },
     {
       name: 'edgeCollections',
-      message: `Edge collection names (ex: ${gray('qux, baz')})`,
+      message: `Edge collection names ${gray('(ex: qux, baz)')}`,
       default: options.edgeCollections,
       filter: (answer) => {
         const names = uniq(
@@ -315,6 +326,7 @@ async function foxxWizard ({cwd, ...options}) {
       default: false
     }
   ])
+  console.log()
   const confirm = await prompt([
     {
       name: 'ok',
@@ -330,8 +342,8 @@ async function foxxWizard ({cwd, ...options}) {
       default: false
     }
   ])
+  console.log()
   if (confirm.retry) {
-    console.log()
     return await foxxWizard({...answers, cwd})
   }
   if (!confirm.ok) throw new Error('Aborted.')
@@ -343,6 +355,7 @@ async function foxxWizard ({cwd, ...options}) {
 }
 
 async function configWizard (configs = {}) {
+  console.log()
   const {name, ...config} = await prompt([
     {
       name: 'name',
@@ -386,7 +399,7 @@ async function configWizard (configs = {}) {
               red(answer)
             }". Error: ${
               red(e.message)
-            }`
+            }\nDid you mean ${green(JSON.stringify(answer))}?`
           )
         }
         return true
@@ -423,7 +436,7 @@ async function depsWizard (deps = {}) {
     },
     {
       name: 'name',
-      message: `Dependency name (ex: ${gray('@foxx/sessions')})`,
+      message: `Dependency name ${gray('(ex: @foxx/sessions)')}`,
       when: (answers) => Boolean(answers.alias),
       default: '*',
       validate: (answer) => {
@@ -434,7 +447,7 @@ async function depsWizard (deps = {}) {
     },
     {
       name: 'version',
-      message: `Dependency version range (ex: ${gray('^1.0.0')})`,
+      message: `Dependency version range ${gray('(ex: ^1.0.0)')}`,
       when: (answers) => Boolean(answers.alias),
       default: '*',
       validate: (answer) => (
@@ -457,10 +470,11 @@ async function depsWizard (deps = {}) {
 }
 
 async function providedWizard (provided = {}) {
+  console.log()
   const {name, version} = await prompt([
     {
       name: 'name',
-      message: `Dependency name (ex: ${gray('@foxx/sessions')})`,
+      message: `Dependency name ${gray('(ex: @foxx/sessions)')}`,
       validate: (answer) => {
         if (!answer) return true
         if (hasOwnProperty.call(provided, answer)) {
@@ -474,7 +488,7 @@ async function providedWizard (provided = {}) {
     },
     {
       name: 'version',
-      message: `Dependency version (ex: ${gray('1.0.0')})`,
+      message: `Dependency version ${gray('(ex: 1.0.0)')}`,
       when: (answers) => Boolean(answers.name),
       validate: (answer) => (
         Boolean(validVersion(answer)) ||
