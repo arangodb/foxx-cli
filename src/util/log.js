@@ -42,6 +42,22 @@ export function fatal (err) {
     }):\n${
       err.message
     }`)
+  } else if (err.statusCode === 401) {
+    error('Authentication failed. Bad username or password?')
+  } else if (typeof err.statusCode === 'number') {
+    error(
+      `The server responded with a ${bold(err.statusCode)} status code.\n` +
+      (
+        err.statusCode >= 500
+        ? 'This typically indicates a server-side error.\n'
+        : 'This typically indicates a problem with the request.\n'
+      ) +
+      'Please check the ArangoDB log file to determine the cause of this error.\n\n' +
+      `If you believe this to be an bug in ${bold('foxx-cli')} ` +
+      `please open an issue at ${bold(bugsUrl)} with the relevant part of the ArangoDB log` +
+      'and a description of what you were trying to do when this problem occured.\n\n' +
+      'We apologize for the inconvenience.'
+    )
   } else {
     error(
       `Sorry! An unexpected error occurred. This is likely a bug in ${bold('foxx-cli')}.\n` +
