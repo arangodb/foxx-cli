@@ -302,6 +302,17 @@ async function foxxWizard ({cwd, ...options}) {
       when: (answers) => Boolean(answers.edgeCollections),
       type: 'confirm',
       default: false
+    },
+    {
+      name: 'generateExamples',
+      message: (answers) => (
+        (answers.generateDocumentRouters || answers.generateEdgeRouters)
+        ? 'Generate additional example routes?'
+        : 'Generate example routes?'
+      ),
+      when: (answers) => Boolean(answers.generateMain),
+      type: 'confirm',
+      default: false
     }
   ])
   const confirm = await prompt([
