@@ -31,11 +31,6 @@ export const builder = (yargs) => common(yargs, {command, describe})
     alias: 'f',
     type: 'boolean',
     default: false
-  },
-  verbose: {
-    describe: 'More output',
-    alias: 'v',
-    type: 'count'
   }
 })
 

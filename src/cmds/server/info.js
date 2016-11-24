@@ -15,14 +15,7 @@ const args = [
 ]
 
 export const builder = (yargs) => common(yargs, {command, sub: 'server', aliases, describe, args})
-.options({
-  verbose: {
-    describe: 'Include passwords and tokens in details or URLs in list',
-    alias: ['v'],
-    type: 'boolean',
-    default: false
-  }
-})
+.describe('verbose', 'Include passwords and tokens in details or URLs in list')
 
 export function handler (argv) {
   loadIni()
