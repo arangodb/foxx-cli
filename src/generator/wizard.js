@@ -409,7 +409,8 @@ async function configWizard (configs = {}) {
 }
 
 async function depsWizard (deps = {}) {
-  const {name, ...dep} = await prompt([
+  console.log()
+  const {alias, ...dep} = await prompt([
     {
       name: 'alias',
       message: 'Local alias',
@@ -423,7 +424,8 @@ async function depsWizard (deps = {}) {
     {
       name: 'name',
       message: `Dependency name (ex: ${gray('@foxx/sessions')})`,
-      when: (answers) => Boolean(answers.name),
+      when: (answers) => Boolean(answers.alias),
+      default: '*',
       validate: (answer) => {
         if (!answer) return 'Dependency name can not be empty.'
         if (answer.includes(':')) return 'Dependency name must not contain colon.'
@@ -433,7 +435,7 @@ async function depsWizard (deps = {}) {
     {
       name: 'version',
       message: `Dependency version range (ex: ${gray('^1.0.0')})`,
-      when: (answers) => Boolean(answers.name),
+      when: (answers) => Boolean(answers.alias),
       default: '*',
       validate: (answer) => (
         answer === '*' || Boolean(validRange(answer)) ||
@@ -443,13 +445,14 @@ async function depsWizard (deps = {}) {
     {
       name: 'required',
       message: 'Required?',
-      when: (answers) => Boolean(answers.name),
+      when: (answers) => Boolean(answers.alias),
       type: 'confirm',
       default: true
     }
   ])
-  if (!name) return deps
-  deps[name] = dep
+  if (!alias) return deps
+  if (!dep.required) dep.required = false
+  deps[alias] = dep
   return await depsWizard(deps)
 }
 
