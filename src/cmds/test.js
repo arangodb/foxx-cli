@@ -109,6 +109,7 @@ async function runTests (db, mount, {reporter: cliReporter, raw}) {
           throw new Error(`Unknown reporter type "${white(apiReporter)}".`)
       }
     }
+
     switch (cliReporter) {
       case 'list':
       case 'min':
