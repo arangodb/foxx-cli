@@ -16,10 +16,10 @@ const describe = il`
 
   Output is controlled with the ${bold('--reporter')} option:
 ` + '\n\n' + group(
-  ['spec', 'Hierarchical specification of nested test cases', '[aliases: suite]'],
-  ['json', `Single large JSON object (implies ${bold('--raw')})`, '[aliases: default]'],
+  ['spec', 'Hierarchical specification of nested test cases', '[default]'],
   ['list', 'Simple list of test cases'],
   ['min', 'Just the summary and failures'],
+  ['json', 'Single large raw JSON object'],
   ['tap', 'Output suitable for Test-Anything-Protocol consumers'],
   ['stream', 'Line-delimited JSON stream of "events" beginning with a single "start", followed by "pass" or "fail" for each test and ending with a single "end"'],
   ['xunit', 'Jenkins-compatible xUnit-style XML output']
@@ -31,21 +31,14 @@ const args = [
 
 export const builder = (yargs) => common(yargs, {command, aliases, describe, args})
 .options({
-  raw: {
-    describe: 'Output unformated JSON response',
-    type: 'boolean',
-    default: false
-  },
   reporter: {
     describe: 'Reporter to use for result data',
     alias: 'R',
     choices: [
       'spec',
-      'suite',
-      'json',
-      'default',
       'list',
       'min',
+      'json',
       'tap',
       'stream',
       'xunit'
@@ -72,50 +65,31 @@ export function handler (argv) {
     }
 
     const db = client(server)
-    return runTests(db, server.mount, argv)
+    return runTests(db, server.mount, argv.reporter)
   })
   .catch(fatal)
 }
 
-async function runTests (db, mount, {reporter: cliReporter, raw}) {
-  if (cliReporter === 'spec') cliReporter = 'suite'
-  else if (cliReporter === 'json') cliReporter = 'default'
-  let apiReporter = cliReporter
-
-  if (
-    cliReporter === 'list' ||
-    cliReporter === 'min' ||
-    cliReporter === 'tap' ||
-    cliReporter === 'xunit'
-  ) {
-    apiReporter = 'default'
-  }
+async function runTests (db, mount, cliReporter) {
+  let apiReporter
+  if (cliReporter === 'spec') apiReporter = 'suite'
+  else if (cliReporter === 'stream') apiReporter = 'stream'
+  else apiReporter = 'default'
 
   try {
     const start = new Date().toISOString()
     const result = await db.runServiceTests(mount, {reporter: apiReporter})
 
-    if (raw || cliReporter === 'default') {
-      console.log(JSON.stringify(result, null, 2))
-      switch (apiReporter) {
-        case 'suite':
-        case 'default':
-          process.exit(result.stats.failures ? 1 : 0)
-          break
-        case 'stream':
-          process.exit(result[result.length - 1][1].failures ? 1 : 0)
-          break
-        default:
-          throw new Error(`Unknown reporter type "${white(apiReporter)}".`)
-      }
-    }
-
     switch (cliReporter) {
+      case 'json':
+        console.log(JSON.stringify(result, null, 2))
+        process.exit(result.stats.failures ? 1 : 0)
+        break
       case 'list':
       case 'min':
         reporters.list(result, cliReporter === 'min')
         break
-      case 'suite':
+      case 'spec':
         reporters.suite(result)
         break
       case 'stream':
