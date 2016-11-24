@@ -38,6 +38,7 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
 })
 .example('$0 deps /myfoxx', 'Show the dependencies for the service mounted at "/foxxmail"')
 .example('$0 deps /myfoxx mailer=/foxxmail', 'Sets the "mailer" dependency to the service mounted at "/foxxmail"')
+.example('$0 deps /myfoxx -f mailer=/foxxmail', 'Sets the "mailer" dependency and clears any other dependencies')
 .example('echo \'{"mailer": "/foxxmail"}\' | $0 deps /myfoxx -', 'Sets the dependency using JSON data from stdin')
 .example('$0 deps /myfoxx -f', 'Clears all configured dependencies')
 

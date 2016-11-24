@@ -36,6 +36,7 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
 })
 .example('$0 config /myfoxx', 'Shows the configuration for the mounted service at the URL "/myfoxx"')
 .example('$0 config /myfoxx someNumber=23', 'Sets the "someNumber" configuration option to the number 23')
+.example('$0 config /myfoxx -f someNumber=23', 'Sets the "someNumber" configuration option and clears all other options')
 .example('echo \'{"someNumber": 23}\' | $0 config /myfoxx -', 'Sets the configuration using JSON data from stdin')
 .example('$0 config /myfoxx -f', 'Clears the service configuration')
 
