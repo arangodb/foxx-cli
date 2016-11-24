@@ -126,7 +126,7 @@ For more details on the pattern matching behaviour, see the documentation of the
 
 If no `.foxxignore` file is present in the service's root directory the following patterns will be ignored automatically: `.git/`, `.svn/`, `.hg/`, `*.swp`, `.DS_Store`.
 
-Should you need to include files that match these matterns for some reason, you can override this list by creating an empty `.foxxignore` file.
+Should you need to include files that match these patterns for some reason, you can override this list by creating an empty `.foxxignore` file.
 
 You can also create a `.foxxignore` file in the current directory using the `ignore` command:
 
