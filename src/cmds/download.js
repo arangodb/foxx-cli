@@ -48,13 +48,6 @@ export const builder = (yargs) => common(yargs, {command, aliases, describe, arg
     } delete any existing files in the directory that are not contained in the bundle`,
     type: 'boolean',
     default: false
-  },
-  verbose: {
-    describe: 'More output',
-    alias: 'v',
-    type: 'boolean',
-    count: true,
-    default: false
   }
 })
 .example('$0 download /hello', 'Downloads the Foxx service mounted at the URL "/hello" and writes the bundle to stdout')

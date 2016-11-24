@@ -39,12 +39,6 @@ export const builder = (yargs) => common(yargs, {command, describe, args})
     type: 'boolean',
     default: false
   },
-  force: {
-    describe: 'If no service exists at the given mount path, fall back to installing the service instead of failing',
-    alias: 'f',
-    type: 'boolean',
-    default: false
-  },
   remote: {
     describe: `Let the ArangoDB server resolve ${bold('source')} instead of resolving it locally`,
     alias: 'R',
