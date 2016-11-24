@@ -1,8 +1,9 @@
 import {bold, gray, white} from 'chalk'
 import {common} from '../util/cli'
 import client from '../util/client'
-import {fatal} from '../util/log'
+import {error, fatal} from '../util/log'
 import {group, inline as il} from '../util/text'
+import {ERROR_SERVICE_NOT_FOUND} from '../errors'
 import resolveMount from '../resolveMount'
 
 export const command = 'info [mount-path]'
@@ -47,10 +48,17 @@ export function handler (argv) {
 }
 
 async function showService (db, mount, raw) {
-  const services = await db.getService(mount)
-  console.log(JSON.stringify(services, null, 2))
-  process.exit(0)
-  // TODO formatted output when raw != true
+  try {
+    const services = await db.getService(mount)
+    console.log(JSON.stringify(services, null, 2))
+    // TODO formatted output when raw != true
+  } catch (e) {
+    if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
+      error(`No service found at "${white(mount)}".`)
+      process.exit(1)
+    }
+    throw e
+  }
 }
 
 async function listServices (db, raw) {
