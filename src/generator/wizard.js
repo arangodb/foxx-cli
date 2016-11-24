@@ -13,6 +13,10 @@ for (const key of Object.keys(licenses)) {
 
 export default async function wizard (options) {
   const answers = await foxxWizard(options)
+  answers.configuration = undefined
+  answers.dependencies = undefined
+  answers.provides = undefined
+
   const {defineConfiguration} = await prompt([
     {
       name: 'defineConfiguration',
@@ -28,8 +32,6 @@ export default async function wizard (options) {
       answers.configuration = config
     }
     console.log()
-  } else {
-    answers.configuration = undefined
   }
   const {defineDependencies} = await prompt([
     {
@@ -45,8 +47,6 @@ export default async function wizard (options) {
       answers.dependencies = deps
     }
     console.log()
-  } else {
-    answers.dependencies = undefined
   }
   const {defineProvided} = await prompt([
     {
@@ -58,10 +58,10 @@ export default async function wizard (options) {
   ])
   if (defineProvided) {
     const provided = await providedWizard()
-    if (Object.keys(provided).length) answers.provides = provided
+    if (Object.keys(provided).length) {
+      answers.provides = provided
+    }
     console.log()
-  } else {
-    answers.provides = undefined
   }
   return answers
 }
