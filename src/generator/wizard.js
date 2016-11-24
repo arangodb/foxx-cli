@@ -456,15 +456,29 @@ async function depsWizard (deps = {}) {
       )
     },
     {
+      name: 'description',
+      message: 'Description',
+      when: (answers) => Boolean(answers.alias)
+    },
+    {
       name: 'required',
       message: 'Required?',
       when: (answers) => Boolean(answers.alias),
       type: 'confirm',
       default: true
+    },
+    {
+      name: 'multiple',
+      message: 'Allow multiple?',
+      when: (answers) => Boolean(answers.alias),
+      type: 'confirm',
+      default: false
     }
   ])
   if (!alias) return deps
   if (!dep.required) dep.required = false
+  if (!dep.multiple) dep.multiple = false
+  if (!dep.description) delete dep.description
   deps[alias] = dep
   return await depsWizard(deps)
 }
