@@ -14,61 +14,7 @@
 
 To learn more about Foxx, see the [official ArangoDB Foxx documentation](https://docs.arangodb.com/3/Manual/Foxx/).
 
-**NOTE: foxx-cli is not yet production ready nor available on npm. The documentation is currently full of lies. Please come back later.**
-
-# State of the implementation
-
-N/I (:x:) -> POC (:zap:) -> Done (:rocket:)
-
-* `foxx bundle`: :rocket:
-
-* `foxx config` (read): :zap:
-
-* `foxx config` (write): :x:
-
-* `foxx deps` (read): :zap:
-
-* `foxx deps` (write): :x:
-
-* `foxx download` (zip): :x:
-
-* `foxx download` (extract): :x:
-
-* `foxx ignore`: :rocket:
-
-* `foxx info` (list): :rocket:
-
-* `foxx info` (detail): :zap:
-
-* `foxx init` (interactive): :zap:
-
-* `foxx init -y`: :x:
-
-* `foxx init -n`: :x:
-
-* `foxx install` :zap:
-
-* `foxx replace` :zap:
-
-* `foxx script` (list): :zap:
-
-* `foxx script` (run): :x:
-
-* `foxx server info`: :rocket:
-
-* `foxx server remove`: :rocket:
-
-* `foxx server set`: :rocket:
-
-* `foxx set-dev`: :zap:
-
-* `foxx set-prod`: :zap:
-
-* `foxx test`: :rocket:
-
-* `foxx uninstall`: :rocket:
-
-* `foxx upgrade`: :zap:
+**NOTE: foxx-cli is not yet production ready nor available on npm. The documentation is currently full of lies. Please come back later. For details see [the project roadmap](./ROADMAP.md)**
 
 ## Table of Contents
 
