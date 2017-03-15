@@ -73,38 +73,14 @@ export function handler (argv) {
 async function runTests (db, mount, cliReporter) {
   let apiReporter
   if (cliReporter === 'spec') apiReporter = 'suite'
-  else if (cliReporter === 'stream') apiReporter = 'stream'
-  else apiReporter = 'default'
+  else if (cliReporter === 'json') apiReporter = 'default'
+  else if (cliReporter === 'list') apiReporter = 'default'
+  else if (cliReporter === 'min') apiReporter = 'default'
+  else apiReporter = cliReporter
 
+  let result
   try {
-    const start = new Date().toISOString()
-    const result = await db.runServiceTests(mount, {reporter: apiReporter})
-
-    switch (cliReporter) {
-      case 'json':
-        console.log(JSON.stringify(result, null, 2))
-        process.exit(result.stats.failures ? 1 : 0)
-        break
-      case 'list':
-      case 'min':
-        reporters.list(result, cliReporter === 'min')
-        break
-      case 'spec':
-        reporters.suite(result)
-        break
-      case 'stream':
-        reporters.stream(result)
-        break
-      case 'tap':
-        reporters.tap(result)
-        break
-      case 'xunit':
-        const hostname = db._connection._baseUrl.hostname
-        reporters.xunit(result, {start, mount, hostname})
-        break
-      default:
-        throw new Error(`Unknown reporter type "${white(apiReporter)}".`)
-    }
+    result = await db.runServiceTests(mount, {reporter: apiReporter})
   } catch (e) {
     if (e.isArangoError) {
       switch (e.errorNum) {
@@ -136,4 +112,43 @@ async function runTests (db, mount, cliReporter) {
     }
     throw e
   }
+
+  if (cliReporter === 'xunit') {
+    console.log(result)
+    const lines = result.split('\n')
+    const match = lines[1].match(/ failures="(\d+)"/)
+    process.exit(match && Number(match[1]) || 0)
+  }
+
+  if (cliReporter === 'tap') {
+    console.log(result)
+    const lines = result.split('\n')
+    while (lines.length > 1 && !lines[lines.length - 1]) lines.pop()
+    const match = lines[lines.length - 1].match(/# fail (\d+)/)
+    process.exit(match && Number(match[1]) || 0)
+  }
+
+  if (cliReporter === 'stream') {
+    console.log(result)
+    const lines = result.split('\n')
+    process.exit(lines.filter((line) => line.startsWith('["fail",')).length)
+  }
+
+  if (cliReporter === 'list' || cliReporter === 'min') {
+    const failures = reporters.list(result, cliReporter === 'min')
+    process.exit(failures || 0)
+  }
+
+  if (cliReporter === 'spec') {
+    const failures = reporters.suite(result)
+    process.exit(failures || 0)
+  }
+
+  if (typeof result === 'string') console.log(result)
+  else console.log(JSON.stringify(result, null, 2))
+  process.exit(
+    result && result.stats && typeof result.stats.failures === 'number'
+    ? result.stats.failures
+    : 0
+  )
 }
