@@ -202,7 +202,10 @@ The following commands still need work before this module can become a "1.0" rel
 
 * :question: Make compatible with mocha formatters?
 
-* :question: Move xunit formatter into Foxx?
+  This would require recording events during the test run, serialising them
+  and deserialising them in foxx-cli to play them back to the 3rd party
+  reporter. This may not be worth the effort considering xunit and tap are
+  already fairly versatile.
 
 # `foxx uninstall`
 
