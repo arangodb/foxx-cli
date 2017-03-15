@@ -1,6 +1,7 @@
 import {render} from 'ejs'
 import {join} from 'path'
 import {readFileSync} from 'fs'
+import I from 'i'
 
 const TEMPLATE_PATH = join(__dirname, '..', '..', 'templates')
 
@@ -50,13 +51,59 @@ export function generateLicense (options) {
 }
 
 export default function generateFiles (options) {
+  const inflect = I()
   const files = []
-  files.push({name: 'manifest.json', content: generateManifest(options)})
+  files.push({
+    name: 'manifest.json',
+    content: generateManifest(options)
+  })
   if (options.generateReadMe) {
-    files.push({name: 'README.md', content: generateFile('README.md', options)})
+    files.push({
+      name: 'README.md',
+      content: generateFile('README.md', options)
+    })
   }
   if (options.generateLicense) {
-    files.push({name: 'LICENSE', content: generateLicense(options)})
+    files.push({
+      name: 'LICENSE',
+      content: generateLicense(options)
+    })
+  }
+  if (options.generateExampleRouters) {
+    const collections = []
+    for (const collection of options.documentCollections) {
+      collections.push([collection, false])
+    }
+    for (const collection of options.edgeCollections) {
+      collections.push([collection, true])
+    }
+    for (const [collection, isEdgeCollection] of collections) {
+      let singular = inflect.singularize(collection)
+      if (singular === collection) singular += 'Item'
+      let plural = inflect.pluralize(singular)
+      if (plural === singular) plural = collection
+      files.push({
+        name: `api/${collection}.js`,
+        content: generateFile('router.js', {
+          collection,
+          isEdgeCollection,
+          singular,
+          plural
+        })
+      })
+    }
+    if (options.generateSetup) {
+      files.push({
+        name: 'setup.js',
+        content: generateFile('setup.js', options)
+      })
+    }
+    if (options.generateTeardown) {
+      files.push({
+        name: 'teardown.js',
+        content: generateFile('teardown.js', options)
+      })
+    }
   }
   return files
 }

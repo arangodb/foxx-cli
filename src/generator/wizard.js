@@ -301,23 +301,16 @@ async function foxxWizard ({cwd, ...options}) {
       default: () => !existsSync(join(cwd, 'README.md'))
     },
     {
-      name: 'generateDocumentRouters',
-      message: 'Generate REST routes for document collections?',
-      when: (answers) => Boolean(answers.documentCollections),
-      type: 'confirm',
-      default: false
-    },
-    {
-      name: 'generateEdgeRouters',
-      message: 'Generate REST routes for edge collections?',
-      when: (answers) => Boolean(answers.edgeCollections),
+      name: 'generateExampleRouters',
+      message: 'Generate example REST APIs for the collections?',
+      when: (answers) => Boolean(answers.documentCollections || answers.edgeCollections),
       type: 'confirm',
       default: false
     },
     {
       name: 'generateExamples',
       message: (answers) => (
-        (answers.generateDocumentRouters || answers.generateEdgeRouters)
+        answers.generateExampleRouters
         ? 'Generate additional example routes?'
         : 'Generate example routes?'
       ),
@@ -347,6 +340,8 @@ async function foxxWizard ({cwd, ...options}) {
     return await foxxWizard({...answers, cwd})
   }
   if (!confirm.ok) throw new Error('Aborted.')
+  if (!answers.documentCollections) answers.documentCollections = []
+  if (!answers.edgeCollections) answers.edgeCollections = []
   answers.license = {
     ...licenses[answers.license],
     id: answers.license

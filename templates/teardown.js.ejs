@@ -1,0 +1,13 @@
+'use strict';
+const db = require('@arangodb').db;
+const allCollections = <%=
+  JSON.stringify([
+    ...documentCollections.sort(),
+    ...edgeCollections.sort()
+  ], null, 2)
+%>;
+
+for (const name of allCollections) {
+  const prefixedName = module.context.collectionName(name);
+  db._drop(prefixedName);
+}
