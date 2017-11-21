@@ -4,7 +4,7 @@ const { common, validateServiceArgs } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
 const { json, fatal } = require("../util/log");
-const { resolveToFileStream } = require("../util/fs");
+const resolveToStream = require("../resolveToStream");
 
 const command = (exports.command = "install <path> [source]");
 const description = (exports.description =
@@ -122,9 +122,7 @@ exports.handler = async function handler(argv) {
 };
 
 async function install(argv, server, opts) {
-  const source = argv.remote
-    ? argv.source
-    : await resolveToFileStream(argv.source);
+  const source = argv.remote ? argv.source : await resolveToStream(argv.source);
   const db = client(server);
   const result = await db.installService(server.mount, source, {
     ...opts,

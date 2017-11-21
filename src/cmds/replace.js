@@ -3,7 +3,7 @@ const { bold } = require("chalk");
 const { common, validateServiceArgs } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { resolveToFileStream } = require("../util/fs");
+const resolveToStream = require("../resolveToStream");
 const { json, fatal } = require("../util/log");
 
 const command = (exports.command = "replace <path> [source]");
@@ -84,9 +84,7 @@ exports.handler = async function handler(argv) {
 };
 
 async function replace(argv, server, opts) {
-  const source = argv.remote
-    ? argv.source
-    : await resolveToFileStream(argv.source);
+  const source = argv.remote ? argv.source : await resolveToStream(argv.source);
   const db = client(server);
   const result = await db.replaceService(server.mount, source, {
     ...opts,
