@@ -1,6 +1,5 @@
 "use strict";
 const { bold } = require("chalk");
-const yargs = require("yargs");
 const { unsplat } = require("../util/array");
 const { common } = require("../util/cli");
 const { fatal } = require("../util/log");
@@ -17,6 +16,12 @@ const args = [["path", "Database-relative path of the service"]];
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args })
     .options({
+      stdout: {
+        describe: `Write to stdout no matter what stdout is`,
+        alias: "O",
+        type: "boolean",
+        default: false
+      },
       outfile: {
         describe:
           "Write or extract the bundle to this path. If omitted, bundle will be written to stdout or extracted to the current working directory",
@@ -32,11 +37,7 @@ exports.builder = yargs =>
       force: {
         describe: `If ${bold("--outfile")} and/or ${bold(
           "--extract"
-        )} were specified, any existing files will be overwritten.\nIf neither ${bold(
-          "--outfile"
-        )} nor ${bold(
-          "--extract"
-        )} were specified, write to stdout no matter what stdout is`,
+        )} were specified, any existing files will be overwritten.`,
         alias: "f",
         type: "boolean",
         default: false
@@ -81,9 +82,15 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   argv.outfile = unsplat(argv.outfile);
   if (argv.delete && !argv.extract) {
-    yargs.showHelp();
     fatal(il`
       Must use ${bold("--extract")} for ${bold("--delete")} to have any effect.
+    `);
+  }
+  if (argv.stdout && argv.outfile) {
+    fatal(il`
+      Can't use both ${bold("--outfile")} and ${bold(
+      "--stdout"
+    )} at the same time.
     `);
   }
   console.log(command, JSON.stringify(argv, null, 2));

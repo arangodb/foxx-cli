@@ -25,6 +25,12 @@ const args = [
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args }).options({
+    stdout: {
+      describe: `Write to stdout no matter what stdout is`,
+      alias: "O",
+      type: "boolean",
+      default: false
+    },
     outfile: {
       describe:
         "Write the zip bundle to this file. If omitted, bundle is written to stdout",
@@ -32,9 +38,9 @@ exports.builder = yargs =>
       type: "string"
     },
     force: {
-      describe: `Write to stdout if no ${bold(
+      describe: `If ${bold(
         "--outfile"
-      )} was specified, no matter what stdout is`,
+      )} was specified, any existing file will be overwritten.`,
       alias: "f",
       type: "boolean",
       default: false
@@ -51,6 +57,24 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   const source = unsplat(argv.source) || process.cwd();
   console.log(JSON.stringify(argv, null, 2));
+  if (argv.stdout && argv.outfile) {
+    fatal(il`
+    Can't use both ${bold("--outfile")} and ${bold(
+      "--stdout"
+    )} at the same time.
+    `);
+  }
+  let out = argv.outfile;
+  if (!out) {
+    if (!argv.stdout && process.stdout.isTTY) {
+      fatal(il`
+        Refusing to write binary data to stdout. Use ${bold(
+          "--stdout"
+        )} if you really want to do this.
+      `);
+    }
+    out = process.stdout;
+  }
   if (!await isDirectory(source)) {
     fatal(il`
       Source directory "${white(
@@ -66,17 +90,6 @@ exports.handler = async function handler(argv) {
       "--sloppy"
     )} if you want to skip this check.
     `);
-  }
-  let out = argv.outfile;
-  if (!out) {
-    if (!argv.force && process.stdout.isTTY) {
-      fatal(il`
-        Refusing to write binary data to stdout. Use ${bold(
-          "--force"
-        )} if you really want to do this.
-      `);
-    }
-    out = process.stdout;
   }
   try {
     await bundle(source, out);
