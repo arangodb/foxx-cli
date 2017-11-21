@@ -6,7 +6,7 @@ const { group, inline: il } = require("./text");
 
 exports.common = function common(yargs, opts) {
   yargs = yargs
-    .epilog("Copyright (c) 2016 ArangoDB GmbH (https://foxx.arangodb.com)")
+    .epilog("Copyright (c) 2016-2017 ArangoDB GmbH (https://foxx.arangodb.com)")
     .strict();
 
   if (opts) {
