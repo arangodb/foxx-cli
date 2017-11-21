@@ -1,224 +1,113 @@
-The following commands still need work before this module can become a "1.0" release:
+# Roadmap to 1.0.0
 
-# General stuff
+The following still needs work before this module can become a "1.0" release:
+
+## General stuff
 
 * :question: Document all commands in README?
-
 * :question: Create `man` pages for \*nix?
-
 * :fire: Set up actual tests with ArangoDB 3.x (CI via travis/appveyor)
-
-* :book: Document foxxignore format in-app (`foxx help foxxignore`?)
-
-* :book: Document foxxrc format in-app (`foxx help foxxrc`?)
-
+* :book: Document foxxignore format in-app (`help foxxignore`?)
+* :book: Document foxxrc format in-app (`help foxxrc`?)
 * :ship: Publish development release as `foxx-cli` on npm
 
-* :fire: Verify flags/options are named & defined consistently (e.g. meaning of `force` and `verbose`)
-
-# `foxx bundle`
-
-* :book: Verbose description
-
-* :book: Examples
-
-* :question: Maybe rename "sloppy" (`-s`) to avoid confusion with "strict"/"stdout"/"save"/"safe"
-
-* :question: Maybe rename "force" (`-f`) to clarify clobbering stdout
-
-# `foxx config`
-
-* :book: Verbose description
-
-## `foxx config` (read)
-
-* :sparkles: Pretty printing
-
-## `foxx config` (write)
-
-* :x: Read from stdin (`-`)
-
-* :x: Read positional `k=v` args
-
-* :x: PATCH mode
-
-* :x: PUT mode (`-f`)
-
-* :question: Maybe rename "force" (`-f`) to clarify "overwrite" mode
-
-# `foxx deps`
-
-* :book: Verbose description
-
-## `foxx deps` (read)
-
-* :sparkles: Pretty printing
-
-## `foxx deps` (write)
-
-* :x: Read from stdin (`-`)
-
-* :x: Read positional `k=v` args
-
-* :x: PATCH mode
-
-* :x: PUT mode (`-f`)
-
-* :question: Maybe rename "force" (`-f`) to clarify "overwrite" mode
-
-# `foxx download`
-
-* :book: Verbose description
-
-* :question: Maybe rename "force" (`-f`) to distinguish between "overwrite" and "clobber stdout"
-
-## `foxx download` (zip)
-
-* :x: Implement actual functionality
-
-## `foxx download` (extract)
-
-* :x: Implement actual functionality
-
-# `foxx ignore`
-
-* :book: Verbose description
-
-* :book: Examples
-
-* :question: Maybe rename "force" (`-f`) to clarify "overwrite" mode
-
-# `foxx list`
-
-* :rocket: All done!
-
-# `foxx show`
-
-* :sparkles: Pretty printing
-
-# `foxx init`
-
-* :book: Verbose description
-
-* :book: Examples
-
-## `foxx init` (interactive)
-
-* :x: Actually generate files and folders
-
-* :x: Implement example routes (`generateExamples`)
-
-## `foxx init -y`
-
-* :x: Define meaningful "verbose" defaults
-
-## `foxx init -n`
-
-* :x: Define meaningful "minimal defaults"
-
-* :question: Maybe rename this to e.g. `-y --minimal`
-
-# `foxx install`
-
-* :book: Verbose description
-
-* :sparkles: Pretty printing
-
-* :fire: Make sure all examples work
-
-# `foxx replace`
-
-* :book: Verbose description
-
-* :sparkles: Pretty printing
-
-* :fire: Make sure all examples work
-
-# `foxx script`
-
-* :book: Verbose description
-
-* :book: Examples
-
-## `foxx scripts`
-
-* :rocket: All done!
-
-## `foxx run`
-
-* :x: Implement actual functionality
-
-* :x: Read positional `k=v` args
-
-* :question: Maybe read args from stdin?
-
-* :question: Pretty print?
-
-# `foxx server`
-
-* :question: Maybe rename ENV vars for consistency?
-
-## `foxx server list`
-
-* :book: Verbose description
-
-* :book: Examples
-
-## `foxx server show`
-
-* :book: Verbose description
-
-* :book: Examples
-
-## `foxx server remove`
-
-* :book: Verbose description
-
-* :book: Examples
-
-## `foxx server set`
-
-* :book: Verbose description
-
-# `foxx set-dev`
-
-* :book: Verbose description
-
-* :book: Examples
-
-* :sparkles: Pretty printing?
-
-# `foxx set-prod`
-
-* :book: Verbose description
-
-* :book: Examples
-
-* :sparkles: Pretty printing?
-
-# `foxx test`
-
-* :book: Examples
-
-* :question: Make compatible with mocha formatters?
+## :x: Functionality
+
+### `config` (write)
+
+* Read from stdin (`-`)
+* Read positional `k=v` args
+* PATCH mode
+* PUT mode (`-f`)
+
+### `deps` (write)
+
+* Read from stdin (`-`)
+* Read positional `k=v` args
+* PATCH mode
+* PUT mode (`-f`)
+
+### `download` (zip)
+
+* Implement actual functionality
+
+### `download` (extract)
+
+* Implement actual functionality
+
+### `init`
+
+* Actually generate files and folders
+* Implement example routes (`generateExamples`)
+* Define meaningful "full" defaults
+* Define meaningful "minimal" defaults
+* Replace `-n` with `--minimal` (interactive)
+
+### `run`
+
+* Implement actual functionality
+* Read positional `k=v` args
+* Read args from stdin (`-`)
+
+## :book: Need examples
+
+* `bundle`
+* `ignore`
+* `init`
+* `run`
+* `scripts`
+* `server list`
+* `server remove`
+* `server show`
+* `set-dev`
+* `set-prod`
+* `test`
+* `uninstall`
+
+## :book: Need long description
+
+* `bundle`
+* `config`
+* `deps`
+* `download`
+* `ignore`
+* `init`
+* `install`
+* `replace`
+* `run`
+* `scripts`
+* `server list`
+* `server remove`
+* `server set`
+* `server show`
+* `set-dev`
+* `set-prod`
+* `uninstall`
+* `upgrade`
+
+## :sparkles: Need pretty printing
+
+* `config`
+* `deps`
+* `install`
+* `replace`
+* `run`
+* `set-dev`
+* `set-prod`
+* `show`
+* `upgrade`
+
+## :question: Technical decisions
+
+### `server`
+
+* Maybe rename ENV vars for consistency?
+
+### `test`
+
+* Make compatible with mocha formatters?
 
   This would require recording events during the test run, serialising them
   and deserialising them in foxx-cli to play them back to the 3rd party
   reporter. This may not be worth the effort considering xunit and tap are
   already fairly versatile.
-
-# `foxx uninstall`
-
-* :book: Verbose description
-
-* :book: Examples
-
-* :sparkles: Pretty printing?
-
-# `foxx upgrade`
-
-* :book: Verbose description
-
-* :sparkles: Pretty printing
-
-* :fire: Make sure all examples work
