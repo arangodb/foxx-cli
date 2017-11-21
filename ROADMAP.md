@@ -88,15 +88,11 @@ The following commands still need work before this module can become a "1.0" rel
 
 * :question: Maybe rename "force" (`-f`) to clarify "overwrite" mode
 
-# `foxx info`
-
-* :book: Examples
-
-## `foxx info` (list)
+# `foxx list`
 
 * :rocket: All done!
 
-## `foxx info` (detail)
+# `foxx show`
 
 * :sparkles: Pretty printing
 
@@ -144,11 +140,11 @@ The following commands still need work before this module can become a "1.0" rel
 
 * :book: Examples
 
-## `foxx script` (list)
+## `foxx scripts`
 
 * :rocket: All done!
 
-## `foxx script` (run)
+## `foxx run`
 
 * :x: Implement actual functionality
 
@@ -162,13 +158,17 @@ The following commands still need work before this module can become a "1.0" rel
 
 * :question: Maybe rename ENV vars for consistency?
 
-## `foxx server info`
+## `foxx server list`
 
 * :book: Verbose description
 
 * :book: Examples
 
-* :question: Maybe rename "verbose" to distinguish secrets in detail / URLs in list
+## `foxx server show`
+
+* :book: Verbose description
+
+* :book: Examples
 
 ## `foxx server remove`
 
