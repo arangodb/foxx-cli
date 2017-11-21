@@ -65,7 +65,7 @@ module.exports = async function resolveServer(path = "", requireMount = true) {
     let extra;
     if (!server.name) {
       extra = dd`
-        When passing URLs make sure to pass the mount path using the following format:
+        When passing URLs make sure to include the mount path using the following format:
           ${bold(
             "http://server.example/database-path#mount=/service-mount-path"
           )}
