@@ -1,71 +1,90 @@
-import {bold, white} from 'chalk'
-import {common} from '../util/cli'
-import client from '../util/client'
-import {fatal} from '../util/log'
-import {inline as il} from '../util/text'
-import resolveMount from '../resolveMount'
+"use strict";
+const { bold, white } = require("chalk");
+const { common } = require("../util/cli");
+const client = require("../util/client");
+const resolveMount = require("../resolveMount");
+const { fatal } = require("../util/log");
+const { inline: il } = require("../util/text");
 
-export const command = 'deps <mount-path> [options..]'
-export const description = 'Manage the dependencies of a mounted service'
-export const aliases = ['dependencies', 'dep']
+const command = (exports.command = "deps <mount-path> [options..]");
+const description = (exports.description =
+  "Manage the dependencies of a mounted service");
+const aliases = (exports.aliases = ["dependencies", "dep"]);
 
-const describe = description
+const describe = description;
 
 const args = [
-  ['mount-path', 'Database-relative path of the service'],
-  ['options', `Key-value pairs to apply to the dependencies. Use ${
-    bold('-')
-  } to pass a JSON file from stdin`]
-]
+  ["mount-path", "Database-relative path of the service"],
+  [
+    "options",
+    `Key-value pairs to apply to the dependencies. Use ${bold(
+      "-"
+    )} to pass a JSON file from stdin`
+  ]
+];
 
-export const builder = (yargs) => common(yargs, {command, aliases, describe, args})
-.options({
-  force: {
-    describe: il`
-      Clear existing values for any omitted dependencies.
-      Note that clearing required dependencies will result in
-      the service being disabled until new values are provided.
-    `,
-    alias: 'f',
-    type: 'boolean',
-    default: false
-  },
-  raw: {
-    describe: 'Output service dependencies as raw JSON',
-    type: 'boolean',
-    default: false
-  }
-})
-.example('$0 deps /myfoxx', 'Show the dependencies for the service mounted at "/foxxmail"')
-.example('$0 deps /myfoxx mailer=/foxxmail', 'Sets the "mailer" dependency to the service mounted at "/foxxmail"')
-.example('$0 deps /myfoxx -f mailer=/foxxmail', 'Sets the "mailer" dependency and clears any other dependencies')
-.example('echo \'{"mailer": "/foxxmail"}\' | $0 deps /myfoxx -', 'Sets the dependency using JSON data from stdin')
-.example('$0 deps /myfoxx -f', 'Clears all configured dependencies')
+exports.builder = yargs =>
+  common(yargs, { command, aliases, describe, args })
+    .options({
+      force: {
+        describe: il`
+          Clear existing values for any omitted dependencies.
+          Note that clearing required dependencies will result in
+          the service being disabled until new values are provided.
+        `,
+        alias: "f",
+        type: "boolean",
+        default: false
+      },
+      raw: {
+        describe: "Output service dependencies as raw JSON",
+        type: "boolean",
+        default: false
+      }
+    })
+    .example(
+      "$0 deps /myfoxx",
+      'Show the dependencies for the service mounted at "/foxxmail"'
+    )
+    .example(
+      "$0 deps /myfoxx mailer=/foxxmail",
+      'Sets the "mailer" dependency to the service mounted at "/foxxmail"'
+    )
+    .example(
+      "$0 deps /myfoxx -f mailer=/foxxmail",
+      'Sets the "mailer" dependency and clears any other dependencies'
+    )
+    .example(
+      'echo \'{"mailer": "/foxxmail"}\' | $0 deps /myfoxx -',
+      "Sets the dependency using JSON data from stdin"
+    )
+    .example("$0 deps /myfoxx -f", "Clears all configured dependencies");
 
-export function handler (argv) {
-  resolveMount(argv.mountPath)
-  .then((server) => {
+exports.handler = async function handler(argv) {
+  try {
+    const server = await resolveMount(argv.mountPath);
     if (!server.mount) {
       fatal(il`
         Not a valid mount path: "${white(argv.mountPath)}".
         Make sure the mount path always starts with a leading slash.
-      `)
+      `);
     }
     if (!server.url) {
       fatal(il`
         Not a valid server: "${white(server.name)}".
         Make sure the mount path always starts with a leading slash.
-      `)
+      `);
     }
-    const db = client(server)
+    const db = client(server);
     // TODO handle write
-    return showDeps(db, server.mount, argv)
-  })
-  .catch(fatal)
-}
+    return await showDeps(db, server.mount, argv);
+  } catch (e) {
+    fatal(e);
+  }
+};
 
-async function showDeps (db, mount, argv) {
-  const config = await db.getServiceDependencies(mount)
+async function showDeps(db, mount, argv) {
+  const config = await db.getServiceDependencies(mount);
   // TODO prettyprint if !argv.raw
-  console.log(JSON.stringify(config, null, 2))
+  console.log(JSON.stringify(config, null, 2));
 }

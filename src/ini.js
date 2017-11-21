@@ -1,25 +1,26 @@
-import {homedir} from 'os'
-import {resolve} from 'path'
-import {encode, decode} from 'ini'
-import {exists, readFile, writeFile} from './util/fs'
+"use strict";
+const { homedir } = require("os");
+const { resolve } = require("path");
+const { encode, decode } = require("ini");
+const { exists, readFile, writeFile } = require("./util/fs");
 
-const RC_FILENAME = '.foxxrc'
+const RC_FILENAME = ".foxxrc";
 
-export async function load () {
+exports.load = async function load() {
   const defaults = {
     server: {}
+  };
+  const rcfile = resolve(homedir(), RC_FILENAME);
+  if (!await exists(rcfile)) {
+    return defaults;
   }
-  const rcfile = resolve(homedir(), RC_FILENAME)
-  if (!(await exists(rcfile))) {
-    return defaults
-  }
-  const data = await readFile(rcfile, 'utf-8')
-  const obj = decode(data)
-  return Object.assign(defaults, obj)
-}
+  const data = await readFile(rcfile, "utf-8");
+  const obj = decode(data);
+  return Object.assign(defaults, obj);
+};
 
-export async function save (obj) {
-  const rcfile = resolve(homedir(), RC_FILENAME)
-  const data = encode(obj)
-  await writeFile(rcfile, data)
-}
+exports.save = async function save(obj) {
+  const rcfile = resolve(homedir(), RC_FILENAME);
+  const data = encode(obj);
+  await writeFile(rcfile, data);
+};

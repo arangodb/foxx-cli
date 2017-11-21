@@ -1,26 +1,27 @@
-import {common} from '../../util/cli'
-import {fatal} from '../../util/log'
-import {load as loadIni, save as saveIni} from '../../ini'
+"use strict";
+const { common } = require("../../util/cli");
+const { fatal } = require("../../util/log");
+const { load: loadIni, save: saveIni } = require("../../ini");
 
-export const command = 'remove <name>'
-export const description = 'Remove server'
-export const aliases = ['rm']
+const command = (exports.command = "remove <name>");
+const description = (exports.description = "Remove server");
+const aliases = (exports.aliases = ["rm"]);
 
-const describe = description
+const describe = description;
 
-const args = [
-  ['name', 'Server name to forget']
-]
+const args = [["name", "Server name to forget"]];
 
-export const builder = (yargs) => common(yargs, {command, sub: 'server', aliases, describe, args})
+exports.builder = yargs =>
+  common(yargs, { command, sub: "server", aliases, describe, args });
 
-export function handler (argv) {
-  loadIni()
-  .then((ini) => {
-    const servers = Object.keys(ini.server)
-    if (!servers || !servers.includes(argv.name)) return
-    delete ini.server[argv.name]
-    return saveIni(ini)
-  })
-  .catch(fatal)
-}
+exports.handler = async function handler(argv) {
+  try {
+    const ini = await loadIni();
+    const servers = Object.keys(ini.server);
+    if (!servers || !servers.includes(argv.name)) return;
+    delete ini.server[argv.name];
+    return await saveIni(ini);
+  } catch (e) {
+    fatal(e);
+  }
+};

@@ -1,95 +1,94 @@
-import {white, bold} from 'chalk'
-import {splat, unsplat} from './array'
-import {fatal} from './log'
-import {group, inline as il} from './text'
+"use strict";
+const { white, bold } = require("chalk");
+const { splat, unsplat } = require("./array");
+const { fatal } = require("./log");
+const { group, inline: il } = require("./text");
 
-export function common (yargs, opts) {
+exports.common = function common(yargs, opts) {
   yargs = yargs
-  .epilog('Copyright (c) 2016 ArangoDB GmbH (https://foxx.arangodb.com)')
-  .strict()
+    .epilog("Copyright (c) 2016 ArangoDB GmbH (https://foxx.arangodb.com)")
+    .strict();
 
   if (opts) {
-    let usage = 'Usage: $0'
-    if (opts.sub) usage += ' ' + opts.sub
-    if (opts.command) usage += ' ' + opts.command
-    if (opts.aliases) usage += '\nAliases: ' + opts.aliases.join(', ')
-    if (opts.describe) usage += '\n\n' + opts.describe
-    if (opts.args) usage += '\n\n' + group('Arguments', ...opts.args)
-    yargs.usage(usage)
+    let usage = "Usage: $0";
+    if (opts.sub) usage += " " + opts.sub;
+    if (opts.command) usage += " " + opts.command;
+    if (opts.aliases) usage += "\nAliases: " + opts.aliases.join(", ");
+    if (opts.describe) usage += "\n\n" + opts.describe;
+    if (opts.args) usage += "\n\n" + group("Arguments", ...opts.args);
+    yargs.usage(usage);
   }
 
-  return yargs
-}
+  return yargs;
+};
 
-export function validateServiceArgs (argv) {
-  if (argv.source) argv.source = unsplat(argv.source)
-  if (argv.cfg) argv.cfg = splat(argv.cfg)
-  if (argv.dep) argv.dep = splat(argv.dep)
+exports.validateServiceArgs = function validateServiceArgs(argv) {
+  if (argv.source) argv.source = unsplat(argv.source);
+  if (argv.cfg) argv.cfg = splat(argv.cfg);
+  if (argv.dep) argv.dep = splat(argv.dep);
 
   if (argv.remote) {
-    if (!argv.source || argv.source === '-') {
+    if (!argv.source || argv.source === "-") {
       fatal(il`
-        Please specify a URL or file path when using ${bold('--remote')}.
-      `)
+        Please specify a URL or file path when using ${bold("--remote")}.
+      `);
     }
   } else if (!argv.source) {
-    argv.source = process.cwd()
+    argv.source = process.cwd();
   }
 
-  const configuration = {}
+  const configuration = {};
   if (argv.cfg) {
     for (const cfg of argv.cfg) {
-      const i = cfg.indexOf('=')
+      const i = cfg.indexOf("=");
       if (i === -1 || i === 0) {
         fatal(il`
           Configuration options must be specified as name=value pairs.
           Option "${white(cfg)}" is invalid.
-        `)
+        `);
       }
 
-      const name = cfg.slice(0, i)
-      const value = cfg.slice(i + 1)
+      const name = cfg.slice(0, i);
+      const value = cfg.slice(i + 1);
 
       try {
-        configuration[name] = value ? JSON.parse(value) : null
+        configuration[name] = value ? JSON.parse(value) : null;
       } catch (e) {
         fatal(il`
-          Configuration option "${
-            white(name)
-          }" is invalid. Value must be valid JSON: "${
-            white(value)
-          }".
-        `)
+          Configuration option "${white(
+            name
+          )}" is invalid. Value must be valid JSON: "${white(value)}".
+        `);
       }
     }
   }
 
-  const dependencies = {}
+  const dependencies = {};
   if (argv.dep) {
     for (const dep of argv.dep) {
-      const i = dep.indexOf('=')
+      const i = dep.indexOf("=");
       if (i === -1 || i === 0) {
         fatal(il`
           Dependency options must be specified as name=/mountPath pairs.
           Option "${white(dep)}" is invalid.
-        `)
+        `);
       }
 
-      const name = dep.slice(0, i)
-      const value = dep.slice(i + 1)
+      const name = dep.slice(0, i);
+      const value = dep.slice(i + 1);
 
       if (dependencies[name]) {
         if (!Array.isArray(dependencies[name])) {
-          dependencies[name] = [dependencies[name]]
+          dependencies[name] = [dependencies[name]];
         }
-        dependencies[name].push(value)
+        dependencies[name].push(value);
       } else {
-        dependencies[name] = value
+        dependencies[name] = value;
       }
     }
   }
-  const opts = {configuration, dependencies}
-  if (argv.development) opts.development = true
-  if (argv.legacy) opts.legacy = true
-  return opts
-}
+  const opts = { configuration, dependencies };
+  if (argv.development) opts.development = true;
+  if (argv.legacy) opts.legacy = true;
+  return opts;
+};

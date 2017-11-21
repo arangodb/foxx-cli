@@ -6,7 +6,7 @@
 
 [![NPM status](https://nodei.co/npm/foxx-cli.png?downloads=true&stars=true)](https://npmjs.org/package/foxx-cli)
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 > CLI for managing and developing ArangoDB Foxx services.
 
@@ -40,7 +40,6 @@ Or with [npm](https://www.npmjs.com):
 ```
 $ npm install --global foxx-cli
 ```
-
 
 **Note**: on Linux systems you may need to install the package with elevated privileges, i.e. using `sudo`:
 
