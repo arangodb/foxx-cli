@@ -41,53 +41,54 @@ Or with [npm](https://www.npmjs.com):
 $ npm install --global foxx-cli
 ```
 
-**Note**: on Linux systems you may need to install the package with elevated privileges, i.e. using `sudo`:
+**Note**: using yarn you can also run **foxx-cli** from your project's `devDependencies`:
 
-```
-$ sudo npm install --global foxx-cli
+```sh
+yarn add --dev foxx-cli
+yarn foxx help
 ```
 
 ## Usage
 
-After you've installed **foxx-cli**, you should be able to use the `foxx` program. You can learn more about the different commands `foxx` supports by using the `help` command.
+After you've installed **foxx-cli**, you should be able to use the `foxx` program. You can learn more about the different commands `foxx` supports by using the `--help` flag.
 
+```sh
+foxx --help
 ```
-$ foxx help
-```
 
-You can also invoke the `help` command with the names of other commands to learn more about them, e.g.:
+You can also use the `--help` flag with commands to learn more about them, e.g.:
 
-```
-$ foxx help install # Help for the "install" command
+```sh
+foxx install --help # Help for the "install" command
 
-$ foxx help server # Help for the "server" command
+foxx server --help # Help for the "server" command
 
-$ foxx help server list # Subcommands are supported, too
+foxx server list --help # Subcommands are supported, too
 ```
 
 If you have no prior knowledge of Foxx, you can get started by [installing ArangoDB locally](https://www.arangodb.com/download) and then creating a new Foxx service in the current directory using the `init` command:
 
-```
-$ foxx init # answer the interactive questions
+```sh
+foxx init # answer the interactive questions
 ```
 
 If you just want an example, you can also run the `init` command non-interactively:
 
-```
-$ foxx init -y # just create an example service please
+```sh
+foxx init -y # just create an example service please
 ```
 
 You can also use `foxx init -n` to create a minimal service without the example code.
 
 You can inspect the files created by the program and tweak them as necessary. Once you're ready, install the service at a *mount path* using the `install` command:
 
-```
-$ foxx install /hello-foxx # installs the current directory
+```sh
+foxx install /hello-foxx # installs the current directory
 ```
 
 You should then be able to view the installed service in your browser at the following URL:
 
-http://localhost:8529/_db/_system/hello-foxx
+<http://localhost:8529/_db/_system/hello-foxx>
 
 ## Special files
 
@@ -131,18 +132,18 @@ Should you need to include files that match these patterns for some reason, you 
 
 You can also create a `.foxxignore` file in the current directory using the `ignore` command:
 
-```
-$ foxx ignore # creates a file pre-populated with the defaults
+```sh
+foxx ignore # creates a file pre-populated with the defaults
 
-$ foxx ignore --force # creates an empty file
+foxx ignore --force # creates an empty file
 ```
 
 To add individual patterns to the `.foxxignore` file just pass them as additional arguments:
 
-```
-$ foxx ignore .git/ .svn/ # you can pass multiple patterns at once
+```sh
+foxx ignore .git/ .svn/ # you can pass multiple patterns at once
 
-$ foxx ignore \*.swp # make sure to escape special characters
+foxx ignore '*.swp' # make sure to escape special characters
 ```
 
 ### foxxrc
