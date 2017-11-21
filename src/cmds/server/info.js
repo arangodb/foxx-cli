@@ -58,14 +58,14 @@ exports.handler = async function handler(argv) {
         }
       }
       process.exit(0);
-      if (!servers) return;
-      if (!argv.verbose) {
-        for (const name of servers) {
-          console.log(name);
-        }
-        return;
-      }
+    }
+    if (!servers) return;
+    if (argv.verbose) {
       console.log(group(...servers.map(name => [name, ini.server[name].url])));
+    } else {
+      for (const name of servers) {
+        console.log(name);
+      }
     }
   } catch (e) {
     fatal(e);
