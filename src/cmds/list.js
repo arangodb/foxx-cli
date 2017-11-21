@@ -16,6 +16,12 @@ const args = [["path", "Database-relative path of the service"]];
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args }).options({
+    all: {
+      describe: "Include system services",
+      alias: "a",
+      type: "boolean",
+      default: false
+    },
     raw: {
       describe: "Output raw JSON responses",
       type: "boolean",
@@ -27,9 +33,16 @@ exports.handler = async function handler(argv) {
   try {
     const server = await resolveServer(argv.path, false);
     const db = client(server);
-    const services = await db.listServices();
+    let services = await db.listServices();
+    if (!argv.all) {
+      services = services.filter(service => !service.mount.startsWith("/_"));
+    }
     if (argv.raw) {
       console.log(JSON.stringify(services, null, 2));
+      process.exit(0);
+    }
+    if (!services.length) {
+      console.log("No services found");
       process.exit(0);
     }
     console.log(
