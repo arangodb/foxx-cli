@@ -6,7 +6,7 @@ const resolveServer = require("../resolveServer");
 const { fatal } = require("../util/log");
 const { group } = require("../util/text");
 
-const command = (exports.command = "list <path>");
+const command = (exports.command = "list [path]");
 exports.description = "List mounted services";
 const aliases = (exports.aliases = ["ls"]);
 
