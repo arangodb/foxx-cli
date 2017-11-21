@@ -1,9 +1,8 @@
 "use strict";
-const { gray } = require("chalk");
 const { common } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { fatal } = require("../util/log");
+const { info, detail, json, fatal } = require("../util/log");
 const { group } = require("../util/text");
 
 const command = (exports.command = "scripts <path>");
@@ -28,23 +27,16 @@ exports.handler = async function handler(argv) {
   try {
     const server = await resolveServer(argv.path);
     const db = client(server);
-    return await listScripts(db, server.mount, argv.raw);
+    const scripts = await db.listServiceScripts(server.mount);
+    const names = Object.keys(scripts);
+    if (argv.raw) {
+      json(scripts);
+    } else if (names.length) {
+      info(group(...names.map(name => [name, scripts[name]])));
+    } else if (argv.verbose) {
+      detail("No scripts available.");
+    }
   } catch (e) {
     fatal(e);
   }
 };
-
-async function listScripts(db, mount, raw) {
-  const scripts = await db.listServiceScripts(mount);
-  const names = Object.keys(scripts);
-  if (raw) {
-    for (const name of names) {
-      console.log(name);
-    }
-  } else if (!names.length) {
-    console.log(gray("No scripts available."));
-  } else {
-    console.log(group(...names.map(name => [name, scripts[name]])));
-  }
-  process.exit(0);
-}

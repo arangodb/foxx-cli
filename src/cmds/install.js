@@ -3,7 +3,7 @@ const { bold } = require("chalk");
 const { common, validateServiceArgs } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { fatal } = require("../util/log");
+const { json, fatal } = require("../util/log");
 const { resolveToFileStream } = require("../util/fs");
 
 const command = (exports.command = "install <path> [source]");
@@ -130,5 +130,9 @@ async function install(argv, server, opts) {
     ...opts,
     setup: argv.setup
   });
-  console.log(JSON.stringify(result, null, 2));
+  if (argv.raw) {
+    json(result);
+  } else {
+    console.log("TODO", result);
+  }
 }

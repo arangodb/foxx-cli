@@ -56,7 +56,7 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   const source = unsplat(argv.source) || process.cwd();
-  console.log(JSON.stringify(argv, null, 2));
+  console.log("TODO", JSON.stringify(argv, null, 2));
   if (argv.stdout && argv.outfile) {
     fatal(il`
     Can't use both ${bold("--outfile")} and ${bold(

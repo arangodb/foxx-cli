@@ -4,7 +4,7 @@ const { common, validateServiceArgs } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
 const { resolveToFileStream } = require("../util/fs");
-const { fatal } = require("../util/log");
+const { json, fatal } = require("../util/log");
 
 const command = (exports.command = "replace <path> [source]");
 const description = (exports.description = "Replace a mounted service");
@@ -93,5 +93,9 @@ async function replace(argv, server, opts) {
     setup: argv.setup,
     teardown: argv.teardown
   });
-  console.log(JSON.stringify(result, null, 2));
+  if (argv.raw) {
+    json(result);
+  } else {
+    console.log("TODO", result);
+  }
 }

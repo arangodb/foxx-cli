@@ -86,7 +86,6 @@ module.exports = async function resolveServer(path = "", requireMount = true) {
     );
   }
   if (!server.url) {
-    console.log(server.mount);
     fatal(`Not a valid server: "${white(server.name || path)}".`);
   }
   return server;

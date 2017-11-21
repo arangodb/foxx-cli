@@ -1,6 +1,6 @@
 /*eslint-disable no-console */
 "use strict";
-const { red, yellow, bold } = require("chalk");
+const { red, yellow, bold, gray } = require("chalk");
 const { format, isError } = require("util");
 const packageJson = require("../../package.json");
 
@@ -21,6 +21,18 @@ exports.indentable = function indentable(start = 0) {
       this.level -= level;
     }
   };
+};
+
+exports.info = function info(message) {
+  console.info(message);
+};
+
+exports.detail = function detail(message) {
+  console.info(gray(message));
+};
+
+exports.json = function json(obj) {
+  console.info(JSON.stringify(obj, null, 2));
 };
 
 exports.warn = function warn(message) {

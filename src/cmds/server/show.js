@@ -1,7 +1,7 @@
 "use strict";
-const { bold, white } = require("chalk");
+const { bold, white, gray } = require("chalk");
 const { common } = require("../../util/cli");
-const { fatal } = require("../../util/log");
+const { info, fatal } = require("../../util/log");
 const { comma, inline: il, mask } = require("../../util/text");
 const { load: loadIni } = require("../../ini");
 
@@ -33,29 +33,32 @@ exports.handler = async function handler(argv) {
       `);
     }
     const server = ini.server[argv.name];
-    console.log("URL:", server.url);
+    info(`URL: ${server.url}`);
     if (server.version !== undefined) {
-      console.log("Version:", server.version);
+      info(`Version: ${server.version}`);
     }
     if (server.username !== undefined) {
-      console.log("Username:", server.username);
+      info(`Username: ${server.username}`);
     }
     if (argv.verbose) {
       if (server.password !== undefined) {
-        console.log("Password:", server.password);
+        info(`Password: ${server.password}`);
       }
       if (server.token !== undefined) {
-        console.log("Token:", server.token);
+        info(`Token: ${server.token}`);
       }
     } else {
       if (server.password !== undefined) {
-        console.log("Password:", mask(server.password));
+        info(
+          `Password: ${
+            server.password ? mask(server.password) : gray("(empty)")
+          }`
+        );
       }
       if (server.token !== undefined) {
-        console.log("Token:", mask(server.token));
+        info(`Token: ${mask(server.token)}`);
       }
     }
-    process.exit(0);
   } catch (e) {
     fatal(e);
   }

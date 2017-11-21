@@ -3,7 +3,7 @@ const { bold } = require("chalk");
 const { common } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { fatal } = require("../util/log");
+const { json, fatal } = require("../util/log");
 const { inline: il } = require("../util/text");
 
 const command = (exports.command = "config <path> [options..]");
@@ -73,6 +73,9 @@ exports.handler = async function handler(argv) {
 
 async function showConfig(db, mount, argv) {
   const config = await db.getServiceConfiguration(mount);
-  // TODO prettyprint if !argv.raw
-  console.log(JSON.stringify(config, null, 2));
+  if (argv.raw) {
+    json(config);
+  } else {
+    console.log("TODO", config);
+  }
 }

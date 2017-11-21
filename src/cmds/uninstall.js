@@ -3,7 +3,7 @@ const { bold } = require("chalk");
 const { common } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { fatal } = require("../util/log");
+const { detail, fatal } = require("../util/log");
 const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
 
 const command = (exports.command = "uninstall <path>");
@@ -28,23 +28,22 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   try {
     const server = await resolveServer(argv.path);
-    return await uninstall(argv, server);
+    const db = client(server);
+    try {
+      await db.uninstallService(server.mount, { teardown: argv.teardown });
+    } catch (e) {
+      if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
+        if (argv.verbose) {
+          detail(`Service "${server.mount}" not found.\nNothing to uninstall.`);
+        }
+        process.exit(0);
+      }
+      throw e;
+    }
+    if (argv.verbose) {
+      detail(`Service "${server.mount}" successfully removed.`);
+    }
   } catch (e) {
     fatal(e);
   }
 };
-
-async function uninstall(argv, server) {
-  const db = client(server);
-  try {
-    await db.uninstallService(server.mount, { teardown: argv.teardown });
-  } catch (e) {
-    if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
-      console.log(
-        `No service found at "${server.mount}".\nNothing to uninstall.`
-      );
-      process.exit(0);
-    }
-    throw e;
-  }
-}

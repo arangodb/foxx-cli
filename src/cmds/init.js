@@ -63,7 +63,7 @@ exports.handler = async function handler(argv) {
     if (jsFiles.length) mainFile = jsFiles.sort()[0];
   }
   if (argv.yes || argv.no) {
-    console.log(JSON.stringify(argv, null, 2));
+    console.log("TODO", JSON.stringify(argv, null, 2));
     process.exit(0);
   }
   try {
@@ -75,6 +75,7 @@ exports.handler = async function handler(argv) {
       engineVersion: "^3.0.0"
     });
     const files = await generateFiles(answers);
+    console.log("TODO");
     for (const file of files) {
       console.log();
       console.log(file.name);

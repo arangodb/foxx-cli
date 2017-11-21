@@ -3,7 +3,7 @@ const { bold, white } = require("chalk");
 const { common } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { error, fatal } = require("../util/log");
+const { json, fatal } = require("../util/log");
 const { inline: il } = require("../util/text");
 const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
 
@@ -33,12 +33,14 @@ exports.handler = async function handler(argv) {
     const db = client(server);
     try {
       const services = await db.getService(server.mount);
-      console.log(JSON.stringify(services, null, 2));
-      // TODO formatted output when raw != true
+      if (argv.raw) {
+        json(services);
+      } else {
+        console.log("TODO", services);
+      }
     } catch (e) {
       if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
-        error(`No service found at "${white(server.mount)}".`);
-        process.exit(1);
+        fatal(`No service found at "${white(server.mount)}".`);
       }
       throw e;
     }

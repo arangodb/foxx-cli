@@ -3,7 +3,7 @@ const { bold, gray } = require("chalk");
 const { common } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { fatal } = require("../util/log");
+const { info, json, detail, fatal } = require("../util/log");
 const { group } = require("../util/text");
 
 const command = (exports.command = "list [path]");
@@ -38,21 +38,19 @@ exports.handler = async function handler(argv) {
       services = services.filter(service => !service.mount.startsWith("/_"));
     }
     if (argv.raw) {
-      console.log(JSON.stringify(services, null, 2));
-      process.exit(0);
+      json(services);
+    } else if (services.length) {
+      info(
+        group(
+          ...services.map(service => [
+            service.development ? bold(service.mount) : service.mount,
+            prettyVersion(service)
+          ])
+        )
+      );
+    } else if (argv.verbose) {
+      detail("No services available.");
     }
-    if (!services.length) {
-      console.log("No services found");
-      process.exit(0);
-    }
-    console.log(
-      group(
-        ...services.map(service => [
-          service.development ? bold(service.mount) : service.mount,
-          prettyVersion(service)
-        ])
-      )
-    );
   } catch (e) {
     fatal(e);
   }

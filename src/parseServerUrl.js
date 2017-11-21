@@ -6,7 +6,7 @@ module.exports = function parseServerUrl(input) {
   const url = parseUrl(input);
   const server = {};
   if (url.auth) {
-    const [username, ...password] = url.split(":");
+    const [username, ...password] = url.auth.split(":");
     server.username = username;
     if (password.length) {
       server.password = password.join(":");

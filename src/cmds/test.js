@@ -5,7 +5,7 @@ const errors = require("../errors");
 const reporters = require("../reporters");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { error, fatal } = require("../util/log");
+const { info, json, error, fatal } = require("../util/log");
 const { group, inline: il } = require("../util/text");
 
 const command = (exports.command = "test <path>");
@@ -95,7 +95,7 @@ async function runTests(db, mount, cliReporter) {
           error("An error occured while trying to execute the tests:");
           error(e);
           error(il`
-            Make sure all tests are specified via the manifest
+            Make sure all tests are specified via the manifest,
             not loaded directly from another test file.
           `);
           process.exit(1);
@@ -106,14 +106,14 @@ async function runTests(db, mount, cliReporter) {
   }
 
   if (cliReporter === "xunit") {
-    console.log(result);
+    info(result);
     const lines = result.split("\n");
     const match = lines[1].match(/ failures="(\d+)"/);
     process.exit((match && Number(match[1])) || 0);
   }
 
   if (cliReporter === "tap") {
-    console.log(result);
+    info(result);
     const lines = result.split("\n");
     while (lines.length > 1 && !lines[lines.length - 1]) lines.pop();
     const match = lines[lines.length - 1].match(/# fail (\d+)/);
@@ -121,7 +121,7 @@ async function runTests(db, mount, cliReporter) {
   }
 
   if (cliReporter === "stream") {
-    console.log(result);
+    info(result);
     const lines = result.split("\n");
     process.exit(lines.filter(line => line.startsWith('["fail",')).length);
   }
@@ -137,9 +137,9 @@ async function runTests(db, mount, cliReporter) {
   }
 
   if (typeof result === "string") {
-    console.log(result);
+    info(result);
   } else {
-    console.log(JSON.stringify(result, null, 2));
+    json(result);
   }
   process.exit(
     result && result.stats && typeof result.stats.failures === "number"

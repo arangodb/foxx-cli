@@ -93,5 +93,5 @@ exports.handler = async function handler(argv) {
     )} at the same time.
     `);
   }
-  console.log(command, JSON.stringify(argv, null, 2));
+  console.log("TODO", JSON.stringify(argv, null, 2));
 };
