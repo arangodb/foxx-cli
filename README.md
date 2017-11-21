@@ -2,10 +2,10 @@
 
 [![license - APACHE-2.0](https://img.shields.io/npm/l/foxx-cli.svg?style=flat-square)](http://opensource.org/licenses/APACHE-2.0)
 [![Dependencies](https://img.shields.io/david/arangodb/foxx-cli.svg?style=flat-square)](https://david-dm.org/arangodb/foxx-cli)
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 
 [![NPM status](https://nodei.co/npm/foxx-cli.png?downloads=true&stars=true)](https://npmjs.org/package/foxx-cli)
 
+[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 > CLI for managing and developing ArangoDB Foxx services.
