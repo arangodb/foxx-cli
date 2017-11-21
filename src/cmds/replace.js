@@ -1,19 +1,18 @@
 "use strict";
-const { bold, white } = require("chalk");
+const { bold } = require("chalk");
 const { common, validateServiceArgs } = require("../util/cli");
 const client = require("../util/client");
-const resolveMount = require("../resolveMount");
+const resolveServer = require("../resolveServer");
 const { resolveToFileStream } = require("../util/fs");
 const { fatal } = require("../util/log");
-const { inline: il } = require("../util/text");
 
-const command = (exports.command = "replace <mount-path> [source]");
+const command = (exports.command = "replace <path> [source]");
 const description = (exports.description = "Replace a mounted service");
 
 const describe = description;
 
 const args = [
-  ["mount-path", "Database-relative path the service is mounted on"],
+  ["path", "Database-relative path the service is mounted on"],
   [
     "source",
     `URL or file system path of the replacement service. Use ${bold(
@@ -68,7 +67,7 @@ exports.builder = yargs =>
     },
     dep: {
       describe:
-        "Pass a dependency option as a name=/mountPath pair. This option can be specified multiple times",
+        "Pass a dependency option as a name=/path pair. This option can be specified multiple times",
       alias: "d",
       type: "string"
     }
@@ -77,21 +76,7 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   const opts = validateServiceArgs(argv);
   try {
-    const server = await resolveMount(argv.mountPath);
-    if (!server.mount) {
-      fatal(il`
-        Not a valid mount path: "${white(argv.mountPath)}".
-        Make sure the mount path always starts with a leading slash.
-      `);
-    }
-
-    if (!server.url) {
-      fatal(il`
-        Not a valid server: "${white(server.name)}".
-        Make sure the mount path always starts with a leading slash.
-      `);
-    }
-
+    const server = await resolveServer(argv.path);
     return await replace(argv, server, opts);
   } catch (e) {
     fatal(e);

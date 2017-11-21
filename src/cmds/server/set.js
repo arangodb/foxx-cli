@@ -7,6 +7,7 @@ const { common } = require("../../util/cli");
 const { fatal } = require("../../util/log");
 const { inline: il } = require("../../util/text");
 const { load: loadIni, save: saveIni } = require("../../ini");
+const parseServerUrl = require("../../parseServerUrl");
 
 const command = (exports.command = "set <name> <url>");
 const description = (exports.description = "Define server");
@@ -59,12 +60,20 @@ exports.builder = yargs =>
       'Set the "staging" server to the ArangoDB instance at "https://proxy.local" with user "devel" and empty password'
     )
     .example(
+      "$0 server set staging https://devel:@proxy.local",
+      'Set the "staging" server to the ArangoDB instance at "https://proxy.local" with user "devel" and empty password'
+    )
+    .example(
       "$0 server set staging https://proxy.local -u devel -P",
       'Set the "staging" server to the ArangoDB instance at "https://proxy.local" with user "devel" and a password read from stdin'
     )
     .example(
       "$0 server set staging https://proxy.local -T",
       'Set the "staging" server to the ArangoDB instance at "https://proxy.local" with a bearer token read from stdin'
+    )
+    .example(
+      "$0 server set staging https://proxy.local#token=1234",
+      'Set the "staging" server to the ArangoDB instance at "https://proxy.local" with bearer token "1234"'
     );
 
 exports.handler = async function handler(argv) {
@@ -96,7 +105,7 @@ exports.handler = async function handler(argv) {
 };
 
 async function buildServer(argv) {
-  const server = { url: argv.url };
+  const server = parseServerUrl(argv.url);
   if (argv.arangoVersion) {
     server.version = unsplat(argv.arangoVersion);
   }

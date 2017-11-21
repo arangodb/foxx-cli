@@ -29,9 +29,9 @@ exports.validateServiceArgs = function validateServiceArgs(argv) {
 
   if (argv.remote) {
     if (!argv.source || argv.source === "-") {
-      fatal(il`
-        Please specify a URL or file path when using ${bold("--remote")}.
-      `);
+      fatal(
+        `Please specify a URL or file path when using ${bold("--remote")}.`
+      );
     }
   } else if (!argv.source) {
     argv.source = process.cwd();
@@ -69,7 +69,7 @@ exports.validateServiceArgs = function validateServiceArgs(argv) {
       const i = dep.indexOf("=");
       if (i === -1 || i === 0) {
         fatal(il`
-          Dependency options must be specified as name=/mountPath pairs.
+          Dependency options must be specified as name=/path pairs.
           Option "${white(dep)}" is invalid.
         `);
       }

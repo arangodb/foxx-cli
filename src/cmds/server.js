@@ -32,6 +32,7 @@ const describe =
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe })
-    .command(require("./server/info"))
+    .command(require("./server/list"))
     .command(require("./server/remove"))
-    .command(require("./server/set"));
+    .command(require("./server/set"))
+    .command(require("./server/show"));

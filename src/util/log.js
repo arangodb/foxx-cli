@@ -34,7 +34,9 @@ exports.error = function error(message) {
 };
 
 exports.fatal = function fatal(err) {
-  if (err.code === "ECONNREFUSED") {
+  if (typeof err === "string") {
+    exports.error(err);
+  } else if (err.code === "ECONNREFUSED") {
     exports.error(
       `Connection refused: ${red.bold(err.address)}:${red.bold(
         err.port

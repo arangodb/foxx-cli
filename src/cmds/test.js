@@ -4,11 +4,11 @@ const { common } = require("../util/cli");
 const errors = require("../errors");
 const reporters = require("../reporters");
 const client = require("../util/client");
-const resolveMount = require("../resolveMount");
+const resolveServer = require("../resolveServer");
 const { error, fatal } = require("../util/log");
 const { group, inline: il } = require("../util/text");
 
-const command = (exports.command = "test <mount-path>");
+const command = (exports.command = "test <path>");
 exports.description = "Run the tests of a mounted service";
 const aliases = (exports.aliases = ["tests", "run-tests"]);
 
@@ -32,7 +32,7 @@ const describe =
     ["xunit", "Jenkins-compatible xUnit-style XML output"]
   );
 
-const args = [["mount-path", "Database-relative path of the service"]];
+const args = [["path", "Database-relative path of the service"]];
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args }).options({
@@ -46,21 +46,7 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   try {
-    const server = await resolveMount(argv.mountPath);
-    if (!server.mount) {
-      fatal(il`
-        Not a valid mount path: "${white(argv.mountPath)}".
-        Make sure the mount path always starts with a leading slash.
-      `);
-    }
-
-    if (!server.url) {
-      fatal(il`
-        Not a valid server: "${white(server.name)}".
-        Make sure the mount path always starts with a leading slash.
-      `);
-    }
-
+    const server = await resolveServer(argv.path);
     const db = client(server);
     return await runTests(db, server.mount, argv.reporter);
   } catch (e) {

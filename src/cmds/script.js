@@ -1,13 +1,12 @@
 "use strict";
-const { gray, white } = require("chalk");
+const { gray } = require("chalk");
 const { common } = require("../util/cli");
 const client = require("../util/client");
-const resolveMount = require("../resolveMount");
+const resolveServer = require("../resolveServer");
 const { fatal } = require("../util/log");
-const { group, inline: il } = require("../util/text");
+const { group } = require("../util/text");
 
-const command = (exports.command =
-  "run <mount-path> [script-name] [options..]");
+const command = (exports.command = "run <path> [script-name] [options..]");
 const description = (exports.description =
   "Run a script for a mounted service");
 const aliases = (exports.aliases = ["run-script", "script", "scripts"]);
@@ -15,7 +14,7 @@ const aliases = (exports.aliases = ["run-script", "script", "scripts"]);
 const describe = description;
 
 const args = [
-  ["mount-path", "Database-relative path of the service"],
+  ["path", "Database-relative path of the service"],
   ["script-name", "Name of the script to execute"],
   ["options", "Arguments that will be passed to the script"]
 ];
@@ -32,21 +31,7 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   // TODO sanity check argv
   try {
-    const server = await resolveMount(argv.mountPath);
-    if (!server.mount) {
-      fatal(il`
-        Not a valid mount path: "${white(argv.mountPath)}".
-        Make sure the mount path always starts with a leading slash.
-      `);
-    }
-
-    if (!server.url) {
-      fatal(il`
-        Not a valid server: "${white(server.name)}".
-        Make sure the mount path always starts with a leading slash.
-      `);
-    }
-
+    const server = await resolveServer(argv.path);
     const db = client(server);
     if (!argv.scriptName) {
       return await listScripts(db, server.mount, argv.raw);

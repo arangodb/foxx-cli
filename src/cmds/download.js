@@ -6,13 +6,13 @@ const { common } = require("../util/cli");
 const { fatal } = require("../util/log");
 const { inline: il } = require("../util/text");
 
-const command = (exports.command = "download <mount-path>");
+const command = (exports.command = "download <path>");
 const description = (exports.description = "Download a mounted service");
 const aliases = (exports.aliases = ["dl"]);
 
 const describe = description;
 
-const args = [["mount-path", "Database-relative path of the service"]];
+const args = [["path", "Database-relative path of the service"]];
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args })
