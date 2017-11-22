@@ -16,14 +16,14 @@ const describe = description;
 exports.builder = yargs =>
   common(yargs, { command, describe }).options({
     yes: {
-      describe: "Use default and example values instead of prompting for input",
+      describe: "Use default values instead of prompting for input",
       alias: "y",
       type: "boolean",
       default: false
     },
-    no: {
-      describe: "Use minimal default values instead of prompting for input",
-      alias: "n",
+    all: {
+      describe: "Use verbose defaults and generate example code",
+      alias: "a",
       type: "boolean",
       default: false
     },
@@ -36,12 +36,6 @@ exports.builder = yargs =>
   });
 
 exports.handler = async function handler(argv) {
-  if (argv.yes && argv.no) {
-    fatal(il`
-      Can't mix ${bold("--yes")} and ${bold("--no")}.
-      You have to pick one or neither.
-    `);
-  }
   const cwd = process.cwd();
   const manifestPath = join(cwd, "manifest.json");
   if (await exists(manifestPath)) {
@@ -62,7 +56,7 @@ exports.handler = async function handler(argv) {
     );
     if (jsFiles.length) mainFile = jsFiles.sort()[0];
   }
-  if (argv.yes || argv.no) {
+  if (argv.yes) {
     console.log("TODO", JSON.stringify(argv, null, 2));
     process.exit(0);
   }
@@ -70,6 +64,7 @@ exports.handler = async function handler(argv) {
     const answers = await wizard({
       cwd,
       mainFile,
+      all: argv.all,
       name: basename(cwd),
       version: "0.0.0",
       engineVersion: "^3.0.0"

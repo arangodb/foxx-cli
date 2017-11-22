@@ -31,9 +31,8 @@ The following still needs work before this module can become a "1.0" release:
 
 * Actually generate files and folders
 * Implement example routes (`generateExamples`)
-* Define meaningful "full" defaults
 * Define meaningful "minimal" defaults
-* Replace `-n` with `--minimal` (interactive)
+* Define meaningful "full" defaults
 
 ### `run`
 
