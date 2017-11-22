@@ -27,14 +27,6 @@ The following still needs work before this module can become a "1.0" release:
 * PATCH mode
 * PUT mode (`-f`)
 
-### `download` (zip)
-
-* Implement actual functionality
-
-### `download` (extract)
-
-* Implement actual functionality
-
 ### `init`
 
 * Actually generate files and folders

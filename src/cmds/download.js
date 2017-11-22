@@ -1,9 +1,15 @@
 "use strict";
-const { bold } = require("chalk");
-const { unsplat } = require("../util/array");
+const { bold, white } = require("chalk");
+const { createWriteStream, existsSync } = require("fs");
+const { fatal, info } = require("../util/log");
+const { exists, extractBuffer, readdir, safeStat } = require("../util/fs");
+
 const { common } = require("../util/cli");
-const { fatal } = require("../util/log");
+const client = require("../util/client");
 const { inline: il } = require("../util/text");
+const { resolve } = require("path");
+const resolveServer = require("../resolveServer");
+const { unsplat } = require("../util/array");
 
 const command = (exports.command = "download <path>");
 const description = (exports.description = "Download a mounted service");
@@ -41,13 +47,6 @@ exports.builder = yargs =>
         alias: "f",
         type: "boolean",
         default: false
-      },
-      delete: {
-        describe: `When using ${bold(
-          "--extract"
-        )} delete any existing files in the directory that are not contained in the bundle`,
-        type: "boolean",
-        default: false
       }
     })
     .example(
@@ -73,25 +72,77 @@ exports.builder = yargs =>
     .example(
       "$0 download -xf /hello -o /tmp/hello",
       "Extracts the bundle and overwrites any existing files"
-    )
-    .example(
-      "$0 download -x --delete /hello -o /tmp/hello",
-      "Extracts the bundle and removes any other existing files"
     );
 
 exports.handler = async function handler(argv) {
   argv.outfile = unsplat(argv.outfile);
-  if (argv.delete && !argv.extract) {
+  let out, outdir;
+  if (!argv.outfile) {
+    if (!argv.extract) {
+      if (!argv.stdout && process.stdout.isTTY) {
+        fatal(il`
+          Refusing to write binary data to stdout.
+          Use ${bold("--stdout")} if you really want to do this.
+        `);
+      }
+      out = process.stdout;
+    } else {
+      outdir = process.cwd();
+    }
+  } else if (argv.stdout) {
     fatal(il`
-      Must use ${bold("--extract")} for ${bold("--delete")} to have any effect.
+      Can't use both ${bold("--outfile")}
+      and ${bold("--stdout")} at the same time.
     `);
+  } else if (argv.extract) {
+    outdir = resolve(argv.outfile);
+    const stats = await safeStat(outdir);
+    if (stats) {
+      if (!stats.isDirectory()) {
+        fatal(`Can't extract to "${white(argv.outfile)}": not a directory.`);
+      }
+      if (!argv.force && (await readdir(outdir)).length) {
+        fatal(il`
+          Refusing to extract to non-empty directory "${white(argv.outfile)}".
+          Use ${bold("--force")} to overwrite existing files.
+        `);
+      }
+    }
+  } else {
+    if (!argv.force && (await exists(argv.outfile))) {
+      fatal(il`
+        Refusing to overwrite existing file "${white(argv.outfile)}".
+        Use ${bold("--force")} to overwrite existing file.
+      `);
+    }
+    out = createWriteStream(argv.outfile);
   }
-  if (argv.stdout && argv.outfile) {
-    fatal(il`
-      Can't use both ${bold("--outfile")} and ${bold(
-      "--stdout"
-    )} at the same time.
-    `);
+  try {
+    const server = await resolveServer(argv.path);
+    const db = client(server);
+    const bundle = await db.downloadService(server.mount);
+    if (!argv.extract) {
+      out.write(bundle);
+      out.close();
+      if (argv.verbose && out !== process.stdout) {
+        info(`Created "${argv.outfile}".`);
+      }
+    } else {
+      await extractBuffer(bundle, {
+        dir: outdir,
+        onEntry(entry) {
+          if (existsSync(resolve(outdir, entry.fileName))) {
+            info(`Overwriting "${entry.fileName}" …`);
+          } else if (argv.verbose) {
+            info(`Creating "${entry.fileName}" …`);
+          }
+        }
+      });
+      if (argv.verbose) {
+        info("Done.");
+      }
+    }
+  } catch (e) {
+    fatal(e);
   }
-  console.log("TODO", JSON.stringify(argv, null, 2));
 };

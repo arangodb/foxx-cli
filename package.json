@@ -6,7 +6,13 @@
   "bin": {
     "foxx": "bin/foxx"
   },
-  "files": ["bin/", "src/", "templates/", "README.md", "LICENSE"],
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "lint": "eslint src"
   },
@@ -27,6 +33,7 @@
     "cliui": "^3.2.0",
     "dedent": "^0.7.0",
     "ejs": "^2.5.7",
+    "extract-zip": "^1.6.6",
     "i": "^0.3.6",
     "ini": "^1.3.4",
     "inquirer": "^4.0.0",

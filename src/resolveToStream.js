@@ -1,10 +1,11 @@
 "use strict";
+
+const createBundle = require("./bundle");
+const { createReadStream } = require("fs");
+const { fatal } = require("./util/log");
 const http = require("http");
 const { parse: parseUrl } = require("url");
-const { createReadStream } = require("fs");
-const { exists, isDirectory } = require("./util/fs");
-const { fatal } = require("./util/log");
-const createBundle = require("./bundle");
+const { safeStat } = require("./util/fs");
 
 function get(path) {
   return new Promise((resolve, reject) => {
@@ -22,10 +23,11 @@ module.exports = async function resolveToStream(path) {
   if (protocol) {
     return await downloadToStream(path);
   }
-  if (!await exists(path)) {
+  const stats = await safeStat(path);
+  if (!stats) {
     fatal(`No such file or directory: "${path}".`);
   }
-  if (await isDirectory(path)) {
+  if (stats.isDirectory(path)) {
     return bundleToStream(path);
   }
   return createReadStream(path);
