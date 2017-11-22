@@ -45,7 +45,6 @@ The following still needs work before this module can become a "1.0" release:
 
 ### `run`
 
-* Implement actual functionality
 * Read positional `k=v` args
 * Read args from stdin (`-`)
 
