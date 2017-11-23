@@ -16,16 +16,10 @@ The following still needs work before this module can become a "1.0" release:
 ### `config` (write)
 
 * Read from stdin (`-`)
-* Read positional `k=v` args
-* PATCH mode
-* PUT mode (`-f`)
 
 ### `deps` (write)
 
 * Read from stdin (`-`)
-* Read positional `k=v` args
-* PATCH mode
-* PUT mode (`-f`)
 
 ### `init`
 
@@ -36,7 +30,6 @@ The following still needs work before this module can become a "1.0" release:
 
 ### `run`
 
-* Read positional `k=v` args
 * Read args from stdin (`-`)
 
 ## :book: Need examples

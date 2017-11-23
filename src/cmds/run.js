@@ -1,8 +1,10 @@
 "use strict";
-const { common } = require("../util/cli");
-const client = require("../util/client");
-const resolveServer = require("../resolveServer");
 const { json, fatal } = require("../util/log");
+
+const client = require("../util/client");
+const { common } = require("../util/cli");
+const parseOptions = require("../util/parseOptions");
+const resolveServer = require("../resolveServer");
 
 const command = (exports.command = "run <path> <name> [options..]");
 const description = (exports.description =
@@ -27,11 +29,17 @@ exports.builder = yargs =>
   });
 
 exports.handler = async function handler(argv) {
-  // TODO sanity check argv
+  let options;
+  if (argv.options === "-") {
+    console.error("TODO", "read from stdin");
+    process.exit(1);
+  } else {
+    options = parseOptions(argv.options);
+  }
   try {
     const server = await resolveServer(argv.path);
     const db = client(server);
-    const result = await db.runServiceScript(server.mount, argv.options);
+    const result = await db.runServiceScript(server.mount, argv.name, options);
     if (argv.raw) {
       json(result);
     } else {

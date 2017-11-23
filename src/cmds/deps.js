@@ -1,10 +1,12 @@
 "use strict";
-const { bold } = require("chalk");
-const { common } = require("../util/cli");
-const client = require("../util/client");
-const resolveServer = require("../resolveServer");
 const { json, fatal } = require("../util/log");
+
+const { bold } = require("chalk");
+const client = require("../util/client");
+const { common } = require("../util/cli");
 const { inline: il } = require("../util/text");
+const parseOptions = require("../util/parseOptions");
+const resolveServer = require("../resolveServer");
 
 const command = (exports.command = "deps <path> [options..]");
 const description = (exports.description =
@@ -61,21 +63,30 @@ exports.builder = yargs =>
     .example("$0 deps /myfoxx -f", "Clears all configured dependencies");
 
 exports.handler = async function handler(argv) {
+  let options;
+  if (argv.options === "-") {
+    console.error("TODO", "read from stdin");
+    process.exit(1);
+  } else {
+    options = parseOptions(argv.options);
+  }
   try {
     const server = await resolveServer(argv.path);
     const db = client(server);
-    // TODO handle write
-    return await showDeps(db, server.mount, argv);
+    let result;
+    if (!options) {
+      result = await db.getServiceDependencies(server.mount);
+    } else if (argv.force) {
+      result = await db.replaceServiceDependencies(server.mount, options);
+    } else {
+      result = await db.updateServiceDependencies(server.mount, options);
+    }
+    if (argv.raw) {
+      json(result);
+    } else {
+      console.log("TODO", result);
+    }
   } catch (e) {
     fatal(e);
   }
 };
-
-async function showDeps(db, mount, argv) {
-  const config = await db.getServiceDependencies(mount);
-  if (argv.raw) {
-    json(config);
-  } else {
-    console.log("TODO", config);
-  }
-}
