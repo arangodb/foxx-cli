@@ -31,14 +31,14 @@ To learn more about Foxx, see the [official ArangoDB Foxx documentation](https:/
 
 **foxx-cli** runs on [Node.js](https://nodejs.org) and can be installed with [yarn](https://yarnpkg.com):
 
-```
-$ yarn global add foxx-cli
+```sh
+yarn global add foxx-cli
 ```
 
 Or with [npm](https://www.npmjs.com):
 
-```
-$ npm install --global foxx-cli
+```sh
+npm install --global foxx-cli
 ```
 
 **Note**: using yarn you can also run **foxx-cli** from your project's `devDependencies`:
@@ -46,6 +46,12 @@ $ npm install --global foxx-cli
 ```sh
 yarn add --dev foxx-cli
 yarn foxx help
+```
+
+If you're using a recent version of npm you can also use npx:
+
+```sh
+npx -p foxx-cli foxx help
 ```
 
 ## Usage
