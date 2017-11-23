@@ -42,6 +42,11 @@ exports.builder = yargs =>
         describe: "Output service dependencies as raw JSON",
         type: "boolean",
         default: false
+      },
+      minimal: {
+        describe: "Print minimal output",
+        type: "boolean",
+        default: false
       }
     })
     .example(
@@ -75,14 +80,29 @@ exports.handler = async function handler(argv) {
     const db = client(server);
     let result;
     if (!options) {
-      result = await db.getServiceDependencies(server.mount);
+      result = await db.getServiceDependencies(server.mount, argv.minimal);
     } else if (argv.force) {
-      result = await db.replaceServiceDependencies(server.mount, options);
+      result = await db.replaceServiceDependencies(
+        server.mount,
+        options,
+        argv.minimal
+      );
     } else {
-      result = await db.updateServiceDependencies(server.mount, options);
+      result = await db.updateServiceDependencies(
+        server.mount,
+        options,
+        argv.minimal
+      );
     }
     if (argv.raw) {
       json(result);
+    } else if (argv.minimal) {
+      if (result.warnings) {
+        for (const key of Object.keys(result.warnings)) {
+          error(`${key}: ${result.warnings[key]}`);
+        }
+      }
+      console.log("TODO", result.values);
     } else {
       console.log("TODO", result);
     }
