@@ -75,10 +75,10 @@ foxx init # answer the interactive questions
 If you just want an example, you can also run the `init` command non-interactively:
 
 ```sh
-foxx init -y # just create an example service please
+foxx init -ya # just create an example service please
 ```
 
-You can also use `foxx init -n` to create a minimal service without the example code.
+You can also use `foxx init -y` to create a minimal service without the example code.
 
 You can inspect the files created by the program and tweak them as necessary. Once you're ready, install the service at a *mount path* using the `install` command:
 
