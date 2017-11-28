@@ -7,6 +7,7 @@ const { common } = require("../util/cli");
 const { inline: il } = require("../util/text");
 const parseOptions = require("../util/parseOptions");
 const resolveServer = require("../resolveServer");
+const streamToBuffer = require("../util/streamToBuffer");
 
 const command = (exports.command = "config <path> [options..]");
 const description = (exports.description =
@@ -20,7 +21,7 @@ const args = [
   [
     "options",
     `Key-value pairs to apply to the configuration. Use ${bold(
-      "-"
+      "@"
     )} to pass a JSON file from stdin`
   ]
 ];
@@ -62,20 +63,27 @@ exports.builder = yargs =>
       'Sets the "someNumber" configuration option and clears all other options'
     )
     .example(
-      "echo '{\"someNumber\": 23}' | $0 config /myfoxx -",
+      "echo '{\"someNumber\": 23}' | $0 config /myfoxx @",
       "Sets the configuration using JSON data from stdin"
     )
     .example("$0 config /myfoxx -f", "Clears the service configuration");
 
 exports.handler = async function handler(argv) {
-  let options;
-  if (argv.options === "-") {
-    console.error("TODO", "read from stdin");
-    process.exit(1);
-  } else {
-    options = parseOptions(argv.options);
-    if (!options && argv.force) {
-      options = {};
+  let options = parseOptions(argv.options);
+  if (!options && argv.force) {
+    options = {};
+  } else if (options === "@") {
+    const output = await streamToBuffer(process.stdin);
+    let json;
+    try {
+      json = output.toString("utf-8");
+    } catch (e) {
+      fatal("Not a valid JSON string");
+    }
+    try {
+      options = JSON.parse(json);
+    } catch (e) {
+      fatal(e.message);
     }
   }
   try {

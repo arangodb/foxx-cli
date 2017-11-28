@@ -5,6 +5,7 @@ const client = require("../util/client");
 const { common } = require("../util/cli");
 const parseOptions = require("../util/parseOptions");
 const resolveServer = require("../resolveServer");
+const streamToBuffer = require("../util/streamToBuffer");
 
 const command = (exports.command = "run <path> <name> [options..]");
 const description = (exports.description =
@@ -29,12 +30,22 @@ exports.builder = yargs =>
   });
 
 exports.handler = async function handler(argv) {
-  let options;
-  if (argv.options === "-") {
-    console.error("TODO", "read from stdin");
-    process.exit(1);
-  } else {
-    options = parseOptions(argv.options);
+  let options = parseOptions(argv.options);
+  if (!options && argv.force) {
+    options = {};
+  } else if (options === "@") {
+    const output = await streamToBuffer(process.stdin);
+    let json;
+    try {
+      json = output.toString("utf-8");
+    } catch (e) {
+      fatal("Not a valid JSON string");
+    }
+    try {
+      options = JSON.parse(json);
+    } catch (e) {
+      fatal(e.message);
+    }
   }
   try {
     const server = await resolveServer(argv.path);

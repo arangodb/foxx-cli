@@ -13,24 +13,12 @@ The following still needs work before this module can become a "1.0" release:
 
 ## :x: Functionality
 
-### `config` (write)
-
-* Read from stdin (`-`)
-
-### `deps` (write)
-
-* Read from stdin (`-`)
-
 ### `init`
 
 * Actually generate files and folders
 * Implement example routes (`generateExamples`)
 * Define meaningful "minimal" defaults
 * Define meaningful "full" defaults
-
-### `run`
-
-* Read args from stdin (`-`)
 
 ## :book: Need examples
 
@@ -90,7 +78,7 @@ The following still needs work before this module can become a "1.0" release:
 
 * Make compatible with mocha formatters?
 
-  This would require recording events during the test run, serialising them
-  and deserialising them in foxx-cli to play them back to the 3rd party
-  reporter. This may not be worth the effort considering xunit and tap are
-  already fairly versatile.
+  This would require recording events during the test run, serialising them and
+  deserialising them in foxx-cli to play them back to the 3rd party reporter.
+  This may not be worth the effort considering xunit and tap are already fairly
+  versatile.
