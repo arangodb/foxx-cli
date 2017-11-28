@@ -3,7 +3,6 @@ const extractZip = require("extract-zip");
 const fs = require("fs");
 const { promisify } = require("util");
 const { relative } = require("path");
-const temp = require("temp");
 const walkdir = require("walkdir");
 
 exports.extract = promisify(extractZip);
@@ -36,14 +35,4 @@ exports.walk = function walk(basepath, shouldIgnore) {
     walker.on("error", e => reject(e));
     walker.on("end", () => resolve(files));
   });
-};
-
-exports.extractBuffer = async function extractBuffer(buf, ...args) {
-  const tmpfile = temp.path({ suffix: ".zip" });
-  try {
-    await exports.writeFile(tmpfile, buf);
-    await exports.extract(tmpfile, ...args);
-  } finally {
-    await exports.unlink(tmpfile);
-  }
 };

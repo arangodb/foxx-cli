@@ -1,7 +1,9 @@
 "use strict";
+const { createReadStream, createWriteStream } = require("fs");
+
 const archiver = require("archiver");
 const { createWriteStream: createTempStream } = require("temp");
-const { createReadStream, createWriteStream } = require("fs");
+const temp = require("temp");
 const { version } = require("../../package.json");
 
 const comment = `Created with foxx-cli v${version} (https://foxx.arangodb.com)`;
@@ -15,7 +17,7 @@ function append(zipstream, name) {
   });
 }
 
-module.exports = function(files, dest) {
+exports.zip = function zip(files, dest) {
   return new Promise(async (resolve, reject) => {
     let filename, filestream;
     if (typeof dest === "string") {
@@ -38,4 +40,14 @@ module.exports = function(files, dest) {
     }
     zipstream.finalize();
   });
+};
+
+exports.extractBuffer = async function extractBuffer(buf, ...args) {
+  const tmpfile = temp.path({ suffix: ".zip" });
+  try {
+    await exports.writeFile(tmpfile, buf);
+    await exports.extract(tmpfile, ...args);
+  } finally {
+    await exports.unlink(tmpfile);
+  }
 };

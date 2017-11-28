@@ -1,19 +1,22 @@
 "use strict";
-const { Minimatch } = require("minimatch");
 const { exists, readFile, writeFile } = require("./util/fs");
+
+const { Minimatch } = require("minimatch");
 
 const defaults = [".git/", ".svn/", ".hg/", "*.swp", ".DS_Store"];
 
-exports.buildMatcher = async function buildMatcher(foxxignore) {
+exports.load = async function load(file) {
+  let lines = defaults;
+  if (await exists(file)) {
+    const text = await readFile(file, "utf-8");
+    lines = text.split(/(\n|\r)+/g);
+  }
+  return exports.buildMatcher(lines);
+};
+
+exports.buildMatcher = function buildMatcher(lines) {
   const blacklist = [];
   const whitelist = [];
-  let lines;
-  if (await exists(foxxignore)) {
-    const text = await readFile(foxxignore, "utf-8");
-    lines = text.split(/\n|\r/g);
-  } else {
-    lines = defaults;
-  }
   for (const line of lines) {
     let list = blacklist;
     let pattern = line.trim();
@@ -32,11 +35,11 @@ exports.buildMatcher = async function buildMatcher(foxxignore) {
     blacklist.some(matcher => matcher.match(path));
 };
 
-exports.save = async function save(foxxignore, values, overwrite) {
+exports.save = async function save(file, values, overwrite) {
   const patterns = new Set(values);
   if (!overwrite) {
-    if (await exists(foxxignore)) {
-      const text = await readFile(foxxignore, "utf-8");
+    if (await exists(file)) {
+      const text = await readFile(file, "utf-8");
       for (const line of text.split(/\n|\r/g)) {
         if (!line) continue;
         patterns.add(line);
@@ -48,5 +51,5 @@ exports.save = async function save(foxxignore, values, overwrite) {
     }
   }
   const lines = Array.from(patterns.values());
-  await writeFile(foxxignore, lines.join("\n") + "\n");
+  await writeFile(file, lines.join("\n") + "\n");
 };

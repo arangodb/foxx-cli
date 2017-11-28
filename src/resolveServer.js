@@ -3,7 +3,7 @@ const dd = require("dedent");
 const { white, bold } = require("chalk");
 const { fatal } = require("./util/log");
 const { load: loadIni } = require("./ini");
-const parseServerUrl = require("./parseServerUrl");
+const parseServerUrl = require("./util/parseServerUrl");
 
 function applyDefaults(server) {
   const defaultToken = process.env.FOXX_ARANGODB_SERVER_TOKEN;

@@ -1,6 +1,5 @@
 "use strict";
-
-const createBundle = require("./bundle");
+const { createBundle } = require("./bundle");
 const { createReadStream } = require("fs");
 const { fatal } = require("./util/log");
 const http = require("http");

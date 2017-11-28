@@ -7,7 +7,7 @@ const { common } = require("../../util/cli");
 const { fatal } = require("../../util/log");
 const { inline: il } = require("../../util/text");
 const { load: loadIni, save: saveIni } = require("../../ini");
-const parseServerUrl = require("../../parseServerUrl");
+const parseServerUrl = require("../../util/parseServerUrl");
 
 const command = (exports.command = "set <name> <url>");
 const description = (exports.description = "Define server");

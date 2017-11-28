@@ -2,10 +2,11 @@
 const { bold, white } = require("chalk");
 const { createWriteStream, existsSync } = require("fs");
 const { fatal, info } = require("../util/log");
-const { exists, extractBuffer, readdir, safeStat } = require("../util/fs");
+const { exists, readdir, safeStat } = require("../util/fs");
 
 const { common } = require("../util/cli");
 const client = require("../util/client");
+const { extractBuffer } = require("../util/zip");
 const { inline: il } = require("../util/text");
 const { resolve } = require("path");
 const resolveServer = require("../resolveServer");
