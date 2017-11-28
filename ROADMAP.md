@@ -67,18 +67,3 @@ The following still needs work before this module can become a "1.0" release:
 * `set-prod`
 * `show`
 * `upgrade`
-
-## :question: Technical decisions
-
-### `server`
-
-* Maybe rename ENV vars for consistency?
-
-### `test`
-
-* Make compatible with mocha formatters?
-
-  This would require recording events during the test run, serialising them and
-  deserialising them in foxx-cli to play them back to the 3rd party reporter.
-  This may not be worth the effort considering xunit and tap are already fairly
-  versatile.
