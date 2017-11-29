@@ -32,11 +32,11 @@ exports.handler = async function handler(argv) {
     const server = await resolveServer(argv.path);
     const db = client(server);
     try {
-      const services = await db.getService(server.mount);
+      const result = await db.getService(server.mount);
       if (argv.raw) {
-        json(services);
+        json(result);
       } else {
-        console.log("TODO", services);
+        console.log(result); // TODO pretty-print
       }
     } catch (e) {
       if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {

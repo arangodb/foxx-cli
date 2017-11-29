@@ -113,9 +113,9 @@ exports.handler = async function handler(argv) {
           error(`${key}: ${result.warnings[key]}`);
         }
       }
-      console.log("TODO", result.values);
+      console.log(result.values); // TODO pretty-print
     } else {
-      console.log("TODO", result);
+      console.log(result); // TODO pretty-print
     }
   } catch (e) {
     fatal(e);

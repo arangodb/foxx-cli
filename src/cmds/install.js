@@ -131,6 +131,6 @@ async function install(argv, server, opts) {
   if (argv.raw) {
     json(result);
   } else {
-    console.log("TODO", result);
+    console.log(result); // TODO pretty-print
   }
 }

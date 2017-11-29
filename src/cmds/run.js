@@ -54,7 +54,7 @@ exports.handler = async function handler(argv) {
     if (argv.raw) {
       json(result);
     } else {
-      console.log("TODO", result);
+      console.log(result); // TODO pretty-print
     }
   } catch (e) {
     fatal(e);

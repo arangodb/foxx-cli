@@ -23,7 +23,6 @@ exports.builder = yargs =>
   });
 
 exports.handler = async function handler(argv) {
-  // TODO sanity check argv
   try {
     const server = await resolveServer(argv.path);
     const db = client(server);
