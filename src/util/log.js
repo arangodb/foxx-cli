@@ -48,11 +48,17 @@ exports.error = function error(message) {
 exports.fatal = function fatal(err) {
   if (typeof err === "string") {
     exports.error(err);
+  } else if (err.code === "ENETUNREACH") {
+    exports.error(
+      `Network unreachable: ${red.bold(err.address)}:${red.bold(
+        err.port
+      )}\nAre you offline?`
+    );
   } else if (err.code === "ECONNREFUSED") {
     exports.error(
       `Connection refused: ${red.bold(err.address)}:${red.bold(
         err.port
-      )}\nAre you offline?`
+      )}\nIs the server down?`
     );
   } else if (err.isArangoError) {
     exports.error(
