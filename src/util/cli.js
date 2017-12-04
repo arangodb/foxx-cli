@@ -22,7 +22,43 @@ exports.common = function common(yargs, opts) {
   return yargs;
 };
 
-exports.validateServiceArgs = function validateServiceArgs(argv) {
+exports.serverArgs = {
+  server: {
+    describe: "ArangoDB server URL or alias",
+    alias: "H",
+    type: "string",
+    default: "default"
+  },
+  username: {
+    describe: "Username to authenticate with",
+    alias: "u",
+    type: "string"
+  },
+  password: {
+    describe: "Use password to authenticate",
+    alias: "P",
+    type: "boolean",
+    default: false
+  },
+  token: {
+    describe: "Use bearer token to authenticate",
+    alias: "T",
+    type: "boolean",
+    default: false
+  },
+  database: {
+    describe: "ArangoDB database name",
+    alias: "D",
+    type: "string"
+  },
+  "arango-version": {
+    describe: "ArangoDB server version",
+    alias: "V",
+    type: "string"
+  }
+};
+
+exports.parseServiceOptions = function parseServiceOptions(argv) {
   if (argv.source) argv.source = unsplat(argv.source);
   if (argv.cfg) argv.cfg = splat(argv.cfg);
   if (argv.dep) argv.dep = splat(argv.dep);

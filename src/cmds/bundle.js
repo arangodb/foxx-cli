@@ -48,7 +48,6 @@ exports.builder = yargs =>
     sloppy: {
       describe:
         "Continue even if no manifest file is present in the source directory",
-      alias: "s",
       type: "boolean",
       default: false
     }

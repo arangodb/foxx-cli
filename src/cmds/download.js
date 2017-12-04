@@ -1,10 +1,10 @@
 "use strict";
 const { bold, white } = require("chalk");
+const { common, serverArgs } = require("../util/cli");
 const { createWriteStream, existsSync } = require("fs");
 const { fatal, info } = require("../util/log");
 const { exists, readdir, safeStat } = require("../util/fs");
 
-const { common } = require("../util/cli");
 const client = require("../util/client");
 const { extractBuffer } = require("../util/zip");
 const { inline: il } = require("../util/text");
@@ -12,17 +12,18 @@ const { resolve } = require("path");
 const resolveServer = require("../resolveServer");
 const { unsplat } = require("../util/array");
 
-const command = (exports.command = "download <path>");
+const command = (exports.command = "download <mount>");
 const description = (exports.description = "Download a mounted service");
 const aliases = (exports.aliases = ["dl"]);
 
 const describe = description;
 
-const args = [["path", "Database-relative path of the service"]];
+const args = [["mount", "Mount path of the service"]];
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args })
     .options({
+      ...serverArgs,
       stdout: {
         describe: `Write to stdout no matter what stdout is`,
         alias: "O",
@@ -119,9 +120,9 @@ exports.handler = async function handler(argv) {
     out = createWriteStream(argv.outfile);
   }
   try {
-    const server = await resolveServer(argv.path);
+    const server = await resolveServer(argv);
     const db = client(server);
-    const bundle = await db.downloadService(server.mount);
+    const bundle = await db.downloadService(argv.mount);
     if (!argv.extract) {
       out.write(bundle);
       out.close();

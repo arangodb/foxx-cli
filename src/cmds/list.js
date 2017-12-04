@@ -1,21 +1,21 @@
 "use strict";
 const { bold, gray } = require("chalk");
-const { common } = require("../util/cli");
-const client = require("../util/client");
-const resolveServer = require("../resolveServer");
-const { info, json, detail, fatal } = require("../util/log");
-const { group } = require("../util/text");
+const { common, serverArgs } = require("../util/cli");
+const { detail, fatal, info, json } = require("../util/log");
 
-const command = (exports.command = "list [path]");
+const client = require("../util/client");
+const { group } = require("../util/text");
+const resolveServer = require("../resolveServer");
+
+const command = (exports.command = "list");
 exports.description = "List mounted services";
 const aliases = (exports.aliases = ["ls"]);
 
 const describe = "Shows an overview of all installed services.";
 
-const args = [["path", "Database-relative path of the service"]];
-
 exports.builder = yargs =>
-  common(yargs, { command, aliases, describe, args }).options({
+  common(yargs, { command, aliases, describe }).options({
+    ...serverArgs,
     all: {
       describe: "Include system services",
       alias: "a",
@@ -31,7 +31,7 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   try {
-    const server = await resolveServer(argv.path, false);
+    const server = await resolveServer(argv);
     const db = client(server);
     let services = await db.listServices();
     if (!argv.all) {

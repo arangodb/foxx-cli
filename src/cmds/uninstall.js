@@ -1,21 +1,23 @@
 "use strict";
-const { bold } = require("chalk");
-const { common } = require("../util/cli");
-const client = require("../util/client");
-const resolveServer = require("../resolveServer");
+const { common, serverArgs } = require("../util/cli");
 const { detail, fatal } = require("../util/log");
-const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
 
-const command = (exports.command = "uninstall <path>");
+const { bold } = require("chalk");
+const client = require("../util/client");
+const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
+const resolveServer = require("../resolveServer");
+
+const command = (exports.command = "uninstall <mount>");
 const description = (exports.description = "Uninstall a mounted service");
 const aliases = (exports.aliases = ["remove", "purge"]);
 
 const describe = description;
 
-const args = [["path", "Database-relative path the service is mounted on"]];
+const args = [["mount", "Mount path of the service"]];
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args }).options({
+    ...serverArgs,
     teardown: {
       describe: `Run the teardown script before uninstalling the service. Use ${bold(
         "--no-teardown"
@@ -27,21 +29,21 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   try {
-    const server = await resolveServer(argv.path);
+    const server = await resolveServer(argv);
     const db = client(server);
     try {
-      await db.uninstallService(server.mount, { teardown: argv.teardown });
+      await db.uninstallService(argv.mount, { teardown: argv.teardown });
     } catch (e) {
       if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
         if (argv.verbose) {
-          detail(`Service "${server.mount}" not found.\nNothing to uninstall.`);
+          detail(`Service "${argv.mount}" not found.\nNothing to uninstall.`);
         }
         process.exit(0);
       }
       throw e;
     }
     if (argv.verbose) {
-      detail(`Service "${server.mount}" successfully removed.`);
+      detail(`Service "${argv.mount}" successfully removed.`);
     }
   } catch (e) {
     fatal(e);

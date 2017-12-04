@@ -1,15 +1,15 @@
 "use strict";
+const { common, serverArgs } = require("../util/cli");
 const { error, fatal, json } = require("../util/log");
 
 const { bold } = require("chalk");
 const client = require("../util/client");
-const { common } = require("../util/cli");
 const { inline: il } = require("../util/text");
 const parseOptions = require("../util/parseOptions");
 const resolveServer = require("../resolveServer");
 const streamToBuffer = require("../util/streamToBuffer");
 
-const command = (exports.command = "config <path> [options..]");
+const command = (exports.command = "config <mount> [options..]");
 const description = (exports.description =
   "Manage the configuration of a mounted service");
 const aliases = (exports.aliases = ["configuration", "cfg"]);
@@ -17,7 +17,7 @@ const aliases = (exports.aliases = ["configuration", "cfg"]);
 const describe = description;
 
 const args = [
-  ["path", "Database-relative path of the service"],
+  ["mount", "Mount path of the service"],
   [
     "options",
     `Key-value pairs to apply to the configuration. Use ${bold(
@@ -29,6 +29,7 @@ const args = [
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args })
     .options({
+      ...serverArgs,
       force: {
         describe: il`
           Clear existing values for any omitted configuration options.
@@ -87,20 +88,20 @@ exports.handler = async function handler(argv) {
     }
   }
   try {
-    const server = await resolveServer(argv.path);
+    const server = await resolveServer(argv);
     const db = client(server);
     let result;
     if (!options) {
-      result = await db.getServiceConfiguration(server.mount, argv.minimal);
+      result = await db.getServiceConfiguration(argv.mount, argv.minimal);
     } else if (argv.force) {
       result = await db.replaceServiceConfiguration(
-        server.mount,
+        argv.mount,
         options,
         argv.minimal
       );
     } else {
       result = await db.updateServiceConfiguration(
-        server.mount,
+        argv.mount,
         options,
         argv.minimal
       );

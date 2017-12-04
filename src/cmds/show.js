@@ -1,25 +1,25 @@
 "use strict";
 const { bold, white } = require("chalk");
-const { common } = require("../util/cli");
-const client = require("../util/client");
-const resolveServer = require("../resolveServer");
-const { json, fatal } = require("../util/log");
-const { inline: il } = require("../util/text");
-const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
+const { common, serverArgs } = require("../util/cli");
+const { fatal, json } = require("../util/log");
 
-const command = (exports.command = "show <path>");
+const client = require("../util/client");
+const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
+const resolveServer = require("../resolveServer");
+
+const command = (exports.command = "show <mount>");
 exports.description = "Show mounted service information";
 const aliases = (exports.aliases = ["info"]);
 
-const describe = il`
-  Shows detailed information about the service installed at the
-  given ${bold("path")}.
-`;
+const describe = `Shows detailed information about the service installed at the given ${bold(
+  "mount"
+)}.`;
 
-const args = [["path", "Database-relative path of the service"]];
+const args = [["mount", "Mount path of the service"]];
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args }).options({
+    ...serverArgs,
     raw: {
       describe: "Output raw JSON response",
       type: "boolean",
@@ -29,10 +29,10 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   try {
-    const server = await resolveServer(argv.path);
+    const server = await resolveServer(argv);
     const db = client(server);
     try {
-      const result = await db.getService(server.mount);
+      const result = await db.getService(argv.mount);
       if (argv.raw) {
         json(result);
       } else {
@@ -40,7 +40,7 @@ exports.handler = async function handler(argv) {
       }
     } catch (e) {
       if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
-        fatal(`No service found at "${white(server.mount)}".`);
+        fatal(`No service found at "${white(argv.mount)}".`);
       }
       throw e;
     }

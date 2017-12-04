@@ -1,20 +1,22 @@
 "use strict";
-const { common } = require("../util/cli");
-const client = require("../util/client");
-const resolveServer = require("../resolveServer");
-const { info, detail, json, fatal } = require("../util/log");
-const { group } = require("../util/text");
+const { common, serverArgs } = require("../util/cli");
+const { detail, fatal, info, json } = require("../util/log");
 
-const command = (exports.command = "scripts <path>");
+const client = require("../util/client");
+const { group } = require("../util/text");
+const resolveServer = require("../resolveServer");
+
+const command = (exports.command = "scripts <mount>");
 const description = (exports.description =
   "List available scripts for a mounted service");
 
 const describe = description;
 
-const args = [["path", "Database-relative path of the service"]];
+const args = [["mount", "Mount path of the service"]];
 
 exports.builder = yargs =>
   common(yargs, { command, describe, args }).options({
+    ...serverArgs,
     raw: {
       describe: "Output raw JSON response",
       type: "boolean",
@@ -24,9 +26,9 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   try {
-    const server = await resolveServer(argv.path);
+    const server = await resolveServer(argv);
     const db = client(server);
-    const scripts = await db.listServiceScripts(server.mount);
+    const scripts = await db.listServiceScripts(argv.mount);
     const names = Object.keys(scripts);
     if (argv.raw) {
       json(scripts);

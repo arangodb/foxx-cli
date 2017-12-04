@@ -1,6 +1,5 @@
 "use strict";
 const { parse: parseUrl } = require("url");
-const { parse: parseQuery } = require("querystring");
 
 module.exports = function parseServerUrl(input) {
   const url = parseUrl(input);
@@ -12,16 +11,14 @@ module.exports = function parseServerUrl(input) {
       server.password = password.join(":");
     }
   }
-  if (url.hash) {
-    const query = parseQuery(url.hash.slice(1));
-    if (query.version !== undefined) server.version = query.version;
-    if (query.mount !== undefined) server.mount = query.mount;
-    if (query.token !== undefined) server.token = query.token;
-  }
   const protocol =
     url.protocol === "tcp:"
       ? "http:"
       : url.protocol === "ssl:" ? "https:" : url.protocol;
-  server.url = `${protocol}//${url.host}${url.pathname}`;
+  if (protocol && url.host) {
+    server.url = `${protocol}//${url.host}`;
+  } else if (url.href.startsWith("//")) {
+    server.url = `http:${url.href}`;
+  }
   return server;
 };

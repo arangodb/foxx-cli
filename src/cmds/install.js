@@ -1,12 +1,13 @@
 "use strict";
+const { common, parseServiceOptions, serverArgs } = require("../util/cli");
+const { fatal, json } = require("../util/log");
+
 const { bold } = require("chalk");
-const { common, validateServiceArgs } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { json, fatal } = require("../util/log");
 const resolveToStream = require("../resolveToStream");
 
-const command = (exports.command = "install <path> [source]");
+const command = (exports.command = "install <mount> [source]");
 const description = (exports.description =
   "Install a service at a given mount path");
 const aliases = (exports.aliases = ["i"]);
@@ -14,7 +15,7 @@ const aliases = (exports.aliases = ["i"]);
 const describe = description;
 
 const args = [
-  ["path", "Database-relative path the service will be mounted on"],
+  ["mount", "Mount path of the service"],
   [
     "source",
     `URL or file system path of the service to install. Use ${bold(
@@ -27,6 +28,7 @@ const args = [
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args })
     .options({
+      ...serverArgs,
       setup: {
         describe: `Run the setup script after installing the service. Use ${bold(
           "--no-setup"
@@ -37,7 +39,7 @@ exports.builder = yargs =>
       development: {
         describe:
           "Install the service in development mode. You can edit the service's files on the server and changes will be reflected automatically",
-        alias: "D",
+        alias: "dev",
         type: "boolean",
         default: false
       },
@@ -74,7 +76,15 @@ exports.builder = yargs =>
     )
     .example("$0 install -D /hello", "Install the service in development mode")
     .example(
-      "$0 install dev:/hello",
+      "$0 install --server http://localhost:8530 hello",
+      "Use the server on port 8530 instead of the default"
+    )
+    .example(
+      "$0 install --database mydb hello",
+      'Use the database "mydb" instead of the default'
+    )
+    .example(
+      "$0 install --server dev hello",
       'Use the "dev" server instead of the default. See the "server" command for details'
     )
     .example(
@@ -112,9 +122,9 @@ exports.builder = yargs =>
     );
 
 exports.handler = async function handler(argv) {
-  const opts = validateServiceArgs(argv);
+  const opts = parseServiceOptions(argv);
   try {
-    const server = await resolveServer(argv.path);
+    const server = await resolveServer(argv);
     return await install(argv, server, opts);
   } catch (e) {
     fatal(e);
@@ -124,7 +134,7 @@ exports.handler = async function handler(argv) {
 async function install(argv, server, opts) {
   const source = argv.remote ? argv.source : await resolveToStream(argv.source);
   const db = client(server);
-  const result = await db.installService(server.mount, source, {
+  const result = await db.installService(argv.mount, source, {
     ...opts,
     setup: argv.setup
   });

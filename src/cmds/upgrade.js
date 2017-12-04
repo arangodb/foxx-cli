@@ -1,18 +1,19 @@
 "use strict";
+const { common, parseServiceOptions, serverArgs } = require("../util/cli");
+const { fatal, json } = require("../util/log");
+
 const { bold } = require("chalk");
-const { common, validateServiceArgs } = require("../util/cli");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
-const { json, fatal } = require("../util/log");
 const resolveToStream = require("../resolveToStream");
 
-const command = (exports.command = "upgrade <path> [source]");
+const command = (exports.command = "upgrade <mount> [source]");
 const description = (exports.description = "Upgrade a mounted service");
 
 const describe = description;
 
 const args = [
-  ["path", "Database-relative path the service is mounted on"],
+  ["mount", "Mount path of the service"],
   [
     "source",
     `URL or file system path of the upgrade service. Use ${bold(
@@ -24,6 +25,7 @@ const args = [
 
 exports.builder = yargs =>
   common(yargs, { command, describe, args }).options({
+    ...serverArgs,
     teardown: {
       describe: "Run the teardown script before upgrading the service",
       type: "boolean",
@@ -39,7 +41,7 @@ exports.builder = yargs =>
     development: {
       describe:
         "Install the replacement in development mode. You can edit the service's files on the server and changes will be reflected automatically",
-      alias: "D",
+      alias: "dev",
       type: "boolean",
       default: false
     },
@@ -72,26 +74,24 @@ exports.builder = yargs =>
   });
 
 exports.handler = async function handler(argv) {
-  const opts = validateServiceArgs(argv);
+  const opts = parseServiceOptions(argv);
   try {
-    const server = await resolveServer(argv.path);
-    return await upgrade(argv, server, opts);
+    const server = await resolveServer(argv);
+    const source = argv.remote
+      ? argv.source
+      : await resolveToStream(argv.source);
+    const db = client(server);
+    const result = await db.upgradeService(argv.mount, source, {
+      ...opts,
+      setup: argv.setup,
+      teardown: argv.teardown
+    });
+    if (argv.raw) {
+      json(result);
+    } else {
+      console.log(result); // TODO pretty-print
+    }
   } catch (e) {
     fatal(e);
   }
 };
-
-async function upgrade(argv, server, opts) {
-  const source = argv.remote ? argv.source : await resolveToStream(argv.source);
-  const db = client(server);
-  const result = await db.upgradeService(server.mount, source, {
-    ...opts,
-    setup: argv.setup,
-    teardown: argv.teardown
-  });
-  if (argv.raw) {
-    json(result);
-  } else {
-    console.log(result); // TODO pretty-print
-  }
-}

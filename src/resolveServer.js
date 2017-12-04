@@ -1,92 +1,98 @@
 "use strict";
-const dd = require("dedent");
-const { white, bold } = require("chalk");
+const { bold, white } = require("chalk");
 const { fatal } = require("./util/log");
 const { load: loadIni } = require("./ini");
 const parseServerUrl = require("./util/parseServerUrl");
+const { prompt } = require("inquirer");
+const { unsplat } = require("./util/array");
+const { validRange } = require("semver");
 
-function applyDefaults(server) {
-  const defaultToken = process.env.FOXX_ARANGODB_SERVER_TOKEN;
-  if (server.url === undefined) {
-    server.url =
-      process.env.FOXX_ARANGODB_SERVER_URL ||
-      "http://localhost:8529/_db/_system";
-  }
-  if (server.version === undefined) {
-    server.version = process.env.FOXX_ARANGODB_SERVER_VERSION;
-  }
-  if (server.token === undefined) {
-    if (
-      server.username === undefined &&
-      server.password === undefined &&
-      defaultToken
-    ) {
-      server.token = defaultToken;
-    } else {
-      if (server.username === undefined) {
-        server.username = process.env.FOXX_ARANGODB_SERVER_USERNAME || "root";
-      }
-      if (server.password === undefined) {
-        server.password = process.env.FOXX_ARANGODB_SERVER_PASSWORD || "";
-      }
-    }
-  }
-  if (server.mount && server.mount.charAt(0) !== "/") {
-    server.mount = `/${server.mount}`;
-  }
-  return server;
-}
-
-async function resolve(mount) {
-  if (!mount) return applyDefaults({});
-  if (mount.match(/^(https?|tcp|ssl):\/\//)) {
-    const server = parseServerUrl(mount);
-    return applyDefaults(server);
-  }
-  let name = "default";
-  if (mount && !mount.startsWith("/")) {
-    let [head, ...tail] = mount.split(":");
-    name = head;
-    mount = tail.join(":");
+async function resolve(endpointOrName = "default") {
+  if (endpointOrName.match(/^((https?|tcp|ssl):)?\/\//)) {
+    return parseServerUrl(endpointOrName);
   }
   const ini = await loadIni();
-  if (hasOwnProperty.call(ini.server, name)) {
-    return applyDefaults({ ...ini.server[name], name, mount });
+  if (ini.server[endpointOrName]) {
+    return {
+      ...ini.server[endpointOrName],
+      name: endpointOrName
+    };
   }
-  if (name !== "default") {
-    return { name, mount };
+  if (endpointOrName === "default") {
+    return { name: endpointOrName };
   }
-  return applyDefaults({ name, mount });
+  return null;
 }
 
-module.exports = async function resolveServer(path = "", requireMount = true) {
-  const server = await resolve(path);
-  if (!server.mount && requireMount) {
-    let extra;
-    if (!server.name) {
-      extra = dd`
-        When passing URLs make sure to include the mount path using the following format:
-          ${bold(
-            "http://server.example/database-path#mount=/service-mount-path"
-          )}
-      `;
-    } else if (server.name === path && !server.url) {
-      extra = dd`
-        When passing a bare mount path make sure that it starts with a slash:
-          ${bold(`/${path}`)}
-      `;
-    } else if (server.name === path || server.name !== "default") {
-      extra = dd`
-        When using a named server make sure to pass the mount path using the following format:
-          ${bold("server-name:service-mount-path")}
-      `;
-    }
+module.exports = async function resolveServer(argv) {
+  if (argv.password && argv.token) {
     fatal(
-      `Not a valid mount path: "${white(path)}".${extra ? `\n\n${extra}` : ""}`
+      `Can not use both ${bold("password")} and ${bold(
+        "token"
+      )} as authentication for the same server.`
     );
   }
-  if (!server.url) {
-    fatal(`Not a valid server: "${white(server.name || path)}".`);
+  if (argv.username && argv.token) {
+    fatal(
+      `Can not use both ${bold("username")} and ${bold(
+        "token"
+      )} as authentication for the same server.`
+    );
+  }
+  const server = await resolve(unsplat(argv.server));
+  if (!server) {
+    fatal(`Not a valid server: "${white(argv.server)}".`);
+  }
+  if (argv.arangoVersion) {
+    if (!validRange(argv.arangoVersion)) {
+      fatal(`Not a valid semver version: "${white(argv.arangoVersion)}".`);
+    }
+    server.version = unsplat(argv.arangoVersion);
+  }
+  if (server.url === undefined) {
+    server.url = "http://localhost:8529";
+  }
+  if (argv.database) {
+    server.database = unsplat(argv.database);
+  } else if (server.database === undefined) {
+    server.database = "_system";
+  }
+  if (argv.username) {
+    delete server.token;
+    server.username = unsplat(argv.username);
+    server.password = "";
+  }
+  if (argv.password) {
+    delete server.token;
+    const { password } = await prompt([
+      {
+        message: "Password",
+        name: "password",
+        type: "password"
+      }
+    ]);
+    server.password = password;
+  }
+  if (argv.token) {
+    delete server.username;
+    delete server.password;
+    const { token } = await prompt([
+      {
+        message: "Token",
+        name: "token",
+        type: "password",
+        validate: Boolean
+      }
+    ]);
+    server.token = token;
+  }
+  if (server.token === undefined) {
+    if (server.username === undefined) {
+      server.username = "root";
+    }
+    if (server.password === undefined) {
+      server.password = "";
+    }
   }
   return server;
 };
