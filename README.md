@@ -2,6 +2,7 @@
 
 [![license - APACHE-2.0](https://img.shields.io/npm/l/foxx-cli.svg?style=flat-square)](http://opensource.org/licenses/APACHE-2.0)
 [![Dependencies](https://img.shields.io/david/arangodb/foxx-cli.svg?style=flat-square)](https://david-dm.org/arangodb/foxx-cli)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Farangodb%2Ffoxx-cli.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Farangodb%2Ffoxx-cli?ref=badge_shield)
 
 [![NPM status](https://nodei.co/npm/foxx-cli.png?downloads=true&stars=true)](https://npmjs.org/package/foxx-cli)
 
@@ -213,3 +214,6 @@ This README conforms to the
 
 The Apache License, Version 2.0. For more information, see the accompanying
 LICENSE file.
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Farangodb%2Ffoxx-cli.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Farangodb%2Ffoxx-cli?ref=badge_large)
