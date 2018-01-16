@@ -34,6 +34,9 @@ exports.handler = async function handler(argv) {
     }
     const server = ini.server[argv.name];
     info(`URL: ${server.url}`);
+    if (server.database !== undefined) {
+      info(`Database: ${server.database}`);
+    }
     if (server.version !== undefined) {
       info(`Version: ${server.version}`);
     }
@@ -42,7 +45,9 @@ exports.handler = async function handler(argv) {
     }
     if (argv.verbose) {
       if (server.password !== undefined) {
-        info(`Password: ${server.password}`);
+        info(
+          `Password: ${server.password ? server.password : gray("(empty)")}`
+        );
       }
       if (server.token !== undefined) {
         info(`Token: ${server.token}`);
