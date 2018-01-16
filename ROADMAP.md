@@ -9,7 +9,6 @@ The following still needs work before this module can become a "1.0" release:
 * :fire: Set up actual tests with ArangoDB 3.x (CI via travis/appveyor)
 * :book: Document foxxignore format in-app (`help foxxignore`?)
 * :book: Document foxxrc format in-app (`help foxxrc`?)
-* :ship: Publish development release as `foxx-cli` on npm
 
 ## :x: Functionality
 
