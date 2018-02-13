@@ -103,11 +103,12 @@ ansi-styles@^3.1.0:
   dependencies:
     color-convert "^1.9.0"
 
-arangojs@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/arangojs/-/arangojs-6.0.1.tgz#fcee562bab001eaa94bb3fd4b8960e0b9cda61f8"
+arangojs@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/arangojs/-/arangojs-6.1.0.tgz#af6d57b532b79af188a55920f864cbd9d06d2076"
   dependencies:
     es6-error "^4.0.1"
+    linkedlist "^1.0.1"
     multi-part "^2.0.0"
     utf8-length "^0.0.1"
     xhr "^2.4.1"
@@ -871,6 +872,10 @@ levn@^0.3.0, levn@~0.3.0:
   dependencies:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
+
+linkedlist@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/linkedlist/-/linkedlist-1.0.1.tgz#7b74189bfad6e76367fb5a10f3c36913128b782b"
 
 locate-path@^2.0.0:
   version "2.0.0"
