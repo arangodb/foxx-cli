@@ -56,6 +56,12 @@ describe("Foxx service installed", () => {
     });
   }
 
+  it("via alias should be available", async () => {
+    foxx(`i ${mount} ${arangoPaths.local.zip}`);
+    const res = await db.route(mount).get();
+    expect(res.body).to.eql({ hello: "world" });
+  });
+
   it("in development mode should be available", async () => {
     foxx(`install --development ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
