@@ -11,7 +11,7 @@ const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
 const username = process.env.ARANGO_USERNAME || "root";
 
-const mount = "/install-test";
+const mount = "/replace-test";
 const basePath = path.resolve(".", "test", "fixtures");
 const serviceServiceMount = "/foxx-crud-test-download";
 
