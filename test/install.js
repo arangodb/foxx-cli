@@ -5,9 +5,11 @@ const path = require("path");
 const Database = require("arangojs");
 const expect = require("chai").expect;
 const foxx = require("./util");
+const helper = require("./helper");
 
 const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
+const username = process.env.ARANGO_USERNAME || "root";
 
 const mount = "/install-test";
 const basePath = path.resolve(".", "test", "fixtures");
@@ -44,62 +46,7 @@ describe("Foxx service installed", () => {
     }
   });
 
-  const cases = [
-    {
-      name: "localJsFile",
-      source: arangoPaths => arangoPaths.local.js
-    },
-    {
-      name: "localZipFile",
-      source: arangoPaths => arangoPaths.local.zip
-    },
-    // {
-    //   name: "localDir",
-    //   source: arangoPaths => arangoPaths.local.dir
-    // }
-    {
-      name: "remoteJsFile",
-      source: arangoPaths => `--remote ${arangoPaths.remote.js}`
-    },
-    {
-      name: "remoteZipFile",
-      source: arangoPaths => `--remote ${arangoPaths.remote.zip}`
-    },
-    {
-      name: "remoteShortJsFile",
-      source: arangoPaths => `-R ${arangoPaths.remote.js}`
-    },
-    {
-      name: "remoteShortZipFile",
-      source: arangoPaths => `-R ${arangoPaths.remote.zip}`
-    },
-    {
-      name: "localJsURL",
-      source: () => `${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/js`
-    },
-    {
-      name: "remoteJsURL",
-      source: () =>
-        `--remote ${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/js`
-    },
-    {
-      name: "remoteShortJsURL",
-      source: () => `-R ${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/js`
-    },
-    {
-      name: "localZipURL",
-      source: () => `${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/zip`
-    },
-    {
-      name: "remoteZipURL",
-      source: () =>
-        `--remote ${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/zip`
-    },
-    {
-      name: "remoteShortZipURL",
-      source: () => `-R ${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/zip`
-    }
-  ];
+  const cases = helper.crudCases(db, serviceServiceMount);
 
   for (const c of cases) {
     it(`via ${c.name} should be available`, async () => {
@@ -145,6 +92,18 @@ describe("Foxx service installed", () => {
 
   it("with alternative database (short option) should be available", async () => {
     foxx(`install -D _system ${mount} ${arangoPaths.local.js}`);
+    const res = await db.route(mount).get();
+    expect(res.body).to.eql({ hello: "world" });
+  });
+
+  it("with alternative username should be avaiable", async () => {
+    foxx(`install --username ${username} ${mount} ${arangoPaths.local.zip}`);
+    const res = await db.route(mount).get();
+    expect(res.body).to.eql({ hello: "world" });
+  });
+
+  it("with alternative username should be avaiable (short option)", async () => {
+    foxx(`install -u ${username} ${mount} ${arangoPaths.local.zip}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
