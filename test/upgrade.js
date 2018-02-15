@@ -15,7 +15,7 @@ const mount = "/upgrade-test";
 const basePath = path.resolve(".", "test", "fixtures");
 const serviceServiceMount = "/foxx-crud-test-download";
 
-describe.only("Foxx service upgraded", () => {
+describe("Foxx service upgraded", () => {
   const db = new Database({
     url: ARANGO_URL,
     arangoVersion: ARANGO_VERSION
