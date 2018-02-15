@@ -384,4 +384,44 @@ describe("Foxx service replaced", () => {
     expect(dependencies).to.have.property("test1", "/test1");
     expect(dependencies).to.have.property("test2", "/test2");
   });
+
+  it("should fail when mount is omitted", async () => {
+    try {
+      foxx(
+        `replace /not${mount} ${path.resolve(
+          basePath,
+          "minimal-working-service.zip"
+        )}`
+      );
+      expect.fail();
+    } catch (e) {
+      // noop
+    }
+    try {
+      await db.route(`/not${mount}`).get();
+      expect.fail();
+    } catch (e) {
+      expect(e).to.have.property("statusCode", 404);
+    }
+  });
+
+  it("should fail when mount is invalid", async () => {
+    try {
+      foxx(
+        `replace /dev/null ${path.resolve(
+          basePath,
+          "minimal-working-service.zip"
+        )}`
+      );
+      expect.fail();
+    } catch (e) {
+      // noop
+    }
+    try {
+      await db.route("/dev/null").get();
+      expect.fail();
+    } catch (e) {
+      expect(e).to.have.property("statusCode", 404);
+    }
+  });
 });
