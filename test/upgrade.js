@@ -387,7 +387,7 @@ describe.only("Foxx service upgraded", () => {
     expect(dependencies).to.have.property("test2", "/test2");
   });
 
-  it.only("should fail when mount is omitted", async () => {
+  it("should fail when mount is omitted", async () => {
     try {
       foxx(
         `upgrade /not${mount} ${path.resolve(
