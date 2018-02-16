@@ -8,6 +8,7 @@ const foxx = require("./util");
 
 const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
+const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 
 const mount = "/dev-test";
 const basePath = path.resolve(".", "test", "fixtures");
@@ -45,6 +46,54 @@ describe("Foxx service development mode", () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
     foxx(`set-development ${mount}`);
+    const infoAfter = await db.getService(mount);
+    expect(infoAfter.development).to.equal(true);
+  });
+
+  it("with alternative server URL should be activated", async () => {
+    const infoBefore = await db.getService(mount);
+    expect(infoBefore.development).to.equal(false);
+    foxx(`set-dev --server ${ARANGO_URL} ${mount}`);
+    const infoAfter = await db.getService(mount);
+    expect(infoAfter.development).to.equal(true);
+  });
+
+  it("with alternative server URL (short option) should be activated", async () => {
+    const infoBefore = await db.getService(mount);
+    expect(infoBefore.development).to.equal(false);
+    foxx(`set-dev -H ${ARANGO_URL} ${mount}`);
+    const infoAfter = await db.getService(mount);
+    expect(infoAfter.development).to.equal(true);
+  });
+
+  it("with alternative database should be activated", async () => {
+    const infoBefore = await db.getService(mount);
+    expect(infoBefore.development).to.equal(false);
+    foxx(`set-dev --database _system ${mount}`);
+    const infoAfter = await db.getService(mount);
+    expect(infoAfter.development).to.equal(true);
+  });
+
+  it("with alternative database (short option) should be activated", async () => {
+    const infoBefore = await db.getService(mount);
+    expect(infoBefore.development).to.equal(false);
+    foxx(`set-dev -D _system ${mount}`);
+    const infoAfter = await db.getService(mount);
+    expect(infoAfter.development).to.equal(true);
+  });
+
+  it("with alternative username should be activated", async () => {
+    const infoBefore = await db.getService(mount);
+    expect(infoBefore.development).to.equal(false);
+    foxx(`set-dev --username ${ARANGO_USERNAME} ${mount}`);
+    const infoAfter = await db.getService(mount);
+    expect(infoAfter.development).to.equal(true);
+  });
+
+  it("with alternative username should be activated (short option)", async () => {
+    const infoBefore = await db.getService(mount);
+    expect(infoBefore.development).to.equal(false);
+    foxx(`set-dev -u ${ARANGO_USERNAME} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
