@@ -8,7 +8,7 @@ const foxx = require("./util");
 
 const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
-const username = process.env.ARANGO_USERNAME || "root";
+const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 
 const mount = "/uninstall-test";
 const basePath = path.resolve(".", "test", "fixtures");
@@ -99,7 +99,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("with alternative username should be avaiable", async () => {
-    foxx(`uninstall --username ${username} ${mount}`);
+    foxx(`uninstall --username ${ARANGO_USERNAME} ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -109,7 +109,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("with alternative username should be avaiable (short option)", async () => {
-    foxx(`uninstall -u ${username} ${mount}`);
+    foxx(`uninstall -u ${ARANGO_USERNAME} ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();

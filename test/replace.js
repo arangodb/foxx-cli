@@ -9,7 +9,7 @@ const helper = require("./helper");
 
 const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
-const username = process.env.ARANGO_USERNAME || "root";
+const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 
 const mount = "/replace-test";
 const basePath = path.resolve(".", "test", "fixtures");
@@ -108,13 +108,15 @@ describe("Foxx service replaced", () => {
   });
 
   it("with alternative username should be avaiable", async () => {
-    foxx(`replace --username ${username} ${mount} ${arangoPaths.local.zip}`);
+    foxx(
+      `replace --username ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
+    );
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be avaiable (short option)", async () => {
-    foxx(`replace -u ${username} ${mount} ${arangoPaths.local.zip}`);
+    foxx(`replace -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
