@@ -97,4 +97,22 @@ describe("Foxx service show", () => {
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
+
+  it("should fail when mount is omitted", async () => {
+    try {
+      foxx(`show /not${mount}`);
+      expect.fail();
+    } catch (e) {
+      // noop
+    }
+  });
+
+  it("should fail when mount is invalid", async () => {
+    try {
+      foxx("show /dev/null");
+      expect.fail();
+    } catch (e) {
+      // noop
+    }
+  });
 });
