@@ -13,7 +13,7 @@ const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 const mount = "/prod-test";
 const basePath = path.resolve(".", "test", "fixtures");
 
-describe.only("Foxx service production mode", () => {
+describe("Foxx service production mode", () => {
   const db = new Database({
     url: ARANGO_URL,
     arangoVersion: ARANGO_VERSION
