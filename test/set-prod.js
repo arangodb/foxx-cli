@@ -99,15 +99,6 @@ describe("Foxx service production mode", () => {
     expect(infoAfter.development).to.equal(false);
   });
 
-  it("should fail when mount is omitted", async () => {
-    try {
-      foxx(`set-prod /not${mount}`);
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
-  });
-
   it("should fail when mount is invalid", async () => {
     try {
       foxx("set-prod /dev/null");
