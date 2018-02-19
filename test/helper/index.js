@@ -1,62 +1,70 @@
 "use strict";
 
-const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
+const path = require("path");
 
-module.exports.crudCases = (db, serviceServiceMount) => {
+const basePath = path.resolve(".", "test", "fixtures");
+
+module.exports.crudCases = () => {
   return [
     {
       name: "localJsFile",
-      source: arangoPaths => arangoPaths.local.js
+      source: () => path.resolve(basePath, "minimal-working-service.js")
     },
     {
       name: "localZipFile",
-      source: arangoPaths => arangoPaths.local.zip
+      source: () => path.resolve(basePath, "minimal-working-service.zip")
     },
-    // {
-    //   name: "localDir",
-    //   source: arangoPaths => arangoPaths.local.dir
-    // }
+    {
+      name: "localDir",
+      source: () => path.resolve(basePath, "minimal-working-service")
+    },
     {
       name: "remoteJsFile",
-      source: arangoPaths => `--remote ${arangoPaths.remote.js}`
+      source: arangoPaths => `--remote ${arangoPaths.local.js}`
     },
     {
       name: "remoteZipFile",
-      source: arangoPaths => `--remote ${arangoPaths.remote.zip}`
+      source: arangoPaths => `--remote ${arangoPaths.local.zip}`
+    },
+    {
+      name: "remoteDir",
+      source: arangoPaths => `--remote ${arangoPaths.local.dir}`
     },
     {
       name: "remoteShortJsFile",
-      source: arangoPaths => `-R ${arangoPaths.remote.js}`
+      source: arangoPaths => `-R ${arangoPaths.local.js}`
     },
     {
       name: "remoteShortZipFile",
-      source: arangoPaths => `-R ${arangoPaths.remote.zip}`
+      source: arangoPaths => `-R ${arangoPaths.local.zip}`
+    },
+    {
+      name: "remoteShortDir",
+      source: arangoPaths => `-R ${arangoPaths.local.dir}`
     },
     {
       name: "localJsURL",
-      source: () => `${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/js`
+      source: arangoPaths => arangoPaths.remote.js
     },
     {
       name: "remoteJsURL",
-      source: () =>
-        `--remote ${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/js`
+      source: arangoPaths => `--remote ${arangoPaths.remote.js}`
     },
     {
       name: "remoteShortJsURL",
-      source: () => `-R ${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/js`
+      source: arangoPaths => `-R ${arangoPaths.remote.js}`
     },
     {
       name: "localZipURL",
-      source: () => `${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/zip`
+      source: arangoPaths => arangoPaths.remote.zip
     },
     {
       name: "remoteZipURL",
-      source: () =>
-        `--remote ${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/zip`
+      source: arangoPaths => `--remote ${arangoPaths.remote.zip}`
     },
     {
       name: "remoteShortZipURL",
-      source: () => `-R ${ARANGO_URL}/_db/${db.name}${serviceServiceMount}/zip`
+      source: arangoPaths => `-R ${arangoPaths.remote.zip}`
     }
   ];
 };

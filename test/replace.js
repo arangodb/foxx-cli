@@ -57,7 +57,7 @@ describe("Foxx service replaced", () => {
     }
   });
 
-  const cases = helper.crudCases(db, serviceServiceMount);
+  const cases = helper.crudCases();
 
   for (const c of cases) {
     it(`via ${c.name} should be available`, async () => {
