@@ -205,6 +205,60 @@ describe("Foxx service dependencies", () => {
     expect(resp).to.have.property("test1", "/test");
     expect(resp).to.not.have.property("test2");
   });
+  it("update should allow multiple changes", async () => {
+    const updateResp = foxx(`deps ${mount} test1=/test1 test2=/test2`, true);
+    expect(updateResp).to.have.property("test1");
+    expect(updateResp.test1).to.have.property("current", "/test1");
+    expect(updateResp).to.have.property("test2");
+    expect(updateResp.test2).to.have.property("current", "/test2");
+    const resp = foxx(`deps ${mount}`, true);
+    expect(resp).to.have.property("test1");
+    expect(resp.test1).to.have.property("current", "/test1");
+    expect(resp).to.have.property("test2");
+    expect(resp.test2).to.have.property("current", "/test2");
+  });
+
+  it("minimal update should allow multiple changes", async () => {
+    const updateResp = foxx(
+      `deps ${mount} test1=/test1 test2=/test2 --minimal`,
+      true
+    );
+    expect(updateResp).to.have.property("values");
+    expect(updateResp.values).to.have.property("test1", "/test1");
+    expect(updateResp.values).to.have.property("test2", "/test2");
+    const resp = foxx(`deps ${mount} --minimal`, true);
+    expect(resp).to.have.property("test1", "/test1");
+    expect(resp).to.have.property("test2", "/test2");
+  });
+
+  it("replace should allow multiple changes", async () => {
+    const updateResp = foxx(
+      `deps ${mount} test1=/test1 test2=/test2 --force`,
+      true
+    );
+    expect(updateResp).to.have.property("test1");
+    expect(updateResp.test1).to.have.property("current", "/test1");
+    expect(updateResp).to.have.property("test2");
+    expect(updateResp.test2).to.have.property("current", "/test2");
+    const resp = foxx(`deps ${mount}`, true);
+    expect(resp).to.have.property("test1");
+    expect(resp.test1).to.have.property("current", "/test1");
+    expect(resp).to.have.property("test2");
+    expect(resp.test2).to.have.property("current", "/test2");
+  });
+
+  it("minimal replace should allow multiple changes", async () => {
+    const updateResp = foxx(
+      `deps ${mount} test1=/test1 test2=/test2 --minimal --force`,
+      true
+    );
+    expect(updateResp).to.have.property("values");
+    expect(updateResp.values).to.have.property("test1", "/test1");
+    expect(updateResp.values).to.have.property("test2", "/test2");
+    const resp = foxx(`deps ${mount} --minimal`, true);
+    expect(resp).to.have.property("test1", "/test1");
+    expect(resp).to.have.property("test2", "/test2");
+  });
 
   it("should fail when mount is invalid", async () => {
     try {
