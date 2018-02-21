@@ -42,8 +42,16 @@ describe("Foxx service configuration", () => {
     expect(config.test2).to.not.have.property("current");
   });
 
-  it("empty via alias should be available", async () => {
+  it("via alias cfg should be available", async () => {
     const config = foxx(`cfg ${mount}`, true);
+    expect(config).to.have.property("test1");
+    expect(config.test1).to.not.have.property("current");
+    expect(config).to.have.property("test2");
+    expect(config.test2).to.not.have.property("current");
+  });
+
+  it("via alias configuration should be available", async () => {
+    const config = foxx(`configuration ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config.test1).to.not.have.property("current");
     expect(config).to.have.property("test2");
