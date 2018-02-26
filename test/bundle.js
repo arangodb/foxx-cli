@@ -10,7 +10,7 @@ const fs = require("fs");
 const basePath = path.resolve(".", "test", "fixtures");
 const tmpFile = path.resolve(os.tmpdir(), "minimal-working-service.zip");
 
-describe.only("Foxx service bundle", () => {
+describe("Foxx service bundle", () => {
   beforeEach(async () => {
     if (fs.existsSync(tmpFile)) {
       try {
