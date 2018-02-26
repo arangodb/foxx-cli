@@ -175,12 +175,7 @@ describe("Foxx service uninstalled", () => {
     }
   });
 
-  it("should fail when mount is invalid", async () => {
-    try {
-      foxx("uninstall /dev/null");
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+  it("should not fail when mount is invalid", async () => {
+    expect(() => foxx("uninstall /dev/null")).to.not.throw();
   });
 });

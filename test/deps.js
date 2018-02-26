@@ -261,11 +261,6 @@ describe("Foxx service dependencies", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    try {
-      foxx("deps /dev/null");
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+    expect(() => foxx("deps /dev/null")).to.throw();
   });
 });

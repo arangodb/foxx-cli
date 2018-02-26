@@ -99,11 +99,6 @@ describe("Foxx service show", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    try {
-      foxx("show /dev/null");
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+    expect(() => foxx("show /dev/null")).to.throw();
   });
 });

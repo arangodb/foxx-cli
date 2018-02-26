@@ -99,11 +99,6 @@ describe("Foxx service development mode", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    try {
-      foxx("set-dev /dev/null");
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+    expect(() => foxx("set-dev /dev/null")).to.throw();
   });
 });

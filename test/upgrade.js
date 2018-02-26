@@ -390,17 +390,14 @@ describe("Foxx service upgraded", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    try {
+    expect(() =>
       foxx(
         `upgrade /dev/null ${path.resolve(
           basePath,
           "minimal-working-service.zip"
         )}`
-      );
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+      )
+    ).to.throw();
     try {
       await db.route(`/dev/null`).get();
       expect.fail();

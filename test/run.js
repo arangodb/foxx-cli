@@ -52,12 +52,7 @@ describe("Foxx service run", () => {
   });
 
   it("non-existing script should not be available", async () => {
-    try {
-      foxx(`run ${mount} no`);
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+    expect(() => foxx(`run ${mount} no`)).to.throw();
   });
 
   it("with alternative server URL should pass argv", async () => {
@@ -94,11 +89,6 @@ describe("Foxx service run", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    try {
-      foxx(`run /dev/null echo`);
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+    expect(() => foxx(`run /dev/null echo`)).to.throw();
   });
 });

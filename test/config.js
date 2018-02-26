@@ -262,11 +262,6 @@ describe("Foxx service configuration", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    try {
-      foxx("config /dev/null");
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+    expect(() => foxx("config /dev/null")).to.throw();
   });
 });

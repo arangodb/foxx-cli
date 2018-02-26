@@ -100,11 +100,6 @@ describe("Foxx service production mode", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    try {
-      foxx("set-prod /dev/null");
-      expect.fail();
-    } catch (e) {
-      // noop
-    }
+    expect(() => foxx("set-prod /dev/null")).to.throw();
   });
 });
