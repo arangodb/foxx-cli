@@ -69,6 +69,11 @@ exports.handler = async function handler(argv) {
       Can't use both ${bold("--outfile")}
       and ${bold("--stdout")} at the same time.
     `);
+  } else if (!argv.force) {
+    const stats = await safeStat(out);
+    if (stats) {
+      fatal(`Outfile "${white(source)}" already exists.`);
+    }
   }
   const stats = await safeStat(source);
   if (!stats) {
