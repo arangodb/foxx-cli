@@ -6,6 +6,7 @@ const archiver = require("archiver");
 const { createWriteStream: createTempStream } = require("temp");
 const temp = require("temp");
 const { version } = require("../../package.json");
+const fs = require("./fs");
 
 const comment = `Created with foxx-cli v${version} (https://foxx.arangodb.com)`;
 
@@ -46,9 +47,9 @@ exports.zip = function zip(basepath, files, dest) {
 exports.extractBuffer = async function extractBuffer(buf, ...args) {
   const tmpfile = temp.path({ suffix: ".zip" });
   try {
-    await exports.writeFile(tmpfile, buf);
-    await exports.extract(tmpfile, ...args);
+    await fs.writeFile(tmpfile, buf);
+    await fs.extract(tmpfile, ...args);
   } finally {
-    await exports.unlink(tmpfile);
+    await fs.unlink(tmpfile);
   }
 };
