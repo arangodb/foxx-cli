@@ -43,12 +43,6 @@ module.exports = async function resolveServer(argv) {
   if (!server) {
     fatal(`Not a valid server: "${white(argv.server)}".`);
   }
-  if (argv.arangoVersion) {
-    if (!validRange(argv.arangoVersion)) {
-      fatal(`Not a valid semver version: "${white(argv.arangoVersion)}".`);
-    }
-    server.version = unsplat(argv.arangoVersion);
-  }
   if (server.url === undefined) {
     server.url = "http://localhost:8529";
   }

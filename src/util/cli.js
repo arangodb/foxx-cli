@@ -50,11 +50,6 @@ exports.serverArgs = {
     describe: "ArangoDB database name",
     alias: "D",
     type: "string"
-  },
-  "arango-version": {
-    describe: "ArangoDB server version",
-    alias: "V",
-    type: "string"
   }
 };
 
