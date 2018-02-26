@@ -6,7 +6,7 @@ const { common } = require("../util/cli");
 const { exists, safeStat } = require("../util/fs");
 const { fatal } = require("../util/log");
 const { inline: il } = require("../util/text");
-const bundle = require("../bundle");
+const bundle = require("../bundle").createBundle;
 
 const command = (exports.command = "bundle [source]");
 const description = (exports.description =
