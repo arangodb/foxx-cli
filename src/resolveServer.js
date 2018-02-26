@@ -5,7 +5,6 @@ const { load: loadIni } = require("./ini");
 const parseServerUrl = require("./util/parseServerUrl");
 const { prompt } = require("inquirer");
 const { unsplat } = require("./util/array");
-const { validRange } = require("semver");
 
 async function resolve(endpointOrName = "default") {
   if (endpointOrName.match(/^((https?|tcp|ssl):)?\/\//)) {
