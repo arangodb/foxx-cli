@@ -20,6 +20,7 @@ describe("Foxx service bundle", () => {
       }
     }
   });
+
   it("should output bundle per default", async () => {
     const output = foxx(
       `bundle ${path.resolve(basePath, "minimal-working-service")}`

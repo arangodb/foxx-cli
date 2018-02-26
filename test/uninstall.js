@@ -98,7 +98,7 @@ describe("Foxx service uninstalled", () => {
     }
   });
 
-  it("with alternative username should be avaiable", async () => {
+  it("with alternative username should be available", async () => {
     foxx(`uninstall --username ${ARANGO_USERNAME} ${mount}`);
     try {
       await db.route(mount).get();
@@ -108,7 +108,7 @@ describe("Foxx service uninstalled", () => {
     }
   });
 
-  it("with alternative username should be avaiable (short option)", async () => {
+  it("with alternative username should be available (short option)", async () => {
     foxx(`uninstall -u ${ARANGO_USERNAME} ${mount}`);
     try {
       await db.route(mount).get();
