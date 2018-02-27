@@ -52,17 +52,6 @@ exports.handler = async function handler(argv) {
       if (server.token !== undefined) {
         info(`Token: ${server.token}`);
       }
-    } else {
-      if (server.password !== undefined) {
-        info(
-          `Password: ${
-            server.password ? mask(server.password) : gray("(empty)")
-          }`
-        );
-      }
-      if (server.token !== undefined) {
-        info(`Token: ${mask(server.token)}`);
-      }
     }
   } catch (e) {
     fatal(e);
