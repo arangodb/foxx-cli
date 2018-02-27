@@ -18,7 +18,7 @@ const defaults = `.git/
 .DS_Store
 `;
 
-describe("Foxx service ignore", () => {
+describe("Foxx ignore", () => {
   beforeEach(async () => {
     if (!fs.existsSync(tmpDir)) {
       fs.mkdirSync(tmpDir);
