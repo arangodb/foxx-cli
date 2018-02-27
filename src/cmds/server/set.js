@@ -48,8 +48,8 @@ exports.builder = yargs =>
       "Username and password can be passed via the URL (in this case the password is empty)"
     )
     .example(
-      "$0 server set dev tls://localhost:8529",
-      'The protocol "tls" can be used as an alias for "http"'
+      "$0 server set dev tcp://localhost:8529",
+      'The protocol "tcp" can be used as an alias for "http"'
     )
     .example(
       "$0 server set dev ssl://localhost:8529",
