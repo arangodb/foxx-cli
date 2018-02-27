@@ -9,7 +9,7 @@ const fs = require("fs");
 
 const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
 
-describe("Foxx server set", () => {
+describe("Foxx server list", () => {
   before(async () => {
     process.env.FOXXRC_PATH = foxxRcFile;
     if (fs.existsSync(foxxRcFile)) {
