@@ -26,18 +26,18 @@ describe("Foxx server show", () => {
   it("should show added server", async () => {
     const server1 = foxx("server show test1");
     expect(server1).to.equal(
-      "URL: http://localhost:8529\nDatabase: _system\nUsername: root\n"
+      "URL: http://localhost:8529\nDatabase: _system\nUsername: root\nPassword: (hidden)\n"
     );
     const server2 = foxx("server show test2");
     expect(server2).to.equal(
-      "URL: http://localhost:8530\nDatabase: _system\nUsername: root\n"
+      "URL: http://localhost:8530\nDatabase: _system\nUsername: root\nPassword: (hidden)\n"
     );
   });
 
   it("via alias should show added server", async () => {
     const server = foxx("remote info test1");
     expect(server).to.equal(
-      "URL: http://localhost:8529\nDatabase: _system\nUsername: root\n"
+      "URL: http://localhost:8529\nDatabase: _system\nUsername: root\nPassword: (hidden)\n"
     );
   });
 
