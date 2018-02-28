@@ -7,6 +7,7 @@ const foxx = require("./util");
 const expect = require("chai").expect;
 const fs = require("fs");
 const os = require("os");
+const rmDir = require("./fs").rmDir;
 
 const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
@@ -18,21 +19,6 @@ const tmpFile = path.resolve(os.tmpdir(), "minimal-working-service.zip");
 const tmpDir = path.resolve(os.tmpdir(), "minimal-working-service");
 const tmpServiceDir = path.resolve(tmpDir, "minimal-working-service");
 const manifest = path.resolve(tmpServiceDir, "manifest.json");
-
-const rmdir = path => {
-  if (fs.existsSync(path)) {
-    const files = fs.readdirSync(path);
-    for (const file of files) {
-      const current = `${path}/${file}`;
-      if (fs.lstatSync(current).isDirectory()) {
-        rmdir(current);
-      } else {
-        fs.unlinkSync(current);
-      }
-    }
-    fs.rmdirSync(path);
-  }
-};
 
 describe("Foxx service download", () => {
   const db = new Database({
@@ -64,7 +50,7 @@ describe("Foxx service download", () => {
       }
     }
     try {
-      rmdir(tmpDir);
+      rmDir(tmpDir);
     } catch (e) {
       // noop
     }
