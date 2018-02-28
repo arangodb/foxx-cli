@@ -20,14 +20,31 @@ const args = [
 ];
 
 exports.builder = yargs =>
-  common(yargs, { command, aliases, describe, args }).options({
-    ...serverArgs,
-    raw: {
-      describe: "Output raw JSON response",
-      type: "boolean",
-      default: false
-    }
-  });
+  common(yargs, { command, aliases, describe, args })
+    .options({
+      ...serverArgs,
+      raw: {
+        describe: "Output raw JSON response",
+        type: "boolean",
+        default: false
+      }
+    })
+    .example(
+      "$0 run /hello send-email",
+      'Runs a script "send-email" of the service at the URL "/hello"'
+    )
+    .example(
+      `$0 run /hello send-email '{"hello": "world"}'`,
+      "Pass an argument to the script"
+    )
+    .example(
+      "$0 run /hello send-email --server http://localhost:8530",
+      "Use the server on port 8530 instead of the default"
+    )
+    .example(
+      "$0 run /hello send-email --database mydb",
+      'Use the database "mydb" instead of the default'
+    );
 
 exports.handler = async function handler(argv) {
   let options = argv.options;
