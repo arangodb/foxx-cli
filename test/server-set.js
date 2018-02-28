@@ -117,4 +117,9 @@ describe("Foxx server set", () => {
       "[server.test]\r\nurl=http://localhost:8529\r\ndatabase=_system\r\nusername=test\r\npassword=\r\n"
     );
   });
+
+  it("should fail when server URL is not valid", async () => {
+    expect(() => foxx("server set test not-valid")).to.throw();
+    expect(fs.existsSync(foxxRcFile)).to.equal(false);
+  });
 });
