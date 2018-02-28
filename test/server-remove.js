@@ -29,8 +29,8 @@ describe("Foxx server remove", () => {
   it("should show added server", async () => {
     foxx("server remove test1");
     const content1 = fs.readFileSync(foxxRcFile, "utf-8");
-    expect(content1).to.equal(
-      "[server.test2]\r\nurl=http://localhost:8530\r\ndatabase=_system\r\nusername=root\r\npassword=\r\n"
+    expect(content1.replace(/\r\n/g, "\n")).to.equal(
+      "[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"
     );
     foxx("server remove test2");
     const content2 = fs.readFileSync(foxxRcFile, "utf-8");
@@ -40,24 +40,24 @@ describe("Foxx server remove", () => {
   it("via alias should show added server", async () => {
     foxx("remote rm test1");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
-    expect(content).to.equal(
-      "[server.test2]\r\nurl=http://localhost:8530\r\ndatabase=_system\r\nusername=root\r\npassword=\r\n"
+    expect(content.replace(/\r\n/g, "\n")).to.equal(
+      "[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"
     );
   });
 
   it("verbose should show added server with password", async () => {
     foxx("server remove test1 --verbose");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
-    expect(content).to.equal(
-      "[server.test2]\r\nurl=http://localhost:8530\r\ndatabase=_system\r\nusername=root\r\npassword=\r\n"
+    expect(content.replace(/\r\n/g, "\n")).to.equal(
+      "[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"
     );
   });
 
   it("verbose via alias should show added server with password", async () => {
     foxx("server remove test1 -v");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
-    expect(content).to.equal(
-      "[server.test2]\r\nurl=http://localhost:8530\r\ndatabase=_system\r\nusername=root\r\npassword=\r\n"
+    expect(content.replace(/\r\n/g, "\n")).to.equal(
+      "[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"
     );
   });
 });
