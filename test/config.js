@@ -170,7 +170,7 @@ describe("Foxx service configuration", () => {
     expect(resp).to.not.have.property("test2");
   });
 
-  it.only("should be merged after update", async () => {
+  it("should be merged after update", async () => {
     foxx(`config ${mount} test2=test2 --force`);
     foxx(`config ${mount} test1=test1`);
     const resp = foxx(`config ${mount}`, true);
@@ -180,7 +180,7 @@ describe("Foxx service configuration", () => {
     expect(resp.test2).to.have.property("current", "test2");
   });
 
-  it.only("minimal should be merged after update", async () => {
+  it("minimal should be merged after update", async () => {
     foxx(`config ${mount} test2=test2 --force`);
     foxx(`config ${mount} test1=test1`);
     const resp = foxx(`config ${mount} --minimal`, true);
