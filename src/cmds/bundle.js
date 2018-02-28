@@ -6,7 +6,7 @@ const { common } = require("../util/cli");
 const { exists, safeStat } = require("../util/fs");
 const { fatal } = require("../util/log");
 const { inline: il } = require("../util/text");
-const bundle = require("../bundle");
+const bundle = require("../bundle").createBundle;
 
 const command = (exports.command = "bundle [source]");
 const description = (exports.description =
@@ -69,6 +69,11 @@ exports.handler = async function handler(argv) {
       Can't use both ${bold("--outfile")}
       and ${bold("--stdout")} at the same time.
     `);
+  } else if (!argv.force) {
+    const stats = await safeStat(out);
+    if (stats) {
+      fatal(`Outfile "${white(source)}" already exists.`);
+    }
   }
   const stats = await safeStat(source);
   if (!stats) {

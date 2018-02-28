@@ -3,11 +3,10 @@ const { json, fatal } = require("../util/log");
 
 const client = require("../util/client");
 const { common, serverArgs } = require("../util/cli");
-const parseOptions = require("../util/parseOptions");
 const resolveServer = require("../resolveServer");
 const streamToBuffer = require("../util/streamToBuffer");
 
-const command = (exports.command = "run <mount> <name> [options..]");
+const command = (exports.command = "run <mount> <name> [options]");
 const description = (exports.description =
   "Run a script for a mounted service");
 const aliases = (exports.aliases = ["script"]);
@@ -31,9 +30,9 @@ exports.builder = yargs =>
   });
 
 exports.handler = async function handler(argv) {
-  let options = parseOptions(argv.options);
-  if (!options && argv.force) {
-    options = {};
+  let options = argv.options;
+  if (!options) {
+    options = undefined;
   } else if (options === "@") {
     const output = await streamToBuffer(process.stdin);
     let json;
@@ -44,6 +43,12 @@ exports.handler = async function handler(argv) {
     }
     try {
       options = JSON.parse(json);
+    } catch (e) {
+      fatal(e.message);
+    }
+  } else {
+    try {
+      options = JSON.parse(options);
     } catch (e) {
       fatal(e.message);
     }

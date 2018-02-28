@@ -125,9 +125,11 @@ exports.handler = async function handler(argv) {
     const bundle = await db.downloadService(argv.mount);
     if (!argv.extract) {
       out.write(bundle);
-      out.close();
-      if (argv.verbose && out !== process.stdout) {
-        info(`Created "${argv.outfile}".`);
+      if (out !== process.stdout) {
+        out.end();
+        if (argv.verbose) {
+          info(`Created "${argv.outfile}".`);
+        }
       }
     } else {
       await extractBuffer(bundle, {

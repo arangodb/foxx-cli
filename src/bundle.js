@@ -12,5 +12,5 @@ exports.gatherFiles = async function gatherFiles(path) {
 
 exports.createBundle = async function createBundle(path, dest) {
   const files = await exports.gatherFiles(path);
-  return await zip(files, dest);
+  return await zip(path, files, dest);
 };

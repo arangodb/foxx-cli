@@ -7,7 +7,7 @@ exports.group = function group(title, ...args) {
     args.unshift(title);
     title = undefined;
   }
-  const wrapWidth = Math.min(160, yargs.terminalWidth());
+  const wrapWidth = Math.max(80, Math.min(160, yargs.terminalWidth()));
   const ui = cliui({ width: wrapWidth, wrap: true });
   const maxLength = args.reduce(
     (base, [name]) => Math.max(base, name.length),
@@ -29,9 +29,9 @@ exports.group = function group(title, ...args) {
 exports.comma = function comma(arr, and = "and") {
   if (!arr.length) return "";
   if (arr.length === 1) return arr[0];
-  return `${arr.slice(0, arr.length - 1).join(", ")} ${and} ${arr[
-    arr.length - 1
-  ]}`;
+  return `${arr.slice(0, arr.length - 1).join(", ")} ${and} ${
+    arr[arr.length - 1]
+  }`;
 };
 
 exports.inline = function inline(strings, ...values) {

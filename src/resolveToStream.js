@@ -18,18 +18,18 @@ module.exports = async function resolveToStream(path) {
     stream.path = "data.bin";
     return stream;
   }
+  const stats = await safeStat(path);
+  if (stats) {
+    if (stats.isDirectory(path)) {
+      return bundleToStream(path);
+    }
+    return createReadStream(path);
+  }
   const { protocol } = parseUrl(path);
   if (protocol) {
     return await downloadToStream(path);
   }
-  const stats = await safeStat(path);
-  if (!stats) {
-    fatal(`No such file or directory: "${path}".`);
-  }
-  if (stats.isDirectory(path)) {
-    return bundleToStream(path);
-  }
-  return createReadStream(path);
+  fatal(`No such file or directory: "${path}".`);
 };
 
 async function downloadToStream(path) {

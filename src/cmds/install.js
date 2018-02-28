@@ -74,7 +74,10 @@ exports.builder = yargs =>
       "$0 install /hello",
       'Install the current working directory as a Foxx service at the URL "/hello"'
     )
-    .example("$0 install -D /hello", "Install the service in development mode")
+    .example(
+      "$0 install --dev /hello",
+      "Install the service in development mode"
+    )
     .example(
       "$0 install --server http://localhost:8530 hello",
       "Use the server on port 8530 instead of the default"

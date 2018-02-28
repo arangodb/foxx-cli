@@ -54,14 +54,10 @@ exports.handler = async function handler(argv) {
       }
     } else {
       if (server.password !== undefined) {
-        info(
-          `Password: ${
-            server.password ? mask(server.password) : gray("(empty)")
-          }`
-        );
+        info(`Password: ${gray("(hidden)")}`);
       }
       if (server.token !== undefined) {
-        info(`Token: ${mask(server.token)}`);
+        info(`Token: ${gray("(hidden)")}`);
       }
     }
   } catch (e) {

@@ -6,15 +6,10 @@
   "bin": {
     "foxx": "bin/foxx"
   },
-  "files": [
-    "bin/",
-    "src/",
-    "templates/",
-    "README.md",
-    "LICENSE"
-  ],
+  "files": ["bin/", "src/", "templates/", "README.md", "LICENSE"],
   "scripts": {
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -27,7 +22,7 @@
   },
   "homepage": "https://github.com/arangodb/foxx-cli#readme",
   "dependencies": {
-    "arangojs": "6.0.0",
+    "arangojs": "^6.1.0",
     "archiver": "^2.1.0",
     "chalk": "^2.0.0",
     "cliui": "^3.2.0",
@@ -47,9 +42,11 @@
   },
   "devDependencies": {
     "babel-eslint": "^8.0.2",
+    "chai": "^4.1.2",
     "eslint": "^4.11.0",
     "eslint-config-prettier": "^2.8.0",
     "eslint-plugin-prettier": "^2.3.1",
+    "mocha": "^5.0.0",
     "prettier": "^1.8.2"
   }
 }
