@@ -18,11 +18,11 @@ exports.builder = yargs =>
     .describe("verbose", "Include passwords and tokens")
     .example(
       "$0 server show dev",
-      'Shows information about the server "dev" not including password and token'
+      'Shows information about the server named "dev" not including password and token'
     )
     .example(
       "$0 server show dev -v",
-      'Shows information about the server "dev" including password and token'
+      'Shows information about the server named "dev" including password and token'
     );
 
 exports.handler = async function handler(argv) {
