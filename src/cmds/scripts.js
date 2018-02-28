@@ -15,14 +15,27 @@ const describe = description;
 const args = [["mount", "Mount path of the service"]];
 
 exports.builder = yargs =>
-  common(yargs, { command, describe, args }).options({
-    ...serverArgs,
-    raw: {
-      describe: "Output raw JSON response",
-      type: "boolean",
-      default: false
-    }
-  });
+  common(yargs, { command, describe, args })
+    .options({
+      ...serverArgs,
+      raw: {
+        describe: "Output raw JSON response",
+        type: "boolean",
+        default: false
+      }
+    })
+    .example(
+      "$0 scripts /hello",
+      'Shows all scripts of the service at the URL "/hello"'
+    )
+    .example(
+      "$0 scripts /hello --server http://localhost:8530",
+      "Use the server on port 8530 instead of the default"
+    )
+    .example(
+      "$0 scripts /hello --database mydb",
+      'Use the database "mydb" instead of the default'
+    );
 
 exports.handler = async function handler(argv) {
   try {
