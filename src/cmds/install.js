@@ -120,7 +120,7 @@ exports.builder = yargs =>
       'Install the service and set its "mailer" and "auth" dependencies'
     )
     .example(
-      "cat foxx.zip | $0 install /hello -",
+      "cat foxx.zip | $0 install /hello @",
       "Install the bundle read from stdin"
     );
 
