@@ -1,12 +1,18 @@
 {
   "name": "foxx-cli",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "CLI for ArangoDB Foxx.",
   "preferGlobal": true,
   "bin": {
     "foxx": "bin/foxx"
   },
-  "files": ["bin/", "src/", "templates/", "README.md", "LICENSE"],
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "lint": "eslint src",
     "test": "mocha"
