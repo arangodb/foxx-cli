@@ -17,7 +17,7 @@ const args = [
   [
     "source",
     `URL or file system path of the upgrade service. Use ${bold(
-      "-"
+      "@"
     )} to pass a zip file from stdin`,
     '[default: "."]'
   ]

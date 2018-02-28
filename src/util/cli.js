@@ -59,7 +59,7 @@ exports.parseServiceOptions = function parseServiceOptions(argv) {
   if (argv.dep) argv.dep = splat(argv.dep);
 
   if (argv.remote) {
-    if (!argv.source || argv.source === "-") {
+    if (!argv.source || argv.source === "@") {
       fatal(
         `Please specify a URL or file path when using ${bold("--remote")}.`
       );

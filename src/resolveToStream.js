@@ -13,7 +13,7 @@ function get(path) {
 }
 
 module.exports = async function resolveToStream(path) {
-  if (path === "-") {
+  if (path === "@") {
     const stream = process.stdin;
     stream.path = "data.bin";
     return stream;

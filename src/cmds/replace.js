@@ -16,7 +16,7 @@ const args = [
   [
     "source",
     `URL or file system path of the replacement service. Use ${bold(
-      "-"
+      "@"
     )} to pass a zip file from stdin`,
     '[default: "."]'
   ]
