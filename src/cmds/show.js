@@ -18,14 +18,31 @@ const describe = `Shows detailed information about the service installed at the 
 const args = [["mount", "Mount path of the service"]];
 
 exports.builder = yargs =>
-  common(yargs, { command, aliases, describe, args }).options({
-    ...serverArgs,
-    raw: {
-      describe: "Output raw JSON response",
-      type: "boolean",
-      default: false
-    }
-  });
+  common(yargs, { command, aliases, describe, args })
+    .options({
+      ...serverArgs,
+      raw: {
+        describe: "Output raw JSON response",
+        type: "boolean",
+        default: false
+      }
+    })
+    .example(
+      "$0 show /hello",
+      'Shows information about a Foxx service at the URL "/hello"'
+    )
+    .example(
+      "$0 show --server http://locahost:8530 /hello",
+      "Use the server on port 8530 instead of the default"
+    )
+    .example(
+      "$0 show --database mydb /hello",
+      'Use the database "mydb" instead of the default'
+    )
+    .example(
+      "$0 show --server dev /hello",
+      'Use the "dev" server instead of the default. See the "server" command for details'
+    );
 
 exports.handler = async function handler(argv) {
   try {
