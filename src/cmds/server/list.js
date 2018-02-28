@@ -11,10 +11,10 @@ const aliases = (exports.aliases = ["ls"]);
 const describe = description;
 
 exports.builder = yargs =>
-  common(yargs, { command, sub: "server", aliases, describe }).describe(
-    "verbose",
-    "Include URLs"
-  );
+  common(yargs, { command, sub: "server", aliases, describe })
+    .describe("verbose", "Include URLs")
+    .example("$0 server list", "Shows all known servers")
+    .example("$0 server list -v", "Shows all known servers and their URLs");
 
 exports.handler = async function handler(argv) {
   try {
