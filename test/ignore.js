@@ -92,7 +92,7 @@ describe("Foxx ignore", () => {
   it("should be considered when creating a bundle", async () => {
     fs.writeFileSync(path.resolve(tmpDir, "test1"), "");
     fs.writeFileSync(path.resolve(tmpDir, "test2"), "");
-    fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), {});
+    fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
     foxx("ignore test1");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     foxx(`bundle --outfile ${tmpFile}`);
@@ -108,5 +108,49 @@ describe("Foxx ignore", () => {
     expect(
       fs.existsSync(path.resolve(tmpDir, "bundle", ".foxxignore"))
     ).to.equal(true);
+  });
+
+  it("non-existing should be considered when creating a bundle", async () => {
+    fs.mkdirSync(path.resolve(tmpDir, ".git"));
+    fs.writeFileSync(path.resolve(tmpDir, ".git", "test"), "");
+    fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
+    const tmpFile = path.resolve(tmpDir, "bundle.zip");
+    foxx(`bundle --outfile ${tmpFile}`);
+    await require("../src/util/fs").extract(tmpFile, {
+      dir: path.resolve(tmpDir, "bundle")
+    });
+    expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(
+      false
+    );
+  });
+
+  it("defaults should be considered when creating a bundle", async () => {
+    fs.mkdirSync(path.resolve(tmpDir, ".git"));
+    fs.writeFileSync(path.resolve(tmpDir, ".git", "test"), "");
+    fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
+    foxx("ignore");
+    const tmpFile = path.resolve(tmpDir, "bundle.zip");
+    foxx(`bundle --outfile ${tmpFile}`);
+    await require("../src/util/fs").extract(tmpFile, {
+      dir: path.resolve(tmpDir, "bundle")
+    });
+    expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(
+      false
+    );
+  });
+
+  it("empty should be considered when creating a bundle", async () => {
+    fs.mkdirSync(path.resolve(tmpDir, ".git"));
+    fs.writeFileSync(path.resolve(tmpDir, ".git", "test"), "");
+    fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
+    foxx("ignore -f");
+    const tmpFile = path.resolve(tmpDir, "bundle.zip");
+    foxx(`bundle --outfile ${tmpFile}`);
+    await require("../src/util/fs").extract(tmpFile, {
+      dir: path.resolve(tmpDir, "bundle")
+    });
+    expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(
+      true
+    );
   });
 });
