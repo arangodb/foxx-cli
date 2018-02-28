@@ -36,15 +36,36 @@ const describe =
 const args = [["mount", "Mount path of the service"]];
 
 exports.builder = yargs =>
-  common(yargs, { command, aliases, describe, args }).options({
-    ...serverArgs,
-    reporter: {
-      describe: "Reporter to use for result data",
-      alias: "R",
-      choices: ["spec", "list", "min", "json", "tap", "stream", "xunit"],
-      default: "spec"
-    }
-  });
+  common(yargs, { command, aliases, describe, args })
+    .options({
+      ...serverArgs,
+      reporter: {
+        describe: "Reporter to use for result data",
+        alias: "R",
+        choices: ["spec", "list", "min", "json", "tap", "stream", "xunit"],
+        default: "spec"
+      }
+    })
+    .example(
+      "$0 test /hello",
+      'Runs the tests of a Foxx service at the URL "/hello"'
+    )
+    .example(
+      "$0 test -R json /hello",
+      "Use the json reporter instead of the default"
+    )
+    .example(
+      "$0 test --server http://locahost:8530 /hello",
+      "Use the server on port 8530 instead of the default"
+    )
+    .example(
+      "$0 test --database mydb /hello",
+      'Use the database "mydb" instead of the default'
+    )
+    .example(
+      "$0 test --server dev /hello",
+      'Use the "dev" server instead of the default. See the "server" command for details'
+    );
 
 exports.handler = async function handler(argv) {
   try {
