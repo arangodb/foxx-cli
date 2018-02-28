@@ -14,20 +14,37 @@ const aliases = (exports.aliases = ["ls"]);
 const describe = "Shows an overview of all installed services.";
 
 exports.builder = yargs =>
-  common(yargs, { command, aliases, describe }).options({
-    ...serverArgs,
-    all: {
-      describe: "Include system services",
-      alias: "a",
-      type: "boolean",
-      default: false
-    },
-    raw: {
-      describe: "Output raw JSON responses",
-      type: "boolean",
-      default: false
-    }
-  });
+  common(yargs, { command, aliases, describe })
+    .options({
+      ...serverArgs,
+      all: {
+        describe: "Include system services",
+        alias: "a",
+        type: "boolean",
+        default: false
+      },
+      raw: {
+        describe: "Output raw JSON responses",
+        type: "boolean",
+        default: false
+      }
+    })
+    .example(
+      "$0 list",
+      "Shows all installed services not including system services"
+    )
+    .example(
+      "$0 list -a",
+      "Shows all installed services including system services"
+    )
+    .example(
+      "$0 list --server http://localhost:8530",
+      "Use the server on port 8530 instead of the default"
+    )
+    .example(
+      "$0 list --database mydb",
+      'Use the database "mydb" instead of the default'
+    );
 
 exports.handler = async function handler(argv) {
   try {
