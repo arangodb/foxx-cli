@@ -9,7 +9,7 @@ exports.load = async function load(file) {
   let lines = defaults;
   if (await exists(file)) {
     const text = await readFile(file, "utf-8");
-    lines = text.split(/(\n|\r)+/g);
+    lines = text.replace(/\r/g, "").split(/\n+/g);
   }
   return exports.buildMatcher(lines);
 };
@@ -25,7 +25,7 @@ exports.buildMatcher = function buildMatcher(lines) {
       pattern = pattern.slice(1);
     }
     if (!pattern) continue;
-    if (pattern.endsWith("/")) pattern += "";
+    if (pattern.endsWith("/")) pattern += "**";
     if (!pattern.startsWith("/")) pattern = "**/" + pattern;
     else pattern = pattern.slice(1);
     list.push(new Minimatch(pattern, { dot: true, nonegate: true }));
