@@ -24,34 +24,56 @@ const args = [
 ];
 
 exports.builder = yargs =>
-  common(yargs, { command, aliases, describe, args }).options({
-    stdout: {
-      describe: `Write to stdout no matter what stdout is`,
-      alias: "O",
-      type: "boolean",
-      default: false
-    },
-    outfile: {
-      describe:
-        "Write the zip bundle to this file. If omitted, bundle is written to stdout",
-      alias: "o",
-      type: "string"
-    },
-    force: {
-      describe: `If ${bold(
-        "--outfile"
-      )} was specified, any existing file will be overwritten.`,
-      alias: "f",
-      type: "boolean",
-      default: false
-    },
-    sloppy: {
-      describe:
-        "Continue even if no manifest file is present in the source directory",
-      type: "boolean",
-      default: false
-    }
-  });
+  common(yargs, { command, aliases, describe, args })
+    .options({
+      stdout: {
+        describe: `Write to stdout no matter what stdout is`,
+        alias: "O",
+        type: "boolean",
+        default: false
+      },
+      outfile: {
+        describe:
+          "Write the zip bundle to this file. If omitted, bundle is written to stdout",
+        alias: "o",
+        type: "string"
+      },
+      force: {
+        describe: `If ${bold(
+          "--outfile"
+        )} was specified, any existing file will be overwritten.`,
+        alias: "f",
+        type: "boolean",
+        default: false
+      },
+      sloppy: {
+        describe:
+          "Continue even if no manifest file is present in the source directory",
+        type: "boolean",
+        default: false
+      }
+    })
+    .example(
+      "$0 bundle",
+      "Creates a bundle of the current directory and writes it to stdout"
+    )
+    .example(
+      "$0 bundle /tmp/service",
+      "Creates a bundle of the given service directory"
+    )
+    .example("$0 bundle -O", "Writes to stdout even if stdout is a TTY")
+    .example(
+      "$0 bundle -o /tmp/bundle.zip",
+      "Writes the bundle to the given file path"
+    )
+    .example(
+      "$0 bundle -f -o /tmp/bundle.zip",
+      "Overwrites the bundle if it already exists"
+    )
+    .example(
+      "$0 bundle --sloppy",
+      "Creates the bundle even if service manifest is missing"
+    );
 
 exports.handler = async function handler(argv) {
   const source = unsplat(argv.source) || process.cwd();
