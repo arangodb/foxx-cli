@@ -14,9 +14,9 @@ describe("Foxx server list", () => {
     process.env.FOXXRC_PATH = foxxRcFile;
     if (fs.existsSync(foxxRcFile)) {
       fs.unlinkSync(foxxRcFile);
-      foxx("server set test1 //localhost:8529");
-      foxx("server set test2 //localhost:8530");
     }
+    foxx("server set test1 //localhost:8529");
+    foxx("server set test2 //localhost:8530");
   });
 
   after(async () => {
