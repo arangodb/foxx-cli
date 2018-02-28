@@ -19,7 +19,7 @@ const args = [
   [
     "source",
     `URL or file system path of the service to install. Use ${bold(
-      "-"
+      "@"
     )} to pass a zip file from stdin`,
     '[default: "."]'
   ]
