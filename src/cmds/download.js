@@ -88,6 +88,11 @@ exports.handler = async function handler(argv) {
         `);
       }
       out = process.stdout;
+    } else if (argv.stdout) {
+      fatal(il`
+        Can't use both ${bold("--extract")}
+        and ${bold("--stdout")} at the same time.
+      `);
     } else {
       outdir = process.cwd();
     }

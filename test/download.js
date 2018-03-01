@@ -185,4 +185,15 @@ describe("Foxx service download", () => {
   it("should fail when mount is invalid", async () => {
     expect(() => foxx("download /dev/null")).to.throw();
   });
+
+  it("should extract in cwd when no outfile set", async () => {
+    if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
+    const output = foxx(`download --extract ${mount}`, false, tmpDir);
+    expect(output).to.equal("");
+    expect(fs.existsSync(manifest)).to.equal(true);
+  });
+
+  it("should fail with options stdout and extract", async () => {
+    expect(() => foxx(`download --stdout --extract ${mount}`)).to.throw();
+  });
 });
