@@ -6,6 +6,7 @@ const Database = require("arangojs");
 const expect = require("chai").expect;
 const foxx = require("./util");
 const helper = require("./helper");
+const fs = require("fs");
 
 const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
@@ -55,6 +56,15 @@ describe("Foxx service installed", () => {
       expect(res.body).to.eql({ hello: "world" });
     });
   }
+
+  it("via stdin should be available", async () => {
+    const input = fs.readFileSync(
+      path.resolve(basePath, "minimal-working-service.zip")
+    );
+    foxx(`install ${mount} @`, false, { input });
+    const res = await db.route(mount).get();
+    expect(res.body).to.eql({ hello: "world" });
+  });
 
   it("via alias should be available", async () => {
     foxx(`i ${mount} ${arangoPaths.local.zip}`);
