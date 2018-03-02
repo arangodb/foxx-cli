@@ -13,10 +13,12 @@ const resolveServer = require("../resolveServer");
 const { unsplat } = require("../util/array");
 
 const command = (exports.command = "download <mount>");
-const description = (exports.description = "Download a mounted service");
+exports.description = "Download a mounted service";
 const aliases = (exports.aliases = ["dl"]);
 
-const describe = description;
+const describe = il`Downloads a zip bundle of the service directory.
+
+When development mode is enabled, this always creates a new bundle. Otherwise the bundle will represent the version of a service that is installed on that ArangoDB instance.`;
 
 const args = [["mount", "Mount path of the service"]];
 

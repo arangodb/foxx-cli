@@ -8,11 +8,12 @@ const resolveServer = require("../resolveServer");
 const resolveToStream = require("../resolveToStream");
 
 const command = (exports.command = "install <mount> [source]");
-const description = (exports.description =
-  "Install a service at a given mount path");
+exports.description = "Install a service at a given mount path";
 const aliases = (exports.aliases = ["i"]);
 
-const describe = description;
+const describe = `Installs the given new service at the given ${bold(
+  "mount"
+)} path.`;
 
 const args = [
   ["mount", "Mount path of the service"],

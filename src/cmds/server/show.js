@@ -2,14 +2,14 @@
 const { bold, white, gray } = require("chalk");
 const { common } = require("../../util/cli");
 const { info, fatal } = require("../../util/log");
-const { comma, inline: il, mask } = require("../../util/text");
+const { comma, inline: il } = require("../../util/text");
 const { load: loadIni } = require("../../ini");
 
 const command = (exports.command = "show <name>");
-const description = (exports.description = "Show server information");
+exports.description = "Show server information";
 const aliases = (exports.aliases = ["info"]);
 
-const describe = description;
+const describe = `Shows information about a server inlcuding its alias and URL.`;
 
 const args = [["name", "Server name to show details of"]];
 

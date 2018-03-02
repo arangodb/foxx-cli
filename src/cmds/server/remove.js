@@ -4,10 +4,10 @@ const { fatal } = require("../../util/log");
 const { load: loadIni, save: saveIni } = require("../../ini");
 
 const command = (exports.command = "remove <name>");
-const description = (exports.description = "Remove server");
+exports.description = "Remove server";
 const aliases = (exports.aliases = ["rm"]);
 
-const describe = description;
+const describe = "Removes a server from the list of known servers.";
 
 const args = [["name", "Server name to forget"]];
 

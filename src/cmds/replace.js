@@ -1,15 +1,22 @@
 "use strict";
 const { bold } = require("chalk");
 const { common, serverArgs, parseServiceOptions } = require("../util/cli");
+const { inline: il } = require("../util/text");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
 const resolveToStream = require("../resolveToStream");
 const { json, fatal } = require("../util/log");
 
 const command = (exports.command = "replace <mount> [source]");
-const description = (exports.description = "Replace a mounted service");
+exports.description = "Replace a mounted service";
 
-const describe = description;
+const describe = il`Removes the service at the given ${bold(
+  "mount"
+)} path from the database and file system. Then installs the given new service at the same ${bold(
+  "mount"
+)} path.
+
+This is a slightly safer equivalent to performing an uninstall of the old service followed by installing the new service. The new service's main and script files (if any) will be checked for basic syntax errors before the old service is removed.`;
 
 const args = [
   ["mount", "Mount path of the service"],

@@ -3,14 +3,19 @@ const { common, parseServiceOptions, serverArgs } = require("../util/cli");
 const { fatal, json } = require("../util/log");
 
 const { bold } = require("chalk");
+const { inline: il } = require("../util/text");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
 const resolveToStream = require("../resolveToStream");
 
 const command = (exports.command = "upgrade <mount> [source]");
-const description = (exports.description = "Upgrade a mounted service");
+exports.description = "Upgrade a mounted service";
 
-const describe = description;
+const describe = il`Installs the given new service on top of the service currently installed at the given ${bold(
+  "mount"
+)} path.
+
+This is only recommended for switching between different versions of the same service. Unlike replacing a service, upgrading a service retains the old service's configuration and dependencies (if any) and should therefore only be used to migrate an existing service to a newer or equivalent service.`;
 
 const args = [
   ["mount", "Mount path of the service"],

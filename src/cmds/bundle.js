@@ -9,11 +9,11 @@ const { inline: il } = require("../util/text");
 const bundle = require("../bundle").createBundle;
 
 const command = (exports.command = "bundle [source]");
-const description = (exports.description =
-  "Create a service bundle for a service");
+exports.description = "Create a service bundle for a service";
 const aliases = (exports.aliases = ["zip"]);
 
-const describe = description;
+const describe =
+  "Creates a zip bundle of a service located on the local filesystem.";
 
 const args = [
   [
