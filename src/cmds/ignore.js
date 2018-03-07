@@ -25,7 +25,7 @@ exports.builder = yargs =>
     })
     .example(
       "$0 ignore",
-      "Creates a .foxxignore file with defaults in the current directory if it does not already exists"
+      "Creates a .foxxignore file with defaults in the current directory if it does not already exist"
     )
     .example(
       "$0 ignore example/",
