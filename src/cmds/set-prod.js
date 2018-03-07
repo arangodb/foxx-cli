@@ -3,14 +3,16 @@ const { common, serverArgs } = require("../util/cli");
 
 const client = require("../util/client");
 const { fatal } = require("../util/log");
+const { inline: il } = require("../util/text");
 const resolveServer = require("../resolveServer");
 
 const command = (exports.command = "set-prod <mount>");
-const description = (exports.description =
-  "Disable development for a mounted service");
+exports.description = "Disable development for a mounted service";
 const aliases = (exports.aliases = ["set-production"]);
 
-const describe = description;
+const describe = il`Puts the service at the given mount path into production mode.
+
+When running ArangoDB in a cluster with multiple coordinators this will replace the service on all other coordinators with the version on this coordinator.`;
 
 const args = [["mount", "Mount path of the service"]];
 

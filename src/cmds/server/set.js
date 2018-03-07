@@ -8,10 +8,11 @@ const resolveServer = require("../../resolveServer");
 const { white } = require("chalk");
 
 const command = (exports.command = "set <name> <server>");
-const description = (exports.description = "Define server");
+exports.description = "Define server";
 const aliases = (exports.aliases = ["add"]);
 
-const describe = description;
+const describe =
+  "Defines a server under a given alias including its credentials.";
 
 const args = [
   ["name", "Server name to define"],

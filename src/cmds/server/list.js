@@ -5,10 +5,10 @@ const { group } = require("../../util/text");
 const { load: loadIni } = require("../../ini");
 
 const command = (exports.command = "list");
-const description = (exports.description = "List known servers");
+exports.description = "List known servers";
 const aliases = (exports.aliases = ["ls"]);
 
-const describe = description;
+const describe = `List all known servers by their aliases.`;
 
 exports.builder = yargs =>
   common(yargs, { command, sub: "server", aliases, describe })

@@ -1,17 +1,19 @@
 "use strict";
 const { json, fatal } = require("../util/log");
 
+const { bold } = require("chalk");
 const client = require("../util/client");
 const { common, serverArgs } = require("../util/cli");
 const resolveServer = require("../resolveServer");
 const streamToBuffer = require("../util/streamToBuffer");
 
 const command = (exports.command = "run <mount> <name> [options]");
-const description = (exports.description =
-  "Run a script for a mounted service");
+exports.description = "Run a script for a mounted service";
 const aliases = (exports.aliases = ["script"]);
 
-const describe = description;
+const describe = `Runs the given script for the service at the given ${bold(
+  "mount"
+)} path. Returns the exports of the script, if any.`;
 
 const args = [
   ["mount", "Mount path of the service"],

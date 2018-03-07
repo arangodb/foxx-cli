@@ -8,10 +8,12 @@ const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
 const resolveServer = require("../resolveServer");
 
 const command = (exports.command = "uninstall <mount>");
-const description = (exports.description = "Uninstall a mounted service");
+exports.description = "Uninstall a mounted service";
 const aliases = (exports.aliases = ["remove", "purge"]);
 
-const describe = description;
+const describe = `Removes the service at the given ${bold(
+  "mount"
+)} path from the database and file system.`;
 
 const args = [["mount", "Mount path of the service"]];
 

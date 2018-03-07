@@ -5,11 +5,11 @@ const { fatal } = require("../util/text");
 const { save: saveIgnore } = require("../ignore");
 
 const command = (exports.command = "ignore [patterns..]");
-const description = (exports.description =
-  "Add one or more patterns to the .foxxignore file");
+exports.description = "Add one or more patterns to the .foxxignore file";
 const aliases = (exports.aliases = ["exclude"]);
 
-const describe = description;
+const describe =
+  "Add one or more patterns to the .foxxingore file which is used to exclude files from being archived with the command bundle.";
 
 const args = [["patterns", "Patterns to add to the .foxxignore file"]];
 

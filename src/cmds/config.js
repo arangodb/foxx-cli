@@ -10,11 +10,14 @@ const resolveServer = require("../resolveServer");
 const streamToBuffer = require("../util/streamToBuffer");
 
 const command = (exports.command = "config <mount> [options..]");
-const description = (exports.description =
-  "Manage the configuration of a mounted service");
+exports.description = "Manage the configuration of a mounted service";
 const aliases = (exports.aliases = ["configuration", "cfg"]);
 
-const describe = description;
+const describe = il`Updates or fetches the current configuration for the service at the given ${bold(
+  "mount"
+)} path.
+
+Returns an object mapping the configuration option names to their definitions including a human-friendly title and the current value (if any).`;
 
 const args = [
   ["mount", "Mount path of the service"],

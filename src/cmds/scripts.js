@@ -7,10 +7,10 @@ const { group } = require("../util/text");
 const resolveServer = require("../resolveServer");
 
 const command = (exports.command = "scripts <mount>");
-const description = (exports.description =
-  "List available scripts for a mounted service");
+exports.description = "List available scripts for a mounted service";
 
-const describe = description;
+const describe =
+  "Fetches a list of the scripts defined by the service. Returns an object mapping the raw script names to human-friendly names.";
 
 const args = [["mount", "Mount path of the service"]];
 

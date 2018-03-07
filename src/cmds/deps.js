@@ -1,5 +1,5 @@
 "use strict";
-const { fatal, json } = require("../util/log");
+const { error, fatal, json } = require("../util/log");
 
 const { bold } = require("chalk");
 const client = require("../util/client");
@@ -10,11 +10,14 @@ const resolveServer = require("../resolveServer");
 const streamToBuffer = require("../util/streamToBuffer");
 
 const command = (exports.command = "deps <mount> [options..]");
-const description = (exports.description =
-  "Manage the dependencies of a mounted service");
+exports.description = "Manage the dependencies of a mounted service";
 const aliases = (exports.aliases = ["dependencies", "dep"]);
 
-const describe = description;
+const describe = il`Updates or fetches the current dependencies for service at the given ${bold(
+  "mount"
+)} path.
+
+Returns an object mapping the dependency names to their definitions including a human-friendly title and the current mount path (if any).`;
 
 const args = [
   ["mount", "Mount path of the service"],
