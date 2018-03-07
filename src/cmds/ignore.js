@@ -14,14 +14,37 @@ const describe = description;
 const args = [["patterns", "Patterns to add to the .foxxignore file"]];
 
 exports.builder = yargs =>
-  common(yargs, { command, aliases, describe, args }).options({
-    force: {
-      describe: "Overwrite existing patterns (including defaults)",
-      alias: "f",
-      type: "boolean",
-      default: false
-    }
-  });
+  common(yargs, { command, aliases, describe, args })
+    .options({
+      force: {
+        describe: "Overwrite existing patterns (including defaults)",
+        alias: "f",
+        type: "boolean",
+        default: false
+      }
+    })
+    .example(
+      "$0 ignore",
+      "Creates a .foxxignore file with defaults in the current directory if it does not already exist"
+    )
+    .example(
+      "$0 ignore example/",
+      'Adds the pattern for a directory "example" to the .foxxignore file'
+    )
+    .example(
+      "$0 ignore example.md",
+      'Adds the pattern for a file "example.md" to the .foxxignore file'
+    )
+    .example("$0 ignore example/ example.md", "Adds multiple patterns")
+    .example(
+      "$0 ignore *.md",
+      'Adds a pattern to ignore all files ending with ".md"'
+    )
+    .example(
+      "$0 ignore -f example/",
+      "Overwrites all patterns with the given one"
+    )
+    .example("$0 ignore -f", "Removes all patterns from .foxxignore");
 
 exports.handler = async function handler(argv) {
   const foxxignore = resolve(process.cwd(), ".foxxignore");

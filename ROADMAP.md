@@ -21,18 +21,7 @@ The following still needs work before this module can become a "1.0" release:
 
 ## :book: Need examples
 
-* `bundle`
-* `ignore`
 * `init`
-* `run`
-* `scripts`
-* `server list`
-* `server remove`
-* `server show`
-* `set-dev`
-* `set-prod`
-* `test`
-* `uninstall`
 
 ## :book: Need long description
 

@@ -16,16 +16,37 @@ const describe = description;
 const args = [["mount", "Mount path of the service"]];
 
 exports.builder = yargs =>
-  common(yargs, { command, aliases, describe, args }).options({
-    ...serverArgs,
-    teardown: {
-      describe: `Run the teardown script before uninstalling the service. Use ${bold(
-        "--no-teardown"
-      )} to disable`,
-      type: "boolean",
-      default: true
-    }
-  });
+  common(yargs, { command, aliases, describe, args })
+    .options({
+      ...serverArgs,
+      teardown: {
+        describe: `Run the teardown script before uninstalling the service. Use ${bold(
+          "--no-teardown"
+        )} to disable`,
+        type: "boolean",
+        default: true
+      }
+    })
+    .example(
+      "$0 uninstall /hello",
+      'Uninstalls a Foxx service at the URL "/hello"'
+    )
+    .example(
+      "$0 uninstall --no-teardown /hello",
+      "Does not run the teardown script before uninstalling"
+    )
+    .example(
+      "$0 uninstall --server http://locahost:8530 /hello",
+      "Use the server on port 8530 instead of the default"
+    )
+    .example(
+      "$0 uninstall --database mydb /hello",
+      'Use the database "mydb" instead of the default'
+    )
+    .example(
+      "$0 uninstall --server dev /hello",
+      'Use the "dev" server instead of the default. See the "server" command for details'
+    );
 
 exports.handler = async function handler(argv) {
   try {

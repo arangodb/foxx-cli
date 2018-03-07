@@ -79,15 +79,15 @@ exports.builder = yargs =>
       "Install the service in development mode"
     )
     .example(
-      "$0 install --server http://localhost:8530 hello",
+      "$0 install --server http://localhost:8530 /hello",
       "Use the server on port 8530 instead of the default"
     )
     .example(
-      "$0 install --database mydb hello",
+      "$0 install --database mydb /hello",
       'Use the database "mydb" instead of the default'
     )
     .example(
-      "$0 install --server dev hello",
+      "$0 install --server dev /hello",
       'Use the "dev" server instead of the default. See the "server" command for details'
     )
     .example(

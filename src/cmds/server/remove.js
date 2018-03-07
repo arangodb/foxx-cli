@@ -12,7 +12,10 @@ const describe = description;
 const args = [["name", "Server name to forget"]];
 
 exports.builder = yargs =>
-  common(yargs, { command, sub: "server", aliases, describe, args });
+  common(yargs, { command, sub: "server", aliases, describe, args }).example(
+    "$0 server remove dev",
+    'Removes the server named "dev"'
+  );
 
 exports.handler = async function handler(argv) {
   try {
