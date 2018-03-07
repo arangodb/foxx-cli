@@ -91,4 +91,10 @@ describe("Foxx service run", () => {
   it("should fail when mount is invalid", async () => {
     expect(() => foxx(`run /dev/null echo`)).to.throw();
   });
+
+  it("should pass argv to script via stdin and return exports", async () => {
+    const input = '{"hello":"world"}';
+    const resp = foxx(`run ${mount} echo @`, true, { input });
+    expect(resp).to.eql([{ hello: "world" }]);
+  });
 });

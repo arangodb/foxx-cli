@@ -11,7 +11,7 @@ const rmDir = require("./fs").rmDir;
 const tmpDir = path.resolve(os.tmpdir(), "foxx-ignore-test");
 const ignoreFile = path.resolve(tmpDir, ".foxxignore");
 
-const foxx = command => foxxUtil(command, false, tmpDir);
+const foxx = command => foxxUtil(command, false, { cwd: tmpDir });
 const defaults = `.git/
 .svn/
 .hg/

@@ -188,7 +188,7 @@ describe("Foxx service download", () => {
 
   it("should extract in cwd when no outfile set", async () => {
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
-    const output = foxx(`download --extract ${mount}`, false, tmpDir);
+    const output = foxx(`download --extract ${mount}`, false, { cwd: tmpDir });
     expect(output).to.equal("");
     expect(fs.existsSync(manifest)).to.equal(true);
   });

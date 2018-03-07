@@ -264,4 +264,34 @@ describe("Foxx service configuration", () => {
   it("should fail when mount is invalid", async () => {
     expect(() => foxx("config /dev/null")).to.throw();
   });
+
+  it("via stdin should be available", async () => {
+    const input = '{"test1": "test"}';
+    const updateResp = foxx(`config ${mount} @`, true, { input });
+    expect(updateResp).to.have.property("test1");
+    expect(updateResp.test1).to.have.property("current", "test");
+    expect(updateResp.test1).to.not.have.property("warning");
+    expect(updateResp).to.have.property("test2");
+    expect(updateResp.test2).to.not.have.property("current");
+    expect(updateResp.test2).to.not.have.property("warning");
+    const resp = foxx(`config ${mount}`, true);
+    expect(resp).to.have.property("test1");
+    expect(resp.test1).to.have.property("current", "test");
+    expect(resp).to.have.property("test2");
+    expect(resp.test2).to.not.have.property("current");
+  });
+
+  it("via stdin should allow multiple chages", async () => {
+    const input = '{"test1": "test1", "test2": "test2"}';
+    const updateResp = foxx(`config ${mount} @`, true, { input });
+    expect(updateResp).to.have.property("test1");
+    expect(updateResp.test1).to.have.property("current", "test1");
+    expect(updateResp).to.have.property("test2");
+    expect(updateResp.test2).to.have.property("current", "test2");
+    const resp = foxx(`config ${mount}`, true);
+    expect(resp).to.have.property("test1");
+    expect(resp.test1).to.have.property("current", "test1");
+    expect(resp).to.have.property("test2");
+    expect(resp.test2).to.have.property("current", "test2");
+  });
 });
