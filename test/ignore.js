@@ -28,19 +28,19 @@ describe("Foxx ignore", () => {
   });
 
   it("without params should create default ignore file", async () => {
-    foxx("ignore");
+    await foxx("ignore");
     expect(fs.existsSync(ignoreFile)).to.equal(true);
     expect(fs.readFileSync(ignoreFile, "utf-8")).to.equal(defaults);
   });
 
   it("via alias without params should create default ignore file", async () => {
-    foxx("exclude");
+    await foxx("exclude");
     expect(fs.existsSync(ignoreFile)).to.equal(true);
     expect(fs.readFileSync(ignoreFile, "utf-8")).to.equal(defaults);
   });
 
   it("with param first time called should create ignore file", async () => {
-    foxx("ignore test");
+    await foxx("ignore test");
     expect(fs.existsSync(ignoreFile)).to.equal(true);
     const content = fs.readFileSync(ignoreFile, "utf-8");
     expect(content).to.have.string(defaults);
@@ -48,7 +48,7 @@ describe("Foxx ignore", () => {
   });
 
   it("via alias with param first time called should create ignore file", async () => {
-    foxx("exclude test");
+    await foxx("exclude test");
     expect(fs.existsSync(ignoreFile)).to.equal(true);
     const content = fs.readFileSync(ignoreFile, "utf-8");
     expect(content).to.have.string(defaults);
@@ -56,7 +56,7 @@ describe("Foxx ignore", () => {
   });
 
   it("called with multiple params should include every param", async () => {
-    foxx("ignore test1 test2");
+    await foxx("ignore test1 test2");
     const content = fs.readFileSync(ignoreFile, "utf-8");
     expect(content).to.have.string(defaults);
     expect(content).to.have.string("test1");
@@ -64,8 +64,8 @@ describe("Foxx ignore", () => {
   });
 
   it("called a second time should not overwrite previous pattern", async () => {
-    foxx("ignore test1");
-    foxx("ignore test2");
+    await foxx("ignore test1");
+    await foxx("ignore test2");
     const content = fs.readFileSync(ignoreFile, "utf-8");
     expect(content).to.have.string(defaults);
     expect(content).to.have.string("test1");
@@ -73,7 +73,7 @@ describe("Foxx ignore", () => {
   });
 
   it("with option force should overwrite defaults", async () => {
-    foxx("ignore test1 test2 --force");
+    await foxx("ignore test1 test2 --force");
     const content = fs.readFileSync(ignoreFile, "utf-8");
     expect(content).to.not.have.string(defaults);
     expect(content).to.have.string("test1");
@@ -81,8 +81,8 @@ describe("Foxx ignore", () => {
   });
 
   it("with option force should overwrite previous pattern", async () => {
-    foxx("ignore test1");
-    foxx("ignore test2 --force");
+    await foxx("ignore test1");
+    await foxx("ignore test2 --force");
     const content = fs.readFileSync(ignoreFile, "utf-8");
     expect(content).to.not.have.string(defaults);
     expect(content).to.not.have.string("test1");
@@ -93,9 +93,9 @@ describe("Foxx ignore", () => {
     fs.writeFileSync(path.resolve(tmpDir, "test1"), "");
     fs.writeFileSync(path.resolve(tmpDir, "test2"), "");
     fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
-    foxx("ignore test1");
+    await foxx("ignore test1");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
-    foxx(`bundle --outfile ${tmpFile}`);
+    await foxx(`bundle --outfile ${tmpFile}`);
     await require("../src/util/fs").extract(tmpFile, {
       dir: path.resolve(tmpDir, "bundle")
     });
@@ -115,7 +115,7 @@ describe("Foxx ignore", () => {
     fs.writeFileSync(path.resolve(tmpDir, ".git", "test"), "");
     fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
-    foxx(`bundle --outfile ${tmpFile}`);
+    await foxx(`bundle --outfile ${tmpFile}`);
     await require("../src/util/fs").extract(tmpFile, {
       dir: path.resolve(tmpDir, "bundle")
     });
@@ -128,9 +128,9 @@ describe("Foxx ignore", () => {
     fs.mkdirSync(path.resolve(tmpDir, ".git"));
     fs.writeFileSync(path.resolve(tmpDir, ".git", "test"), "");
     fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
-    foxx("ignore");
+    await foxx("ignore");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
-    foxx(`bundle --outfile ${tmpFile}`);
+    await foxx(`bundle --outfile ${tmpFile}`);
     await require("../src/util/fs").extract(tmpFile, {
       dir: path.resolve(tmpDir, "bundle")
     });
@@ -143,9 +143,9 @@ describe("Foxx ignore", () => {
     fs.mkdirSync(path.resolve(tmpDir, ".git"));
     fs.writeFileSync(path.resolve(tmpDir, ".git", "test"), "");
     fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
-    foxx("ignore -f");
+    await foxx("ignore -f");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
-    foxx(`bundle --outfile ${tmpFile}`);
+    await foxx(`bundle --outfile ${tmpFile}`);
     await require("../src/util/fs").extract(tmpFile, {
       dir: path.resolve(tmpDir, "bundle")
     });

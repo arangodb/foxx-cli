@@ -37,7 +37,7 @@ describe("Foxx service development mode", () => {
   it("should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
-    foxx(`set-dev ${mount}`);
+    await foxx(`set-dev ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
@@ -45,7 +45,7 @@ describe("Foxx service development mode", () => {
   it("should be activated via alias", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
-    foxx(`set-development ${mount}`);
+    await foxx(`set-development ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
@@ -53,7 +53,7 @@ describe("Foxx service development mode", () => {
   it("with alternative server URL should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
-    foxx(`set-dev --server ${ARANGO_URL} ${mount}`);
+    await foxx(`set-dev --server ${ARANGO_URL} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
@@ -61,7 +61,7 @@ describe("Foxx service development mode", () => {
   it("with alternative server URL (short option) should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
-    foxx(`set-dev -H ${ARANGO_URL} ${mount}`);
+    await foxx(`set-dev -H ${ARANGO_URL} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
@@ -69,7 +69,7 @@ describe("Foxx service development mode", () => {
   it("with alternative database should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
-    foxx(`set-dev --database _system ${mount}`);
+    await foxx(`set-dev --database _system ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
@@ -77,7 +77,7 @@ describe("Foxx service development mode", () => {
   it("with alternative database (short option) should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
-    foxx(`set-dev -D _system ${mount}`);
+    await foxx(`set-dev -D _system ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
@@ -85,7 +85,7 @@ describe("Foxx service development mode", () => {
   it("with alternative username should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
-    foxx(`set-dev --username ${ARANGO_USERNAME} ${mount}`);
+    await foxx(`set-dev --username ${ARANGO_USERNAME} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
@@ -93,12 +93,17 @@ describe("Foxx service development mode", () => {
   it("with alternative username should be activated (short option)", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(false);
-    foxx(`set-dev -u ${ARANGO_USERNAME} ${mount}`);
+    await foxx(`set-dev -u ${ARANGO_USERNAME} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
   });
 
   it("should fail when mount is invalid", async () => {
-    expect(() => foxx("set-dev /dev/null")).to.throw();
+    try {
+      await foxx("set-dev /dev/null");
+    } catch (e) {
+      return;
+    }
+    expect.fail();
   });
 });

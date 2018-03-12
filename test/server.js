@@ -38,15 +38,15 @@ describe("Foxx with server", () => {
 
   afterEach(async () => {
     try {
-      await foxx(`uninstall ${mount}`);
+      await await foxx(`uninstall ${mount}`);
     } catch (e) {
       // noop
     }
   });
 
   it("with alternative server should be available", async () => {
-    foxx("server set test //localhost:8529");
-    foxx(
+    await foxx("server set test //localhost:8529");
+    await foxx(
       `install --server test ${mount} ${path.resolve(
         basePath,
         "minimal-working-service.zip"

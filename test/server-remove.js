@@ -18,8 +18,8 @@ describe("Foxx server remove", () => {
     if (fs.existsSync(foxxRcFile)) {
       fs.unlinkSync(foxxRcFile);
     }
-    foxx("server set test1 //localhost:8529");
-    foxx("server set test2 //localhost:8530");
+    await foxx("server set test1 //localhost:8529");
+    await foxx("server set test2 //localhost:8530");
   });
 
   after(async () => {
@@ -27,18 +27,18 @@ describe("Foxx server remove", () => {
   });
 
   it("should show added server", async () => {
-    foxx("server remove test1");
+    await foxx("server remove test1");
     const content1 = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content1.replace(/\r\n/g, "\n")).to.equal(
       "[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"
     );
-    foxx("server remove test2");
+    await foxx("server remove test2");
     const content2 = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content2).to.equal("");
   });
 
   it("via alias should show added server", async () => {
-    foxx("remote rm test1");
+    await foxx("remote rm test1");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"
@@ -46,7 +46,7 @@ describe("Foxx server remove", () => {
   });
 
   it("verbose should show added server with password", async () => {
-    foxx("server remove test1 --verbose");
+    await foxx("server remove test1 --verbose");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"
@@ -54,7 +54,7 @@ describe("Foxx server remove", () => {
   });
 
   it("verbose via alias should show added server with password", async () => {
-    foxx("server remove test1 -v");
+    await foxx("server remove test1 -v");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"

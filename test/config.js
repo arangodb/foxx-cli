@@ -35,7 +35,7 @@ describe("Foxx service configuration", () => {
   });
 
   it("empty should be available", async () => {
-    const config = foxx(`config ${mount}`, true);
+    const config = await foxx(`config ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config.test1).to.not.have.property("current");
     expect(config).to.have.property("test2");
@@ -43,7 +43,7 @@ describe("Foxx service configuration", () => {
   });
 
   it("via alias cfg should be available", async () => {
-    const config = foxx(`cfg ${mount}`, true);
+    const config = await foxx(`cfg ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config.test1).to.not.have.property("current");
     expect(config).to.have.property("test2");
@@ -51,7 +51,7 @@ describe("Foxx service configuration", () => {
   });
 
   it("via alias configuration should be available", async () => {
-    const config = foxx(`configuration ${mount}`, true);
+    const config = await foxx(`configuration ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config.test1).to.not.have.property("current");
     expect(config).to.have.property("test2");
@@ -59,55 +59,58 @@ describe("Foxx service configuration", () => {
   });
 
   it("with alternative server URL should be available", async () => {
-    const config = foxx(`config --server ${ARANGO_URL} ${mount}`, true);
+    const config = await foxx(`config --server ${ARANGO_URL} ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config).to.have.property("test2");
   });
 
   it("with alternative server URL (short option) should be available", async () => {
-    const config = foxx(`config -H ${ARANGO_URL} ${mount}`, true);
+    const config = await foxx(`config -H ${ARANGO_URL} ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config).to.have.property("test2");
   });
 
   it("with alternative database should be available", async () => {
-    const config = foxx(`config --database _system ${mount}`, true);
+    const config = await foxx(`config --database _system ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config).to.have.property("test2");
   });
 
   it("with alternative database (short option) should be available", async () => {
-    const config = foxx(`config -D _system ${mount}`, true);
+    const config = await foxx(`config -D _system ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config).to.have.property("test2");
   });
 
   it("with alternative username should be avaiable", async () => {
-    const config = foxx(`config --username ${ARANGO_USERNAME} ${mount}`, true);
+    const config = await foxx(
+      `config --username ${ARANGO_USERNAME} ${mount}`,
+      true
+    );
     expect(config).to.have.property("test1");
     expect(config).to.have.property("test2");
   });
 
   it("with alternative username should be avaiable (short option)", async () => {
-    const config = foxx(`config -u ${ARANGO_USERNAME} ${mount}`, true);
+    const config = await foxx(`config -u ${ARANGO_USERNAME} ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config).to.have.property("test2");
   });
 
   it("empty minimal should be available", async () => {
-    const config = foxx(`config ${mount} --minimal`, true);
+    const config = await foxx(`config ${mount} --minimal`, true);
     expect(config).to.eql({});
   });
 
   it("should be available after update", async () => {
-    const updateResp = foxx(`config ${mount} test1=test`, true);
+    const updateResp = await foxx(`config ${mount} test1=test`, true);
     expect(updateResp).to.have.property("test1");
     expect(updateResp.test1).to.have.property("current", "test");
     expect(updateResp.test1).to.not.have.property("warning");
     expect(updateResp).to.have.property("test2");
     expect(updateResp.test2).to.not.have.property("current");
     expect(updateResp.test2).to.not.have.property("warning");
-    const resp = foxx(`config ${mount}`, true);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test");
     expect(resp).to.have.property("test2");
@@ -115,25 +118,25 @@ describe("Foxx service configuration", () => {
   });
 
   it("minimal should be available after update", async () => {
-    const updateResp = foxx(`config ${mount} test1=test --minimal`, true);
+    const updateResp = await foxx(`config ${mount} test1=test --minimal`, true);
     expect(updateResp).to.have.property("values");
     expect(updateResp.values).to.have.property("test1", "test");
     expect(updateResp.values).to.not.have.property("test2");
     expect(updateResp).to.not.have.property("warnings");
-    const resp = foxx(`config ${mount} --minimal`, true);
+    const resp = await foxx(`config ${mount} --minimal`, true);
     expect(resp).to.have.property("test1", "test");
     expect(resp).to.not.have.property("test2");
   });
 
   it("should be available after replace", async () => {
-    const replaceResp = foxx(`config ${mount} test1=test --force`, true);
+    const replaceResp = await foxx(`config ${mount} test1=test --force`, true);
     expect(replaceResp).to.have.property("test1");
     expect(replaceResp.test1).to.have.property("current", "test");
     expect(replaceResp.test1).to.not.have.property("warning");
     expect(replaceResp).to.have.property("test2");
     expect(replaceResp.test2).to.not.have.property("current");
     expect(replaceResp.test2).to.have.property("warning", "is required");
-    const resp = foxx(`config ${mount}`, true);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test");
     expect(resp).to.have.property("test2");
@@ -141,14 +144,14 @@ describe("Foxx service configuration", () => {
   });
 
   it("should be available after replace via alias", async () => {
-    const replaceResp = foxx(`config ${mount} test1=test --f`, true);
+    const replaceResp = await foxx(`config ${mount} test1=test --f`, true);
     expect(replaceResp).to.have.property("test1");
     expect(replaceResp.test1).to.have.property("current", "test");
     expect(replaceResp.test1).to.not.have.property("warning");
     expect(replaceResp).to.have.property("test2");
     expect(replaceResp.test2).to.not.have.property("current");
     expect(replaceResp.test2).to.have.property("warning", "is required");
-    const resp = foxx(`config ${mount}`, true);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test");
     expect(resp).to.have.property("test2");
@@ -156,7 +159,7 @@ describe("Foxx service configuration", () => {
   });
 
   it("minimal should be available after replace", async () => {
-    const replaceResp = foxx(
+    const replaceResp = await foxx(
       `config ${mount} test1=test --force --minimal`,
       true
     );
@@ -165,15 +168,15 @@ describe("Foxx service configuration", () => {
     expect(replaceResp.values).to.not.have.property("test2");
     expect(replaceResp).to.have.property("warnings");
     expect(replaceResp.warnings).to.have.property("test2", "is required");
-    const resp = foxx(`config ${mount} --minimal`, true);
+    const resp = await foxx(`config ${mount} --minimal`, true);
     expect(resp).to.have.property("test1", "test");
     expect(resp).to.not.have.property("test2");
   });
 
   it("should be merged after update", async () => {
-    foxx(`config ${mount} test2=test2 --force`);
-    foxx(`config ${mount} test1=test1`);
-    const resp = foxx(`config ${mount}`, true);
+    await foxx(`config ${mount} test2=test2 --force`);
+    await foxx(`config ${mount} test1=test1`);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test1");
     expect(resp).to.have.property("test2");
@@ -181,17 +184,17 @@ describe("Foxx service configuration", () => {
   });
 
   it("minimal should be merged after update", async () => {
-    foxx(`config ${mount} test2=test2 --force`);
-    foxx(`config ${mount} test1=test1`);
-    const resp = foxx(`config ${mount} --minimal`, true);
+    await foxx(`config ${mount} test2=test2 --force`);
+    await foxx(`config ${mount} test1=test1`);
+    const resp = await foxx(`config ${mount} --minimal`, true);
     expect(resp).to.have.property("test1", "test1");
     expect(resp).to.have.property("test2", "test2");
   });
 
   it("should be overwritten after replace", async () => {
-    foxx(`config ${mount} test2=test2`);
-    foxx(`config ${mount} test1=test --force`);
-    const resp = foxx(`config ${mount}`, true);
+    await foxx(`config ${mount} test2=test2`);
+    await foxx(`config ${mount} test1=test --force`);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test");
     expect(resp).to.have.property("test2");
@@ -199,20 +202,23 @@ describe("Foxx service configuration", () => {
   });
 
   it("minimal should be overwritten after replace", async () => {
-    foxx(`config ${mount} test2=test2`);
-    foxx(`config ${mount} test1=test --force`);
-    const resp = foxx(`config ${mount} --minimal`, true);
+    await foxx(`config ${mount} test2=test2`);
+    await foxx(`config ${mount} test1=test --force`);
+    const resp = await foxx(`config ${mount} --minimal`, true);
     expect(resp).to.have.property("test1", "test");
     expect(resp).to.not.have.property("test2");
   });
 
   it("update should allow multiple changes", async () => {
-    const updateResp = foxx(`config ${mount} test1=test1 test2=test2`, true);
+    const updateResp = await foxx(
+      `config ${mount} test1=test1 test2=test2`,
+      true
+    );
     expect(updateResp).to.have.property("test1");
     expect(updateResp.test1).to.have.property("current", "test1");
     expect(updateResp).to.have.property("test2");
     expect(updateResp.test2).to.have.property("current", "test2");
-    const resp = foxx(`config ${mount}`, true);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test1");
     expect(resp).to.have.property("test2");
@@ -220,20 +226,20 @@ describe("Foxx service configuration", () => {
   });
 
   it("minimal update should allow multiple changes", async () => {
-    const updateResp = foxx(
+    const updateResp = await foxx(
       `config ${mount} test1=test1 test2=test2 --minimal`,
       true
     );
     expect(updateResp).to.have.property("values");
     expect(updateResp.values).to.have.property("test1", "test1");
     expect(updateResp.values).to.have.property("test2", "test2");
-    const resp = foxx(`config ${mount} --minimal`, true);
+    const resp = await foxx(`config ${mount} --minimal`, true);
     expect(resp).to.have.property("test1", "test1");
     expect(resp).to.have.property("test2", "test2");
   });
 
   it("replace should allow multiple changes", async () => {
-    const updateResp = foxx(
+    const updateResp = await foxx(
       `config ${mount} test1=test1 test2=test2 --force`,
       true
     );
@@ -241,7 +247,7 @@ describe("Foxx service configuration", () => {
     expect(updateResp.test1).to.have.property("current", "test1");
     expect(updateResp).to.have.property("test2");
     expect(updateResp.test2).to.have.property("current", "test2");
-    const resp = foxx(`config ${mount}`, true);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test1");
     expect(resp).to.have.property("test2");
@@ -249,32 +255,37 @@ describe("Foxx service configuration", () => {
   });
 
   it("minimal replace should allow multiple changes", async () => {
-    const updateResp = foxx(
+    const updateResp = await foxx(
       `config ${mount} test1=test1 test2=test2 --minimal --force`,
       true
     );
     expect(updateResp).to.have.property("values");
     expect(updateResp.values).to.have.property("test1", "test1");
     expect(updateResp.values).to.have.property("test2", "test2");
-    const resp = foxx(`config ${mount} --minimal`, true);
+    const resp = await foxx(`config ${mount} --minimal`, true);
     expect(resp).to.have.property("test1", "test1");
     expect(resp).to.have.property("test2", "test2");
   });
 
   it("should fail when mount is invalid", async () => {
-    expect(() => foxx("config /dev/null")).to.throw();
+    try {
+      await foxx("config /dev/null");
+    } catch (e) {
+      return;
+    }
+    expect.fail();
   });
 
   it("via stdin should be available", async () => {
     const input = '{"test1": "test"}';
-    const updateResp = foxx(`config ${mount} @`, true, { input });
+    const updateResp = await foxx(`config ${mount} @`, true, { input });
     expect(updateResp).to.have.property("test1");
     expect(updateResp.test1).to.have.property("current", "test");
     expect(updateResp.test1).to.not.have.property("warning");
     expect(updateResp).to.have.property("test2");
     expect(updateResp.test2).to.not.have.property("current");
     expect(updateResp.test2).to.not.have.property("warning");
-    const resp = foxx(`config ${mount}`, true);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test");
     expect(resp).to.have.property("test2");
@@ -283,12 +294,12 @@ describe("Foxx service configuration", () => {
 
   it("via stdin should allow multiple chages", async () => {
     const input = '{"test1": "test1", "test2": "test2"}';
-    const updateResp = foxx(`config ${mount} @`, true, { input });
+    const updateResp = await foxx(`config ${mount} @`, true, { input });
     expect(updateResp).to.have.property("test1");
     expect(updateResp.test1).to.have.property("current", "test1");
     expect(updateResp).to.have.property("test2");
     expect(updateResp.test2).to.have.property("current", "test2");
-    const resp = foxx(`config ${mount}`, true);
+    const resp = await foxx(`config ${mount}`, true);
     expect(resp).to.have.property("test1");
     expect(resp.test1).to.have.property("current", "test1");
     expect(resp).to.have.property("test2");

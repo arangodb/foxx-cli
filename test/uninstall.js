@@ -39,7 +39,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("via alias remove should not be available", async () => {
-    foxx(`remove ${mount}`);
+    await foxx(`remove ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -49,7 +49,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("via alias purge should not be available", async () => {
-    foxx(`purge ${mount}`);
+    await foxx(`purge ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -59,7 +59,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("with alternative server URL should not be available", async () => {
-    foxx(`uninstall --server ${ARANGO_URL} ${mount}`);
+    await foxx(`uninstall --server ${ARANGO_URL} ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -69,7 +69,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("with alternative server URL (short option) should not be available", async () => {
-    foxx(`uninstall -H ${ARANGO_URL} ${mount}`);
+    await foxx(`uninstall -H ${ARANGO_URL} ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -79,7 +79,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("with alternative database should not be available", async () => {
-    foxx(`uninstall --database _system ${mount}`);
+    await foxx(`uninstall --database _system ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -89,7 +89,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("with alternative database (short option) should not be available", async () => {
-    foxx(`uninstall -D _system ${mount}`);
+    await foxx(`uninstall -D _system ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -99,7 +99,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("with alternative username should be available", async () => {
-    foxx(`uninstall --username ${ARANGO_USERNAME} ${mount}`);
+    await foxx(`uninstall --username ${ARANGO_USERNAME} ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -109,7 +109,7 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("with alternative username should be available (short option)", async () => {
-    foxx(`uninstall -u ${ARANGO_USERNAME} ${mount}`);
+    await foxx(`uninstall -u ${ARANGO_USERNAME} ${mount}`);
     try {
       await db.route(mount).get();
       expect.fail();
@@ -120,7 +120,7 @@ describe("Foxx service uninstalled", () => {
 
   it("should run its teardown script by default", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
-    foxx(
+    await foxx(
       `replace ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
@@ -128,7 +128,7 @@ describe("Foxx service uninstalled", () => {
     );
     const info = await db.collection(col).get();
     expect(info).to.have.property("name", col);
-    foxx(`uninstall ${mount}`);
+    await foxx(`uninstall ${mount}`);
     try {
       await db.collection(col).get();
       expect.fail();
@@ -139,13 +139,13 @@ describe("Foxx service uninstalled", () => {
 
   it("should run its teardown script when enabled", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
-    foxx(
+    await foxx(
       `replace ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
       )}`
     );
-    foxx(`uninstall --teardown ${mount}`);
+    await foxx(`uninstall --teardown ${mount}`);
     try {
       await db.collection(col).get();
       expect.fail();
@@ -157,13 +157,13 @@ describe("Foxx service uninstalled", () => {
   it("should not run its teardown script when disabled", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
     try {
-      foxx(
+      await foxx(
         `replace ${mount} ${path.resolve(
           basePath,
           "minimal-working-setup-teardown.zip"
         )}`
       );
-      foxx(`uninstall --no-teardown ${mount}`);
+      await foxx(`uninstall --no-teardown ${mount}`);
       const info = await db.collection(col).get();
       expect(info).to.have.property("name", col);
     } finally {
@@ -176,6 +176,6 @@ describe("Foxx service uninstalled", () => {
   });
 
   it("should not fail when mount is invalid", async () => {
-    expect(() => foxx("uninstall /dev/null")).to.not.throw();
+    await foxx("uninstall /dev/null");
   });
 });

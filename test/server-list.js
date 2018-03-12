@@ -15,8 +15,8 @@ describe("Foxx server list", () => {
     if (fs.existsSync(foxxRcFile)) {
       fs.unlinkSync(foxxRcFile);
     }
-    foxx("server set test1 //localhost:8529");
-    foxx("server set test2 //localhost:8530");
+    await foxx("server set test1 //localhost:8529");
+    await foxx("server set test2 //localhost:8530");
   });
 
   after(async () => {
@@ -24,24 +24,24 @@ describe("Foxx server list", () => {
   });
 
   it("should include added server", async () => {
-    const server = foxx("server list");
+    const server = await foxx("server list");
     expect(server).to.equal("test1\ntest2\n");
   });
 
   it("via alias should include added server", async () => {
-    const server = foxx("remote ls");
+    const server = await foxx("remote ls");
     expect(server).to.equal("test1\ntest2\n");
   });
 
   it("verbose should include added server with URLs", async () => {
-    const server = foxx("server list --verbose");
+    const server = await foxx("server list --verbose");
     expect(server).to.equal(
       "  test1  http://localhost:8529\n  test2  http://localhost:8530\n"
     );
   });
 
   it("verbose via alias should include added server with URLs", async () => {
-    const server = foxx("server list -v");
+    const server = await foxx("server list -v");
     expect(server).to.equal(
       "  test1  http://localhost:8529\n  test2  http://localhost:8530\n"
     );

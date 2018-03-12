@@ -34,16 +34,16 @@ describe("Foxx service show", () => {
     }
   });
 
-  it("should show information about the service", () => {
-    const service = foxx(`show ${mount}`, true);
+  it("should show information about the service", async () => {
+    const service = await foxx(`show ${mount}`, true);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
 
-  it("should show information about the service via alias", () => {
-    const service = foxx(`info ${mount}`, true);
+  it("should show information about the service via alias", async () => {
+    const service = await foxx(`info ${mount}`, true);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("development", false);
@@ -51,7 +51,7 @@ describe("Foxx service show", () => {
   });
 
   it("with alternative server URL should show information about the service", async () => {
-    const service = foxx(`show --server ${ARANGO_URL} ${mount}`, true);
+    const service = await foxx(`show --server ${ARANGO_URL} ${mount}`, true);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("development", false);
@@ -59,7 +59,7 @@ describe("Foxx service show", () => {
   });
 
   it("with alternative server URL (short option) should show information about the service", async () => {
-    const service = foxx(`show -H ${ARANGO_URL} ${mount}`, true);
+    const service = await foxx(`show -H ${ARANGO_URL} ${mount}`, true);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("development", false);
@@ -67,7 +67,7 @@ describe("Foxx service show", () => {
   });
 
   it("with alternative database should show information about the service", async () => {
-    const service = foxx(`show --database _system ${mount}`, true);
+    const service = await foxx(`show --database _system ${mount}`, true);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("development", false);
@@ -75,7 +75,7 @@ describe("Foxx service show", () => {
   });
 
   it("with alternative database (short option) should show information about the service", async () => {
-    const service = foxx(`show -D _system ${mount}`, true);
+    const service = await foxx(`show -D _system ${mount}`, true);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("development", false);
@@ -83,7 +83,10 @@ describe("Foxx service show", () => {
   });
 
   it("with alternative username should show information about the service", async () => {
-    const service = foxx(`show --username ${ARANGO_USERNAME} ${mount}`, true);
+    const service = await foxx(
+      `show --username ${ARANGO_USERNAME} ${mount}`,
+      true
+    );
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("development", false);
@@ -91,7 +94,7 @@ describe("Foxx service show", () => {
   });
 
   it("with alternative username should show information about the service (short option)", async () => {
-    const service = foxx(`show -u ${ARANGO_USERNAME} ${mount}`, true);
+    const service = await foxx(`show -u ${ARANGO_USERNAME} ${mount}`, true);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("development", false);
@@ -99,6 +102,11 @@ describe("Foxx service show", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    expect(() => foxx("show /dev/null")).to.throw();
+    try {
+      await foxx("show /dev/null");
+    } catch (e) {
+      return;
+    }
+    expect.fail();
   });
 });

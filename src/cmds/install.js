@@ -1,8 +1,9 @@
 "use strict";
+const errors = require("../errors");
 const { common, parseServiceOptions, serverArgs } = require("../util/cli");
-const { fatal, json } = require("../util/log");
+const { error, fatal, json } = require("../util/log");
 
-const { bold } = require("chalk");
+const { bold, white } = require("chalk");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
 const resolveToStream = require("../resolveToStream");
@@ -129,22 +130,47 @@ exports.handler = async function handler(argv) {
   const opts = parseServiceOptions(argv);
   try {
     const server = await resolveServer(argv);
-    return await install(argv, server, opts);
+    const source = argv.remote
+      ? argv.source
+      : await resolveToStream(argv.source);
+    const db = client(server);
+    const result = await db.installService(argv.mount, source, {
+      ...opts,
+      setup: argv.setup
+    });
+    if (argv.raw) {
+      json(result);
+    } else {
+      console.log(result); // TODO pretty-print
+    }
   } catch (e) {
+    if (e.isArangoError) {
+      switch (e.errorNum) {
+        case errors.ERROR_INVALID_MOUNTPOINT:
+          fatal(`Not a valid mount path: "${white(argv.mount)}".`);
+          break;
+        case errors.ERROR_SERVICE_MOUNTPOINT_CONFLICT:
+          fatal(`Mount path already in use: "${white(argv.mount)}".`);
+          break;
+        case errors.ERROR_SERVICE_SOURCE_NOT_FOUND:
+          fatal(`Server failed to resolve source "${white(argv.source)}".`);
+          break;
+        case errors.ERROR_SERVICE_SOURCE_ERROR:
+          fatal(`Server failed to download source "${white(argv.source)}".`);
+          break;
+        case errors.ERROR_SERVICE_MANIFEST_NOT_FOUND:
+          fatal("Service bundle does not contain a manifest.");
+          break;
+        case errors.ERROR_MALFORMED_MANIFEST_FILE:
+          fatal("Service manifest is not a well-formed JSON file.");
+          break;
+        case errors.ERROR_INVALID_SERVICE_MANIFEST:
+          error("Service manifest rejected due to errors:");
+          error(e);
+          process.exit(1);
+          break;
+      }
+    }
     fatal(e);
   }
 };
-
-async function install(argv, server, opts) {
-  const source = argv.remote ? argv.source : await resolveToStream(argv.source);
-  const db = client(server);
-  const result = await db.installService(argv.mount, source, {
-    ...opts,
-    setup: argv.setup
-  });
-  if (argv.raw) {
-    json(result);
-  } else {
-    console.log(result); // TODO pretty-print
-  }
-}

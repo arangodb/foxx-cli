@@ -62,7 +62,7 @@ describe("Foxx service upgraded", () => {
 
   for (const c of cases) {
     it(`via ${c.name} should be available`, async () => {
-      foxx(`upgrade ${mount} ${c.source(arangoPaths)}`);
+      await foxx(`upgrade ${mount} ${c.source(arangoPaths)}`);
       const res = await db.route(mount).get();
       expect(res.body).to.eql({ hello: "world" });
     });
@@ -72,13 +72,13 @@ describe("Foxx service upgraded", () => {
     const input = fs.readFileSync(
       path.resolve(basePath, "minimal-working-service.zip")
     );
-    foxx(`upgrade ${mount} @`, false, { input });
+    await foxx(`upgrade ${mount} @`, false, { input });
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("in development mode should be available", async () => {
-    foxx(`upgrade --development ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade --development ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -86,7 +86,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("in development mode (short option) should be available", async () => {
-    foxx(`upgrade --dev ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade --dev ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -94,31 +94,33 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with alternative server URL should be available", async () => {
-    foxx(`upgrade --server ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
+    await foxx(
+      `upgrade --server ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`
+    );
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative server URL (short option) should be available", async () => {
-    foxx(`upgrade -H ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade -H ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database should be available", async () => {
-    foxx(`upgrade --database _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade --database _system ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database (short option) should be available", async () => {
-    foxx(`upgrade -D _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade -D _system ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be avaiable", async () => {
-    foxx(
+    await foxx(
       `upgrade --username ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
     );
     const res = await db.route(mount).get();
@@ -126,7 +128,9 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with alternative username should be avaiable (short option)", async () => {
-    foxx(`upgrade -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`);
+    await foxx(
+      `upgrade -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
+    );
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
@@ -139,7 +143,7 @@ describe("Foxx service upgraded", () => {
     } catch (e) {
       expect(e.errorNum).to.equal(1203);
     }
-    foxx(
+    await foxx(
       `upgrade ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
@@ -157,7 +161,7 @@ describe("Foxx service upgraded", () => {
     } catch (e) {
       expect(e.errorNum).to.equal(1203);
     }
-    foxx(
+    await foxx(
       `upgrade --setup ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
@@ -175,7 +179,7 @@ describe("Foxx service upgraded", () => {
     } catch (e) {
       expect(e.errorNum).to.equal(1203);
     }
-    foxx(
+    await foxx(
       `upgrade --no-setup ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
@@ -192,13 +196,13 @@ describe("Foxx service upgraded", () => {
   it("should not run its teardown script by default", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
     try {
-      foxx(
+      await foxx(
         `upgrade ${mount} ${path.resolve(
           basePath,
           "minimal-working-setup-teardown.zip"
         )}`
       );
-      foxx(
+      await foxx(
         `upgrade ${mount} ${path.resolve(
           basePath,
           "minimal-working-service.zip"
@@ -217,13 +221,13 @@ describe("Foxx service upgraded", () => {
 
   it("should run its teardown script when enabled", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
-    foxx(
+    await foxx(
       `upgrade ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
       )}`
     );
-    foxx(
+    await foxx(
       `upgrade --teardown ${mount} ${path.resolve(
         basePath,
         "minimal-working-service.zip"
@@ -240,13 +244,13 @@ describe("Foxx service upgraded", () => {
   it("should not run its teardown script when disabled", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
     try {
-      foxx(
+      await foxx(
         `upgrade ${mount} ${path.resolve(
           basePath,
           "minimal-working-setup-teardown.zip"
         )}`
       );
-      foxx(
+      await foxx(
         `upgrade --no-teardown ${mount} ${path.resolve(
           basePath,
           "minimal-working-service.zip"
@@ -264,7 +268,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with configuration should not be set by default", async () => {
-    foxx(
+    await foxx(
       `upgrade ${mount} ${path.resolve(basePath, "with-configuration.zip")}`
     );
     const configuration = await db.getServiceConfiguration(mount, true);
@@ -273,7 +277,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with configuration should have one config set", async () => {
-    foxx(
+    await foxx(
       `upgrade --cfg test1=\\"test1\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -285,7 +289,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with configuration should have two configs set", async () => {
-    foxx(
+    await foxx(
       `upgrade --cfg test1=\\"test1\\" --cfg test2=\\"test2\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -297,7 +301,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with configuration should have one config set (short option)", async () => {
-    foxx(
+    await foxx(
       `upgrade -c test1=\\"test1\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -309,7 +313,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with configuration should have two configs set (short option)", async () => {
-    foxx(
+    await foxx(
       `upgrade -c test1=\\"test1\\" -c test2=\\"test2\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -321,7 +325,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with configuration should have two configs set (mixed options)", async () => {
-    foxx(
+    await foxx(
       `upgrade --cfg test1=\\"test1\\" -c test2=\\"test2\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -333,14 +337,16 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with dependencies should have not be set by default", async () => {
-    foxx(`upgrade ${mount} ${path.resolve(basePath, "with-dependencies.zip")}`);
+    await foxx(
+      `upgrade ${mount} ${path.resolve(basePath, "with-dependencies.zip")}`
+    );
     const dependencies = await db.getServiceDependencies(mount, true);
     expect(dependencies).to.not.have.property("test1");
     expect(dependencies).to.not.have.property("test2");
   });
 
   it("with dependencies should have one dependency set", async () => {
-    foxx(
+    await foxx(
       `upgrade --dep test1=/test1 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -352,7 +358,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with dependencies should have two dependencies set", async () => {
-    foxx(
+    await foxx(
       `upgrade --dep test1=/test1 --dep test2=/test2 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -364,7 +370,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with dependencies should have one dependency set (short option)", async () => {
-    foxx(
+    await foxx(
       `upgrade -d test1=/test1 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -376,7 +382,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with dependencies should have two dependencies set (short option)", async () => {
-    foxx(
+    await foxx(
       `upgrade -d test1=/test1 -d test2=/test2 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -388,7 +394,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with dependencies should have two dependencies set (mixed options)", async () => {
-    foxx(
+    await foxx(
       `upgrade --dep test1=/test1 -d test2=/test2 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -400,19 +406,21 @@ describe("Foxx service upgraded", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    expect(() =>
-      foxx(
+    try {
+      await foxx(
         `upgrade /dev/null ${path.resolve(
           basePath,
           "minimal-working-service.zip"
         )}`
-      )
-    ).to.throw();
-    try {
-      await db.route(`/dev/null`).get();
-      expect.fail();
+      );
     } catch (e) {
-      expect(e).to.have.property("statusCode", 404);
+      try {
+        await db.route(`/dev/null`).get();
+      } catch (e) {
+        expect(e).to.have.property("statusCode", 404);
+        return;
+      }
     }
+    expect.fail();
   });
 });

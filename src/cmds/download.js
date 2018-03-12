@@ -1,4 +1,5 @@
 "use strict";
+const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
 const { bold, white } = require("chalk");
 const { common, serverArgs } = require("../util/cli");
 const { createWriteStream, existsSync } = require("fs");
@@ -154,6 +155,9 @@ exports.handler = async function handler(argv) {
       }
     }
   } catch (e) {
+    if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
+      fatal(`No service found at "${white(argv.mount)}".`);
+    }
     fatal(e);
   }
 };
