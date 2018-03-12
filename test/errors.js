@@ -76,6 +76,92 @@ describe.only("Error handling", () => {
       expect.fail();
     });
   });
+  describe("Foxx install", () => {
+    it("correctly handles INVALID_MOUNTPOINT", async () => {
+      ERROR = errors.ERROR_INVALID_MOUNTPOINT;
+      try {
+        await foxx(`install -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.include("/myfoxx");
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_MOUNTPOINT_CONFLICT", async () => {
+      ERROR = errors.ERROR_SERVICE_MOUNTPOINT_CONFLICT;
+      try {
+        await foxx(`install -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.include("/myfoxx");
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_SOURCE_NOT_FOUND", async () => {
+      ERROR = errors.ERROR_SERVICE_SOURCE_NOT_FOUND;
+      try {
+        await foxx(`install -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/resolve/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_SOURCE_ERROR", async () => {
+      ERROR = errors.ERROR_SERVICE_SOURCE_ERROR;
+      try {
+        await foxx(`install -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/download/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_MANIFEST_NOT_FOUND", async () => {
+      ERROR = errors.ERROR_SERVICE_MANIFEST_NOT_FOUND;
+      try {
+        await foxx(`install -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles MALFORMED_MANIFEST_FILE", async () => {
+      ERROR = errors.ERROR_MALFORMED_MANIFEST_FILE;
+      try {
+        await foxx(`install -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles INVALID_SERVICE_MANIFEST", async () => {
+      ERROR = errors.ERROR_INVALID_SERVICE_MANIFEST;
+      try {
+        await foxx(`install -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
+        return;
+      }
+      expect.fail();
+    });
+  });
   describe("Foxx replace", () => {
     it("correctly handles SERVICE_NOT_FOUND", async () => {
       ERROR = errors.ERROR_SERVICE_NOT_FOUND;
