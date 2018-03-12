@@ -6,7 +6,7 @@ const { inline: il } = require("../util/text");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
 const resolveToStream = require("../resolveToStream");
-const { json, error, fatal } = require("../util/log");
+const { json, info, fatal } = require("../util/log");
 
 const command = (exports.command = "replace <mount> [source]");
 exports.description = "Replace a mounted service";
@@ -155,7 +155,7 @@ exports.handler = async function handler(argv) {
     if (argv.raw) {
       json(result);
     } else {
-      console.log(result); // TODO pretty-print
+      info(`Replaced service at "${white(argv.mount)}".`);
     }
   } catch (e) {
     if (e.isArangoError) {
@@ -176,9 +176,28 @@ exports.handler = async function handler(argv) {
           fatal("Service manifest is not a well-formed JSON file.");
           break;
         case errors.ERROR_INVALID_SERVICE_MANIFEST:
-          error("Service manifest rejected due to errors:");
-          error(e);
-          process.exit(1);
+          fatal(`Service manifest rejected due to errors:\n\n${e.message}`);
+          break;
+        case errors.ERROR_MODULE_NOT_FOUND:
+          fatal(
+            `Server encountered errors trying to locate a JavaScript file:\n\n${
+              e.message
+            }\n\nMake sure the service bundle includes all files referenced in the manifest.`
+          );
+          break;
+        case errors.ERROR_MODULE_FAILURE:
+          fatal(
+            `Server encountered errors executing a JavaScript file:\n\n${
+              e.message
+            }\n\nFor details check the arangod server logs.`
+          );
+          break;
+        case errors.ERROR_MODULE_SYNTAX_ERROR:
+          fatal(
+            `Server encountered errors trying to parse a JavaScript file:\n\n${
+              e.message
+            }`
+          );
           break;
       }
     }

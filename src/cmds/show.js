@@ -1,7 +1,7 @@
 "use strict";
-const { bold, white } = require("chalk");
+const { bold, gray, white } = require("chalk");
 const { common, serverArgs } = require("../util/cli");
-const { fatal, json } = require("../util/log");
+const { fatal, info, json } = require("../util/log");
 
 const client = require("../util/client");
 const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
@@ -52,7 +52,14 @@ exports.handler = async function handler(argv) {
     if (argv.raw) {
       json(result);
     } else {
-      console.log(result); // TODO pretty-print
+      const parts = ["Mount:", result.mount];
+      if (result.legacy) parts.push(gray("(legacy)"));
+      if (result.development) parts.push(bold("[DEV]"));
+      info(parts.join(" "));
+      if (result.name) info(`Name: ${result.name}`);
+      if (result.version) info(`Version: ${result.version}`);
+      info(`Path: ${result.path}`);
+      info(`Checksum: ${result.checksum}`);
     }
   } catch (e) {
     if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
