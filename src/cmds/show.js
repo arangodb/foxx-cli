@@ -48,20 +48,16 @@ exports.handler = async function handler(argv) {
   try {
     const server = await resolveServer(argv);
     const db = client(server);
-    try {
-      const result = await db.getService(argv.mount);
-      if (argv.raw) {
-        json(result);
-      } else {
-        console.log(result); // TODO pretty-print
-      }
-    } catch (e) {
-      if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
-        fatal(`No service found at "${white(argv.mount)}".`);
-      }
-      throw e;
+    const result = await db.getService(argv.mount);
+    if (argv.raw) {
+      json(result);
+    } else {
+      console.log(result); // TODO pretty-print
     }
   } catch (e) {
+    if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
+      fatal(`No service found at "${white(argv.mount)}".`);
+    }
     fatal(e);
   }
 };

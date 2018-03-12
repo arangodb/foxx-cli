@@ -1,5 +1,6 @@
 "use strict";
-const { bold } = require("chalk");
+const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
+const { bold, white } = require("chalk");
 const { common, serverArgs, parseServiceOptions } = require("../util/cli");
 const { inline: il } = require("../util/text");
 const client = require("../util/client");
@@ -157,6 +158,9 @@ exports.handler = async function handler(argv) {
       console.log(result); // TODO pretty-print
     }
   } catch (e) {
+    if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
+      fatal(`No service found at "${white(argv.mount)}".`);
+    }
     fatal(e);
   }
 };

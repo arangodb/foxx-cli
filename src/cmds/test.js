@@ -92,16 +92,14 @@ async function runTests(db, mount, cliReporter) {
     if (e.isArangoError) {
       switch (e.errorNum) {
         case errors.ERROR_SERVICE_NOT_FOUND:
-          error(`No service found at "${white(mount)}".`);
-          process.exit(1);
+          fatal(`No service found at "${white(mount)}".`);
           break;
         case errors.ERROR_SERVICE_NEEDS_CONFIGURATION:
-          error(
+          fatal(
             `Service at "${white(
               mount
             )}" is missing configuration or dependencies.`
           );
-          process.exit(1);
           break;
         case errors.ERROR_MODULE_NOT_FOUND:
           error("An error occured while trying to execute the tests:");
