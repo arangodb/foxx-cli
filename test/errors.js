@@ -22,7 +22,7 @@ const server = http.createServer((req, res) => {
   );
 });
 
-describe.only("Error handling", () => {
+describe("Error handling", () => {
   before(done => {
     server.listen(e => {
       if (!e) HOST = `tcp://localhost:${server.address().port}`;
