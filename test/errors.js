@@ -107,6 +107,54 @@ describe.only("Error handling", () => {
       }
       expect.fail();
     });
+    it("correctly handles SERVICE_NEEDS_CONFIGURATION", async () => {
+      ERROR = errors.ERROR_SERVICE_NEEDS_CONFIGURATION;
+      try {
+        await foxx(`run -H ${HOST} /myfoxx send-mail`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.include("/myfoxx");
+        expect(stderr).to.match(/config/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_UNKNOWN_SCRIPT", async () => {
+      ERROR = errors.ERROR_SERVICE_UNKNOWN_SCRIPT;
+      try {
+        await foxx(`run -H ${HOST} /myfoxx send-mail`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.include("send-mail");
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles MODULE_NOT_FOUND", async () => {
+      ERROR = errors.ERROR_MODULE_NOT_FOUND;
+      try {
+        await foxx(`run -H ${HOST} /myfoxx send-mail`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/require/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_MODULE_FAILURE", async () => {
+      ERROR = errors.ERROR_SERVICE_MODULE_FAILURE;
+      try {
+        await foxx(`run -H ${HOST} /myfoxx send-mail`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        return;
+      }
+      expect.fail();
+    });
   });
   describe("Foxx scripts", () => {
     it("correctly handles SERVICE_NOT_FOUND", async () => {

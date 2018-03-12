@@ -1,6 +1,6 @@
 "use strict";
-const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
-const { json, fatal } = require("../util/log");
+const errors = require("../errors");
+const { json, error, fatal } = require("../util/log");
 
 const { bold, white } = require("chalk");
 const client = require("../util/client");
@@ -83,8 +83,39 @@ exports.handler = async function handler(argv) {
       console.log(result); // TODO pretty-print
     }
   } catch (e) {
-    if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
-      fatal(`No service found at "${white(argv.mount)}".`);
+    if (e.isArangoError) {
+      switch (e.errorNum) {
+        case errors.ERROR_SERVICE_NOT_FOUND:
+          fatal(`No service found at "${white(argv.mount)}".`);
+          break;
+        case errors.ERROR_SERVICE_NEEDS_CONFIGURATION:
+          fatal(
+            `Service at "${white(
+              argv.mount
+            )}" is missing configuration or dependencies.`
+          );
+          break;
+        case errors.ERROR_SERVICE_UNKNOWN_SCRIPT:
+          fatal(`Service does not have a script called "${white(argv.name)}".`);
+          break;
+        case errors.ERROR_MODULE_NOT_FOUND:
+          error("An error occured while trying to execute the script:");
+          error(e);
+          error(
+            "This typically means the script tried to require a path that does not exist."
+          );
+          error(
+            "Make sure the service bundle includes all the files you expect."
+          );
+          process.exit(1);
+          break;
+        case errors.ERROR_MODULE_FAILURE:
+          error("An error occured while trying to execute the script:");
+          error(e);
+          error("This indicates an implementation error in the script.");
+          process.exit(1);
+          break;
+      }
     }
     fatal(e);
   }
