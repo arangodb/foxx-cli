@@ -1,13 +1,9 @@
 /* global describe, it, before, after */
 "use strict";
 const http = require("http");
-const path = require("path");
 const expect = require("chai").expect;
 const foxx = require("./util");
 const errors = require("../src/errors");
-
-const basePath = path.resolve(".", "test", "fixtures");
-const bundle = path.resolve(basePath, "minimal-working-service.zip");
 
 let HOST;
 let ERROR;
@@ -84,11 +80,71 @@ describe.only("Error handling", () => {
     it("correctly handles SERVICE_NOT_FOUND", async () => {
       ERROR = errors.ERROR_SERVICE_NOT_FOUND;
       try {
-        await foxx(`replace -H ${HOST} /myfoxx ${bundle}`);
+        await foxx(`replace -H ${HOST} -R /myfoxx /dev/null`);
       } catch (e) {
         const stderr = e.stderr.toString("utf-8");
         expect(stderr).not.to.match(/unexpected/i);
         expect(stderr).to.include("/myfoxx");
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_SOURCE_NOT_FOUND", async () => {
+      ERROR = errors.ERROR_SERVICE_SOURCE_NOT_FOUND;
+      try {
+        await foxx(`replace -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/resolve/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_SOURCE_ERROR", async () => {
+      ERROR = errors.ERROR_SERVICE_SOURCE_ERROR;
+      try {
+        await foxx(`replace -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/download/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_MANIFEST_NOT_FOUND", async () => {
+      ERROR = errors.ERROR_SERVICE_MANIFEST_NOT_FOUND;
+      try {
+        await foxx(`replace -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles MALFORMED_MANIFEST_FILE", async () => {
+      ERROR = errors.ERROR_MALFORMED_MANIFEST_FILE;
+      try {
+        await foxx(`replace -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles INVALID_SERVICE_MANIFEST", async () => {
+      ERROR = errors.ERROR_INVALID_SERVICE_MANIFEST;
+      try {
+        await foxx(`replace -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
         return;
       }
       expect.fail();
@@ -267,11 +323,71 @@ describe.only("Error handling", () => {
     it("correctly handles SERVICE_NOT_FOUND", async () => {
       ERROR = errors.ERROR_SERVICE_NOT_FOUND;
       try {
-        await foxx(`upgrade -H ${HOST} /myfoxx ${bundle}`);
+        await foxx(`upgrade -H ${HOST} -R /myfoxx /dev/null`);
       } catch (e) {
         const stderr = e.stderr.toString("utf-8");
         expect(stderr).not.to.match(/unexpected/i);
         expect(stderr).to.include("/myfoxx");
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_SOURCE_NOT_FOUND", async () => {
+      ERROR = errors.ERROR_SERVICE_SOURCE_NOT_FOUND;
+      try {
+        await foxx(`upgrade -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/resolve/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_SOURCE_ERROR", async () => {
+      ERROR = errors.ERROR_SERVICE_SOURCE_ERROR;
+      try {
+        await foxx(`upgrade -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/download/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles SERVICE_MANIFEST_NOT_FOUND", async () => {
+      ERROR = errors.ERROR_SERVICE_MANIFEST_NOT_FOUND;
+      try {
+        await foxx(`upgrade -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles MALFORMED_MANIFEST_FILE", async () => {
+      ERROR = errors.ERROR_MALFORMED_MANIFEST_FILE;
+      try {
+        await foxx(`upgrade -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
+        return;
+      }
+      expect.fail();
+    });
+    it("correctly handles INVALID_SERVICE_MANIFEST", async () => {
+      ERROR = errors.ERROR_INVALID_SERVICE_MANIFEST;
+      try {
+        await foxx(`upgrade -H ${HOST} -R /myfoxx /dev/null`);
+      } catch (e) {
+        const stderr = e.stderr.toString("utf-8");
+        expect(stderr).not.to.match(/unexpected/i);
+        expect(stderr).to.match(/manifest/i);
         return;
       }
       expect.fail();

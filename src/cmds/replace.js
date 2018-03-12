@@ -1,12 +1,12 @@
 "use strict";
-const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
+const errors = require("../errors");
 const { bold, white } = require("chalk");
 const { common, serverArgs, parseServiceOptions } = require("../util/cli");
 const { inline: il } = require("../util/text");
 const client = require("../util/client");
 const resolveServer = require("../resolveServer");
 const resolveToStream = require("../resolveToStream");
-const { json, fatal } = require("../util/log");
+const { json, error, fatal } = require("../util/log");
 
 const command = (exports.command = "replace <mount> [source]");
 exports.description = "Replace a mounted service";
@@ -158,8 +158,29 @@ exports.handler = async function handler(argv) {
       console.log(result); // TODO pretty-print
     }
   } catch (e) {
-    if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {
-      fatal(`No service found at "${white(argv.mount)}".`);
+    if (e.isArangoError) {
+      switch (e.errorNum) {
+        case errors.ERROR_SERVICE_NOT_FOUND:
+          fatal(`No service found at "${white(argv.mount)}".`);
+          break;
+        case errors.ERROR_SERVICE_SOURCE_NOT_FOUND:
+          fatal(`Server failed to resolve source "${white(argv.source)}".`);
+          break;
+        case errors.ERROR_SERVICE_SOURCE_ERROR:
+          fatal(`Server failed to download source "${white(argv.source)}".`);
+          break;
+        case errors.ERROR_SERVICE_MANIFEST_NOT_FOUND:
+          fatal("Service bundle does not contain a manifest.");
+          break;
+        case errors.ERROR_MALFORMED_MANIFEST_FILE:
+          fatal("Service manifest is not a well-formed JSON file.");
+          break;
+        case errors.ERROR_INVALID_SERVICE_MANIFEST:
+          error("Service manifest rejected due to errors:");
+          error(e);
+          process.exit(1);
+          break;
+      }
     }
     fatal(e);
   }
