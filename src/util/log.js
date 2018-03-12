@@ -52,13 +52,31 @@ exports.fatal = function fatal(err) {
     exports.error(
       `Network unreachable: ${red.bold(err.address)}:${red.bold(
         err.port
-      )}\nAre you offline?`
+      )}\nThis indicates connectivity issues or a server problem. Are you offline?`
     );
   } else if (err.code === "ECONNREFUSED") {
     exports.error(
       `Connection refused: ${red.bold(err.address)}:${red.bold(
         err.port
-      )}\nIs the server down?`
+      )}\nThis indicates connectivity issues or a server problem. Is the server down?`
+    );
+  } else if (err.code === "ECONNRESET") {
+    exports.error(
+      `Connection reset by peer. The server closed the connection unexpectedly.\nThis indicates connectivity issues or a server problem.`
+    );
+  } else if (err.code === "EMFILE") {
+    exports.error(
+      `Too many open files. Your operating system has reached the maximum number of open file descriptors. Try running ${bold(
+        "`ulimit -n 2048`"
+      )} and try again.`
+    );
+  } else if (err.code === "EPIPE") {
+    exports.error(
+      `Broken pipe. Connection was dropped during upload.\nThis indicates connectivity issues or a server problem.`
+    );
+  } else if (err.code === "ETIMEDOUT") {
+    exports.error(
+      `Operation timed out. Server is not responding.\nThis indicates connectivity issues or a server problem.`
     );
   } else if (err.isArangoError) {
     exports.error(
