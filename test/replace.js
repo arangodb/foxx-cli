@@ -61,14 +61,14 @@ describe("Foxx service replaced", () => {
 
   for (const c of cases) {
     it(`via ${c.name} should be available`, async () => {
-      foxx(`replace ${mount} ${c.source(arangoPaths)}`);
+      await foxx(`replace ${mount} ${c.source(arangoPaths)}`);
       const res = await db.route(mount).get();
       expect(res.body).to.eql({ hello: "world" });
     });
   }
 
   it("in development mode should be available", async () => {
-    foxx(`replace --development ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace --development ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -76,7 +76,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("in development mode (short option) should be available", async () => {
-    foxx(`replace --dev ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace --dev ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -84,31 +84,33 @@ describe("Foxx service replaced", () => {
   });
 
   it("with alternative server URL should be available", async () => {
-    foxx(`replace --server ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
+    await foxx(
+      `replace --server ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`
+    );
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative server URL (short option) should be available", async () => {
-    foxx(`replace -H ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace -H ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database should be available", async () => {
-    foxx(`replace --database _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace --database _system ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database (short option) should be available", async () => {
-    foxx(`replace -D _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace -D _system ${mount} ${arangoPaths.local.js}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be avaiable", async () => {
-    foxx(
+    await foxx(
       `replace --username ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
     );
     const res = await db.route(mount).get();
@@ -116,7 +118,9 @@ describe("Foxx service replaced", () => {
   });
 
   it("with alternative username should be avaiable (short option)", async () => {
-    foxx(`replace -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`);
+    await foxx(
+      `replace -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
+    );
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
@@ -129,7 +133,7 @@ describe("Foxx service replaced", () => {
     } catch (e) {
       expect(e.errorNum).to.equal(1203);
     }
-    foxx(
+    await foxx(
       `replace ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
@@ -147,7 +151,7 @@ describe("Foxx service replaced", () => {
     } catch (e) {
       expect(e.errorNum).to.equal(1203);
     }
-    foxx(
+    await foxx(
       `replace --setup ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
@@ -165,7 +169,7 @@ describe("Foxx service replaced", () => {
     } catch (e) {
       expect(e.errorNum).to.equal(1203);
     }
-    foxx(
+    await foxx(
       `replace --no-setup ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
@@ -181,7 +185,7 @@ describe("Foxx service replaced", () => {
 
   it("should run its teardown script by default", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
-    foxx(
+    await foxx(
       `replace ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
@@ -189,7 +193,7 @@ describe("Foxx service replaced", () => {
     );
     const info = await db.collection(col).get();
     expect(info).to.have.property("name", col);
-    foxx(
+    await foxx(
       `replace ${mount} ${path.resolve(
         basePath,
         "minimal-working-service.zip"
@@ -205,13 +209,13 @@ describe("Foxx service replaced", () => {
 
   it("should run its teardown script when enabled", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
-    foxx(
+    await foxx(
       `replace ${mount} ${path.resolve(
         basePath,
         "minimal-working-setup-teardown.zip"
       )}`
     );
-    foxx(
+    await foxx(
       `replace --teardown ${mount} ${path.resolve(
         basePath,
         "minimal-working-service.zip"
@@ -228,13 +232,13 @@ describe("Foxx service replaced", () => {
   it("should not run its teardown script when disabled", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
     try {
-      foxx(
+      await foxx(
         `replace ${mount} ${path.resolve(
           basePath,
           "minimal-working-setup-teardown.zip"
         )}`
       );
-      foxx(
+      await foxx(
         `replace --no-teardown ${mount} ${path.resolve(
           basePath,
           "minimal-working-service.zip"
@@ -252,7 +256,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with configuration should not be set by default", async () => {
-    foxx(
+    await foxx(
       `replace ${mount} ${path.resolve(basePath, "with-configuration.zip")}`
     );
     const configuration = await db.getServiceConfiguration(mount, true);
@@ -261,7 +265,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with configuration should have one config set", async () => {
-    foxx(
+    await foxx(
       `replace --cfg test1=\\"test1\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -273,7 +277,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with configuration should have two configs set", async () => {
-    foxx(
+    await foxx(
       `replace --cfg test1=\\"test1\\" --cfg test2=\\"test2\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -285,7 +289,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with configuration should have one config set (short option)", async () => {
-    foxx(
+    await foxx(
       `replace -c test1=\\"test1\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -297,7 +301,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with configuration should have two configs set (short option)", async () => {
-    foxx(
+    await foxx(
       `replace -c test1=\\"test1\\" -c test2=\\"test2\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -309,7 +313,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with configuration should have two configs set (mixed options)", async () => {
-    foxx(
+    await foxx(
       `replace --cfg test1=\\"test1\\" -c test2=\\"test2\\" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
@@ -321,14 +325,16 @@ describe("Foxx service replaced", () => {
   });
 
   it("with dependencies should have not be set by default", async () => {
-    foxx(`replace ${mount} ${path.resolve(basePath, "with-dependencies.zip")}`);
+    await foxx(
+      `replace ${mount} ${path.resolve(basePath, "with-dependencies.zip")}`
+    );
     const dependencies = await db.getServiceDependencies(mount, true);
     expect(dependencies).to.not.have.property("test1");
     expect(dependencies).to.not.have.property("test2");
   });
 
   it("with dependencies should have one dependency set", async () => {
-    foxx(
+    await foxx(
       `replace --dep test1=/test1 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -340,7 +346,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with dependencies should have two dependencies set", async () => {
-    foxx(
+    await foxx(
       `replace --dep test1=/test1 --dep test2=/test2 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -352,7 +358,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with dependencies should have one dependency set (short option)", async () => {
-    foxx(
+    await foxx(
       `replace -d test1=/test1 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -364,7 +370,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with dependencies should have two dependencies set (short option)", async () => {
-    foxx(
+    await foxx(
       `replace -d test1=/test1 -d test2=/test2 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -376,7 +382,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("with dependencies should have two dependencies set (mixed options)", async () => {
-    foxx(
+    await foxx(
       `replace --dep test1=/test1 -d test2=/test2 ${mount} ${path.resolve(
         basePath,
         "with-dependencies.zip"
@@ -388,19 +394,21 @@ describe("Foxx service replaced", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    expect(() =>
-      foxx(
+    try {
+      await foxx(
         `replace /dev/null ${path.resolve(
           basePath,
           "minimal-working-service.zip"
         )}`
-      )
-    ).to.throw();
-    try {
-      await db.route("/dev/null").get();
-      expect.fail();
+      );
     } catch (e) {
-      expect(e).to.have.property("statusCode", 404);
+      try {
+        await db.route("/dev/null").get();
+      } catch (e) {
+        expect(e).to.have.property("statusCode", 404);
+        return;
+      }
     }
+    expect.fail();
   });
 });

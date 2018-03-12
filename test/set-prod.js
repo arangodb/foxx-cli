@@ -38,7 +38,7 @@ describe("Foxx service production mode", () => {
   it("should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(true);
-    foxx(`set-prod ${mount}`);
+    await foxx(`set-prod ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(false);
   });
@@ -46,7 +46,7 @@ describe("Foxx service production mode", () => {
   it("should be activated via alias", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(true);
-    foxx(`set-production ${mount}`);
+    await foxx(`set-production ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(false);
   });
@@ -54,7 +54,7 @@ describe("Foxx service production mode", () => {
   it("with alternative server URL should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(true);
-    foxx(`set-prod --server ${ARANGO_URL} ${mount}`);
+    await foxx(`set-prod --server ${ARANGO_URL} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(false);
   });
@@ -62,7 +62,7 @@ describe("Foxx service production mode", () => {
   it("with alternative server URL (short option) should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(true);
-    foxx(`set-prod -H ${ARANGO_URL} ${mount}`);
+    await foxx(`set-prod -H ${ARANGO_URL} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(false);
   });
@@ -70,7 +70,7 @@ describe("Foxx service production mode", () => {
   it("with alternative database should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(true);
-    foxx(`set-prod --database _system ${mount}`);
+    await foxx(`set-prod --database _system ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(false);
   });
@@ -78,7 +78,7 @@ describe("Foxx service production mode", () => {
   it("with alternative database (short option) should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(true);
-    foxx(`set-prod -D _system ${mount}`);
+    await foxx(`set-prod -D _system ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(false);
   });
@@ -86,7 +86,7 @@ describe("Foxx service production mode", () => {
   it("with alternative username should be activated", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(true);
-    foxx(`set-prod --username ${ARANGO_USERNAME} ${mount}`);
+    await foxx(`set-prod --username ${ARANGO_USERNAME} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(false);
   });
@@ -94,12 +94,17 @@ describe("Foxx service production mode", () => {
   it("with alternative username should be activated (short option)", async () => {
     const infoBefore = await db.getService(mount);
     expect(infoBefore.development).to.equal(true);
-    foxx(`set-prod -u ${ARANGO_USERNAME} ${mount}`);
+    await foxx(`set-prod -u ${ARANGO_USERNAME} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(false);
   });
 
   it("should fail when mount is invalid", async () => {
-    expect(() => foxx("set-prod /dev/null")).to.throw();
+    try {
+      await foxx("set-prod /dev/null");
+    } catch (e) {
+      return;
+    }
+    expect.fail();
   });
 });

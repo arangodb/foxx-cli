@@ -15,8 +15,8 @@ describe("Foxx server show", () => {
     if (fs.existsSync(foxxRcFile)) {
       fs.unlinkSync(foxxRcFile);
     }
-    foxx("server set test1 //localhost:8529");
-    foxx("server set test2 //localhost:8530");
+    await foxx("server set test1 //localhost:8529");
+    await foxx("server set test2 //localhost:8530");
   });
 
   after(async () => {
@@ -24,32 +24,32 @@ describe("Foxx server show", () => {
   });
 
   it("should show added server", async () => {
-    const server1 = foxx("server show test1");
+    const server1 = await foxx("server show test1");
     expect(server1).to.equal(
       "URL: http://localhost:8529\nDatabase: _system\nUsername: root\nPassword: (hidden)\n"
     );
-    const server2 = foxx("server show test2");
+    const server2 = await foxx("server show test2");
     expect(server2).to.equal(
       "URL: http://localhost:8530\nDatabase: _system\nUsername: root\nPassword: (hidden)\n"
     );
   });
 
   it("via alias should show added server", async () => {
-    const server = foxx("remote info test1");
+    const server = await foxx("remote info test1");
     expect(server).to.equal(
       "URL: http://localhost:8529\nDatabase: _system\nUsername: root\nPassword: (hidden)\n"
     );
   });
 
   it("verbose should show added server with password", async () => {
-    const server = foxx("server show test1 --verbose");
+    const server = await foxx("server show test1 --verbose");
     expect(server).to.equal(
       "URL: http://localhost:8529\nDatabase: _system\nUsername: root\nPassword: (empty)\n"
     );
   });
 
   it("verbose via alias should show added server with password", async () => {
-    const server = foxx("server show test1 -v");
+    const server = await foxx("server show test1 -v");
     expect(server).to.equal(
       "URL: http://localhost:8529\nDatabase: _system\nUsername: root\nPassword: (empty)\n"
     );

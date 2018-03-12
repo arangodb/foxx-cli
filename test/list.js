@@ -34,14 +34,14 @@ describe("Foxx service list", () => {
     }
   });
 
-  it("should exclude system services", () => {
-    const services = foxx("list", true);
+  it("should exclude system services", async () => {
+    const services = await foxx("list", true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
   });
 
   it("should include installed service", async () => {
-    const services = foxx("list", true);
+    const services = await foxx("list", true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
     const service = services.find(service => service.mount === mount);
@@ -54,7 +54,7 @@ describe("Foxx service list", () => {
   });
 
   it("with alternative server URL should show information about the service", async () => {
-    const services = foxx(`list --server ${ARANGO_URL}`, true);
+    const services = await foxx(`list --server ${ARANGO_URL}`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
     const service = services.find(service => service.mount === mount);
@@ -67,7 +67,7 @@ describe("Foxx service list", () => {
   });
 
   it("with alternative server URL (short option) should show information about the service", async () => {
-    const services = foxx(`list -H ${ARANGO_URL}`, true);
+    const services = await foxx(`list -H ${ARANGO_URL}`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
     const service = services.find(service => service.mount === mount);
@@ -80,7 +80,7 @@ describe("Foxx service list", () => {
   });
 
   it("with alternative database should show information about the service", async () => {
-    const services = foxx(`list --database _system`, true);
+    const services = await foxx(`list --database _system`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
     const service = services.find(service => service.mount === mount);
@@ -93,7 +93,7 @@ describe("Foxx service list", () => {
   });
 
   it("with alternative database (short option) should show information about the service", async () => {
-    const services = foxx(`list -D _system`, true);
+    const services = await foxx(`list -D _system`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
     const service = services.find(service => service.mount === mount);
@@ -106,7 +106,7 @@ describe("Foxx service list", () => {
   });
 
   it("with alternative username should show information about the service", async () => {
-    const services = foxx(`list --username ${ARANGO_USERNAME}`, true);
+    const services = await foxx(`list --username ${ARANGO_USERNAME}`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
     const service = services.find(service => service.mount === mount);
@@ -119,7 +119,7 @@ describe("Foxx service list", () => {
   });
 
   it("with alternative username should show information about the service (short option)", async () => {
-    const services = foxx(`list -u ${ARANGO_USERNAME}`, true);
+    const services = await foxx(`list -u ${ARANGO_USERNAME}`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
     const service = services.find(service => service.mount === mount);

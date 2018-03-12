@@ -57,68 +57,70 @@ describe("Foxx service download", () => {
   });
 
   it("should output bundle per default", async () => {
-    const output = foxx(`download ${mount}`);
+    const output = await foxx(`download ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("via alias should output bundle per default", async () => {
-    const output = foxx(`dl ${mount}`);
+    const output = await foxx(`dl ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("should output bundle with option stdout", async () => {
-    const output = foxx(`download --stdout ${mount}`);
+    const output = await foxx(`download --stdout ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("should output bundle with alias of option stdout", async () => {
-    const output = foxx(`download -O ${mount}`);
+    const output = await foxx(`download -O ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("should output bundle ", async () => {
-    const output = foxx(`download ${mount}`);
+    const output = await foxx(`download ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
   it("with alternative server URL should output bundle", async () => {
-    const output = foxx(`download --server ${ARANGO_URL} ${mount}`);
+    const output = await foxx(`download --server ${ARANGO_URL} ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("with alternative server URL (short option) should output bundle", async () => {
-    const output = foxx(`download -H ${ARANGO_URL} ${mount}`);
+    const output = await foxx(`download -H ${ARANGO_URL} ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("with alternative database should output bundle", async () => {
-    const output = foxx(`download --database _system ${mount}`);
+    const output = await foxx(`download --database _system ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("with alternative database (short option) should output bundle", async () => {
-    const output = foxx(`download -D _system ${mount}`);
+    const output = await foxx(`download -D _system ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("with alternative username should output bundle", async () => {
-    const output = foxx(`download --username ${ARANGO_USERNAME} ${mount}`);
+    const output = await foxx(
+      `download --username ${ARANGO_USERNAME} ${mount}`
+    );
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("with alternative username should output bundle (short option)", async () => {
-    const output = foxx(`download -u ${ARANGO_USERNAME} ${mount}`);
+    const output = await foxx(`download -u ${ARANGO_USERNAME} ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
   it("should write bundle to outfile", async () => {
-    const output = foxx(`download --outfile ${tmpFile} ${mount}`);
+    const output = await foxx(`download --outfile ${tmpFile} ${mount}`);
     expect(output).to.equal("");
     expect(fs.existsSync(tmpFile)).to.equal(true);
     expect(fs.readFileSync(tmpFile, "utf-8")).to.match(/^PK\u0003\u0004/);
   });
 
   it("via alias should write bundle to outfile", async () => {
-    const output = foxx(`download -o ${tmpFile} ${mount}`);
+    const output = await foxx(`download -o ${tmpFile} ${mount}`);
     expect(output).to.equal("");
     expect(fs.existsSync(tmpFile)).to.equal(true);
     expect(fs.readFileSync(tmpFile, "utf-8")).to.match(/^PK\u0003\u0004/);
@@ -126,14 +128,19 @@ describe("Foxx service download", () => {
 
   it("should not overwrite outfile per default", async () => {
     fs.writeFileSync(tmpFile, "no");
-    expect(() => foxx(`download --outfile ${tmpFile} ${mount}`)).to.throw();
-    expect(fs.existsSync(tmpFile)).to.equal(true);
-    expect(fs.readFileSync(tmpFile, "utf-8")).to.equal("no");
+    try {
+      await foxx(`download --outfile ${tmpFile} ${mount}`);
+    } catch (e) {
+      expect(fs.existsSync(tmpFile)).to.equal(true);
+      expect(fs.readFileSync(tmpFile, "utf-8")).to.equal("no");
+      return;
+    }
+    expect.fail();
   });
 
   it("should overwrite outfile when forced", async () => {
     fs.writeFileSync(tmpFile, "");
-    const output = foxx(`download --outfile ${tmpFile} --force ${mount}`);
+    const output = await foxx(`download --outfile ${tmpFile} --force ${mount}`);
     expect(output).to.equal("");
     expect(fs.existsSync(tmpFile)).to.equal(true);
     expect(fs.readFileSync(tmpFile, "utf-8")).to.match(/^PK\u0003\u0004/);
@@ -141,20 +148,22 @@ describe("Foxx service download", () => {
 
   it("should overwrite outfile when forced via alias", async () => {
     fs.writeFileSync(tmpFile, "");
-    const output = foxx(`download -o ${tmpFile} -f ${mount}`);
+    const output = await foxx(`download -o ${tmpFile} -f ${mount}`);
     expect(output).to.equal("");
     expect(fs.existsSync(tmpFile)).to.equal(true);
     expect(fs.readFileSync(tmpFile, "utf-8")).to.match(/^PK\u0003\u0004/);
   });
 
   it("should extract bundle outfile", async () => {
-    const output = foxx(`download --extract --outfile ${tmpDir} ${mount}`);
+    const output = await foxx(
+      `download --extract --outfile ${tmpDir} ${mount}`
+    );
     expect(output).to.equal("");
     expect(fs.existsSync(manifest)).to.equal(true);
   });
 
   it("via alias should extract bundle outfile", async () => {
-    const output = foxx(`download -x -o ${tmpDir} ${mount}`);
+    const output = await foxx(`download -x -o ${tmpDir} ${mount}`);
     expect(output).to.equal("");
     expect(fs.existsSync(manifest)).to.equal(true);
   });
@@ -162,38 +171,53 @@ describe("Foxx service download", () => {
   it("should not overwrite outfile per default", async () => {
     fs.mkdirSync(tmpDir);
     fs.mkdirSync(tmpServiceDir);
-    expect(() =>
-      foxx(`download --extract --outfile ${tmpDir} ${mount}`)
-    ).to.throw();
-    expect(fs.existsSync(manifest)).to.equal(false);
+    try {
+      await foxx(`download --extract --outfile ${tmpDir} ${mount}`);
+    } catch (e) {
+      expect(fs.existsSync(manifest)).to.equal(false);
+      return;
+    }
+    expect.fail();
   });
 
   it("should overwrite outfile when forced", async () => {
     fs.mkdirSync(tmpDir);
     fs.mkdirSync(tmpServiceDir);
-    foxx(`download --extract --outfile ${tmpDir} --force ${mount}`);
+    await foxx(`download --extract --outfile ${tmpDir} --force ${mount}`);
     expect(fs.existsSync(manifest)).to.equal(true);
   });
 
   it("should overwrite outfile when forced via alias", async () => {
     fs.mkdirSync(tmpDir);
     fs.mkdirSync(tmpServiceDir);
-    foxx(`download -x -o ${tmpDir} -f ${mount}`);
+    await foxx(`download -x -o ${tmpDir} -f ${mount}`);
     expect(fs.existsSync(manifest)).to.equal(true);
   });
 
   it("should fail when mount is invalid", async () => {
-    expect(() => foxx("download /dev/null")).to.throw();
+    try {
+      await foxx("download /dev/null");
+    } catch (e) {
+      return;
+    }
+    expect.fail();
   });
 
   it("should extract in cwd when no outfile set", async () => {
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
-    const output = foxx(`download --extract ${mount}`, false, { cwd: tmpDir });
+    const output = await foxx(`download --extract ${mount}`, false, {
+      cwd: tmpDir
+    });
     expect(output).to.equal("");
     expect(fs.existsSync(manifest)).to.equal(true);
   });
 
   it("should fail with options stdout and extract", async () => {
-    expect(() => foxx(`download --stdout --extract ${mount}`)).to.throw();
+    try {
+      await foxx(`download --stdout --extract ${mount}`);
+    } catch (e) {
+      return;
+    }
+    expect.fail();
   });
 });

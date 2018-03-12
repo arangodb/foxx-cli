@@ -33,7 +33,7 @@ describe("Foxx service test", () => {
 
   it("should print test result", async () => {
     try {
-      foxx(`test ${mount}`);
+      await foxx(`test ${mount}`);
     } catch (e) {
       const result = e.stdout.toString("utf-8");
       expect(result).to.has.string("4 passing");
@@ -43,7 +43,7 @@ describe("Foxx service test", () => {
 
   it("with alternative server URL should print test result", async () => {
     try {
-      foxx(`test ${mount} --server ${ARANGO_URL}`);
+      await foxx(`test ${mount} --server ${ARANGO_URL}`);
     } catch (e) {
       const result = e.stdout.toString("utf-8");
       expect(result).to.has.string("4 passing");
@@ -53,7 +53,7 @@ describe("Foxx service test", () => {
 
   it("with alternative server URL (short option) should print test result", async () => {
     try {
-      foxx(`test ${mount} -H ${ARANGO_URL}`);
+      await foxx(`test ${mount} -H ${ARANGO_URL}`);
     } catch (e) {
       const result = e.stdout.toString("utf-8");
       expect(result).to.has.string("4 passing");
@@ -63,7 +63,7 @@ describe("Foxx service test", () => {
 
   it("with alternative database should print test result", async () => {
     try {
-      foxx(`test ${mount} --database _system`);
+      await foxx(`test ${mount} --database _system`);
     } catch (e) {
       const result = e.stdout.toString("utf-8");
       expect(result).to.has.string("4 passing");
@@ -73,7 +73,7 @@ describe("Foxx service test", () => {
 
   it("with alternative database (short option) should print test result", async () => {
     try {
-      foxx(`test ${mount} -D _system`);
+      await foxx(`test ${mount} -D _system`);
     } catch (e) {
       const result = e.stdout.toString("utf-8");
       expect(result).to.has.string("4 passing");
@@ -83,7 +83,7 @@ describe("Foxx service test", () => {
 
   it("with alternative username should print test result", async () => {
     try {
-      foxx(`test ${mount} --username ${ARANGO_USERNAME}`);
+      await foxx(`test ${mount} --username ${ARANGO_USERNAME}`);
     } catch (e) {
       const result = e.stdout.toString("utf-8");
       expect(result).to.has.string("4 passing");
@@ -93,7 +93,7 @@ describe("Foxx service test", () => {
 
   it("with alternative username should print test result (short option)", async () => {
     try {
-      foxx(`test ${mount} -u ${ARANGO_USERNAME}`);
+      await foxx(`test ${mount} -u ${ARANGO_USERNAME}`);
     } catch (e) {
       const result = e.stdout.toString("utf-8");
       expect(result).to.has.string("4 passing");
@@ -102,6 +102,11 @@ describe("Foxx service test", () => {
   });
 
   it("should fail when mount is invalid", async () => {
-    expect(() => foxx(`test /dev/null echo`)).to.throw();
+    try {
+      await foxx(`test /dev/null echo`);
+    } catch (e) {
+      return;
+    }
+    expect.fail();
   });
 });

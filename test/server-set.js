@@ -25,12 +25,12 @@ describe("Foxx server set", () => {
   });
 
   it("first executed should create rc file", async () => {
-    foxx("server set test //localhost:8529");
+    await foxx("server set test //localhost:8529");
     expect(fs.existsSync(foxxRcFile)).to.equal(true);
   });
 
   it("should add server to rc file", async () => {
-    foxx("server set test //localhost:8529");
+    await foxx("server set test //localhost:8529");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=http://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
@@ -38,7 +38,7 @@ describe("Foxx server set", () => {
   });
 
   it("via alias should add server to rc file", async () => {
-    foxx("remote add test //localhost:8529");
+    await foxx("remote add test //localhost:8529");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=http://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
@@ -46,7 +46,7 @@ describe("Foxx server set", () => {
   });
 
   it("should add http server to rc file", async () => {
-    foxx("server set test http://localhost:8529");
+    await foxx("server set test http://localhost:8529");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=http://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
@@ -54,7 +54,7 @@ describe("Foxx server set", () => {
   });
 
   it("should add https server to rc file", async () => {
-    foxx("server set test https://localhost:8529");
+    await foxx("server set test https://localhost:8529");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=https://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
@@ -62,7 +62,7 @@ describe("Foxx server set", () => {
   });
 
   it("should add tcp server to rc file", async () => {
-    foxx("server set test tcp://localhost:8529");
+    await foxx("server set test tcp://localhost:8529");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=http://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
@@ -70,7 +70,7 @@ describe("Foxx server set", () => {
   });
 
   it("should add ssl server to rc file", async () => {
-    foxx("server set test ssl://localhost:8529");
+    await foxx("server set test ssl://localhost:8529");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=https://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
@@ -78,8 +78,8 @@ describe("Foxx server set", () => {
   });
 
   it("executed two time should add both server to rc file", async () => {
-    foxx("server set test1 //localhost:8529");
-    foxx("server set test2 //localhost:8530");
+    await foxx("server set test1 //localhost:8529");
+    await foxx("server set test2 //localhost:8530");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test1]\nurl=http://localhost:8529\ndatabase=_system\nusername=root\npassword=\n\n[server.test2]\nurl=http://localhost:8530\ndatabase=_system\nusername=root\npassword=\n"
@@ -87,7 +87,7 @@ describe("Foxx server set", () => {
   });
 
   it("should add server with alternative database to rc file", async () => {
-    foxx("server set test //localhost:8529 --database test");
+    await foxx("server set test //localhost:8529 --database test");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=http://localhost:8529\ndatabase=test\nusername=root\npassword=\n"
@@ -95,7 +95,7 @@ describe("Foxx server set", () => {
   });
 
   it("should add server with alternative database to rc file using alias", async () => {
-    foxx("server set test //localhost:8529 -D test");
+    await foxx("server set test //localhost:8529 -D test");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=http://localhost:8529\ndatabase=test\nusername=root\npassword=\n"
@@ -103,7 +103,7 @@ describe("Foxx server set", () => {
   });
 
   it("should add server with alternative username to rc file", async () => {
-    foxx("server set test //localhost:8529 --username test");
+    await foxx("server set test //localhost:8529 --username test");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=http://localhost:8529\ndatabase=_system\nusername=test\npassword=\n"
@@ -111,7 +111,7 @@ describe("Foxx server set", () => {
   });
 
   it("should add server with alternative uesrname to rc file using alias", async () => {
-    foxx("server set test //localhost:8529 -u test");
+    await foxx("server set test //localhost:8529 -u test");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
       "[server.test]\nurl=http://localhost:8529\ndatabase=_system\nusername=test\npassword=\n"
@@ -119,7 +119,12 @@ describe("Foxx server set", () => {
   });
 
   it("should fail when server URL is not valid", async () => {
-    expect(() => foxx("server set test not-valid")).to.throw();
-    expect(fs.existsSync(foxxRcFile)).to.equal(false);
+    try {
+      await foxx("server set test not-valid");
+    } catch (e) {
+      expect(fs.existsSync(foxxRcFile)).to.equal(false);
+      return;
+    }
+    expect.fail();
   });
 });
