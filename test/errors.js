@@ -281,13 +281,13 @@ describe("Error handling", () => {
       } catch (e) {
         const stderr = e.stderr.toString("utf-8");
         expect(stderr).not.to.match(/unexpected/i);
-        expect(stderr).to.match(/require/i);
+        expect(stderr).to.match(/include/i);
         return;
       }
       expect.fail();
     });
-    it("correctly handles SERVICE_MODULE_FAILURE", async () => {
-      ERROR = errors.ERROR_SERVICE_MODULE_FAILURE;
+    it("correctly handles MODULE_FAILURE", async () => {
+      ERROR = errors.ERROR_MODULE_FAILURE;
       try {
         await foxx(`run -H ${HOST} /myfoxx send-mail`);
       } catch (e) {
@@ -387,7 +387,7 @@ describe("Error handling", () => {
       } catch (e) {
         const stderr = e.stderr.toString("utf-8");
         expect(stderr).not.to.match(/unexpected/i);
-        expect(stderr).to.match(/require/i);
+        expect(stderr).to.match(/include/i);
         return;
       }
       expect.fail();

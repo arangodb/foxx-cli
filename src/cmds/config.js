@@ -104,12 +104,19 @@ exports.handler = async function handler(argv) {
     }
     if (argv.raw) {
       if (argv.minimal) {
-        json(
-          Object.keys(result).reduce((obj, key) => {
-            obj[key] = result[key].current;
+        result = Object.keys(result).reduce(
+          (obj, key) => {
+            obj.values[key] = result[key].current;
+            if (result[key].warning) {
+              if (!obj.warnings) obj.warnings = {};
+              obj.warnings[key] = result[key].warning;
+            }
             return obj;
-          }, {})
+          },
+          { values: {} }
         );
+        if (!options) json(result.values);
+        else json(result);
       } else json(result);
     } else if (argv.minimal) {
       for (const key of Object.keys(result)) {
