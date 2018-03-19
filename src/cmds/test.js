@@ -1,7 +1,7 @@
 "use strict";
 const { bold, white } = require("chalk");
 const { common, serverArgs } = require("../util/cli");
-const { error, fatal, info, json } = require("../util/log");
+const { fatal, info, json } = require("../util/log");
 const { group, inline: il } = require("../util/text");
 
 const client = require("../util/client");
@@ -102,24 +102,25 @@ async function runTests(db, mount, cliReporter) {
           );
           break;
         case errors.ERROR_MODULE_NOT_FOUND:
-          error("An error occured while trying to execute the tests:");
-          error(e);
-          error(
-            "This typically means the tests tried to require a path that does not exist."
+          fatal(
+            `Server encountered errors trying to locate a JavaScript file:\n\n${
+              e.message
+            }\n\nMake sure the service bundle includes all files referenced in the manifest.`
           );
-          error(
-            "Make sure the service bundle includes all the files you expect."
-          );
-          process.exit(1);
           break;
         case errors.ERROR_MODULE_FAILURE:
-          error("An error occured while trying to execute the tests:");
-          error(e);
-          error(il`
-            Make sure all tests are specified via the manifest,
-            not loaded directly from another test file.
-          `);
-          process.exit(1);
+          fatal(
+            `Server encountered errors executing a JavaScript file:\n\n${
+              e.message
+            }\n\nMake sure all tests are specified via the manifest, not loaded directly from another test file. For details check the arangod server logs.`
+          );
+          break;
+        case errors.ERROR_MODULE_SYNTAX_ERROR:
+          fatal(
+            `Server encountered errors trying to parse a JavaScript file:\n\n${
+              e.message
+            }`
+          );
           break;
       }
     }

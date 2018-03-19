@@ -1,7 +1,7 @@
 "use strict";
 const errors = require("../errors");
 const { common, parseServiceOptions, serverArgs } = require("../util/cli");
-const { error, fatal, json } = require("../util/log");
+const { fatal, info, json } = require("../util/log");
 
 const { bold, white } = require("chalk");
 const { inline: il } = require("../util/text");
@@ -152,7 +152,7 @@ exports.handler = async function handler(argv) {
     if (argv.raw) {
       json(result);
     } else {
-      console.log(result); // TODO pretty-print
+      info(`Upgraded service at "${white(argv.mount)}".`);
     }
   } catch (e) {
     if (e.isArangoError) {
@@ -173,9 +173,28 @@ exports.handler = async function handler(argv) {
           fatal("Service manifest is not a well-formed JSON file.");
           break;
         case errors.ERROR_INVALID_SERVICE_MANIFEST:
-          error("Service manifest rejected due to errors:");
-          error(e);
-          process.exit(1);
+          fatal(`Service manifest rejected due to errors:\n\n${e.message}`);
+          break;
+        case errors.ERROR_MODULE_NOT_FOUND:
+          fatal(
+            `Server encountered errors trying to locate a JavaScript file:\n\n${
+              e.message
+            }\n\nMake sure the service bundle includes all files referenced in the manifest.`
+          );
+          break;
+        case errors.ERROR_MODULE_FAILURE:
+          fatal(
+            `Server encountered errors executing a JavaScript file:\n\n${
+              e.message
+            }\n\nFor details check the arangod server logs.`
+          );
+          break;
+        case errors.ERROR_MODULE_SYNTAX_ERROR:
+          fatal(
+            `Server encountered errors trying to parse a JavaScript file:\n\n${
+              e.message
+            }`
+          );
           break;
       }
     }

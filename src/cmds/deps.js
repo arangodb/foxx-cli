@@ -1,8 +1,8 @@
 "use strict";
 const { ERROR_SERVICE_NOT_FOUND } = require("../errors");
-const { error, fatal, json } = require("../util/log");
+const { error, info, fatal, json } = require("../util/log");
 
-const { bold, white } = require("chalk");
+const { bold, gray, red, white } = require("chalk");
 const client = require("../util/client");
 const { common, serverArgs } = require("../util/cli");
 const { inline: il } = require("../util/text");
@@ -96,31 +96,50 @@ exports.handler = async function handler(argv) {
     const db = client(server);
     let result;
     if (!options) {
-      result = await db.getServiceDependencies(argv.mount, argv.minimal);
+      result = await db.getServiceDependencies(argv.mount);
     } else if (argv.force) {
-      result = await db.replaceServiceDependencies(
-        argv.mount,
-        options,
-        argv.minimal
-      );
+      result = await db.replaceServiceDependencies(argv.mount, options);
     } else {
-      result = await db.updateServiceDependencies(
-        argv.mount,
-        options,
-        argv.minimal
-      );
+      result = await db.updateServiceDependencies(argv.mount, options);
     }
     if (argv.raw) {
-      json(result);
+      if (argv.minimal) {
+        result = Object.keys(result).reduce(
+          (obj, key) => {
+            obj.values[key] = result[key].current;
+            if (result[key].warning) {
+              if (!obj.warnings) obj.warnings = {};
+              obj.warnings[key] = result[key].warning;
+            }
+            return obj;
+          },
+          { values: {} }
+        );
+        if (!options) json(result.values);
+        else json(result);
+      } else json(result);
     } else if (argv.minimal) {
-      if (result.warnings) {
-        for (const key of Object.keys(result.warnings)) {
-          error(`${key}: ${result.warnings[key]}`);
-        }
+      for (const key of Object.keys(result)) {
+        const dfn = result[key];
+        if (dfn.warning) error(`${key}: ${dfn.warning}`);
+        if (dfn.current === undefined) info(`${key}: ${gray("N/A")}`);
+        else info(`${key}: ${dfn.current}`);
       }
-      console.log(result.values); // TODO pretty-print
     } else {
-      console.log(result); // TODO pretty-print
+      let i = Object.keys(result).length;
+      for (const key of Object.keys(result)) {
+        const dfn = result[key];
+        info(bold(dfn.title));
+        info(`Key: ${key}`);
+        const parts = [`Depends: ${dfn.name}@${dfn.version}`];
+        if (!dfn.required) parts.push(gray("(optional)"));
+        if (dfn.multiple) parts.push(red("(multi)"));
+        info(parts.join(" "));
+        if (dfn.current === undefined) info(`Mount: ${gray("N/A")}`);
+        else info(`Mount: ${dfn.current}`);
+        info(dfn.description);
+        if (i-- > 1) info("");
+      }
     }
   } catch (e) {
     if (e.isArangoError && e.errorNum === ERROR_SERVICE_NOT_FOUND) {

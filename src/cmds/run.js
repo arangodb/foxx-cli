@@ -1,6 +1,6 @@
 "use strict";
 const errors = require("../errors");
-const { json, error, fatal } = require("../util/log");
+const { json, fatal } = require("../util/log");
 
 const { bold, white } = require("chalk");
 const client = require("../util/client");
@@ -77,11 +77,7 @@ exports.handler = async function handler(argv) {
     const server = await resolveServer(argv);
     const db = client(server);
     const result = await db.runServiceScript(argv.mount, argv.name, options);
-    if (argv.raw) {
-      json(result);
-    } else {
-      console.log(result); // TODO pretty-print
-    }
+    json(result);
   } catch (e) {
     if (e.isArangoError) {
       switch (e.errorNum) {
@@ -99,21 +95,25 @@ exports.handler = async function handler(argv) {
           fatal(`Service does not have a script called "${white(argv.name)}".`);
           break;
         case errors.ERROR_MODULE_NOT_FOUND:
-          error("An error occured while trying to execute the script:");
-          error(e);
-          error(
-            "This typically means the script tried to require a path that does not exist."
+          fatal(
+            `Server encountered errors trying to locate a JavaScript file:\n\n${
+              e.message
+            }\n\nMake sure the service bundle includes all files referenced in the manifest.`
           );
-          error(
-            "Make sure the service bundle includes all the files you expect."
-          );
-          process.exit(1);
           break;
         case errors.ERROR_MODULE_FAILURE:
-          error("An error occured while trying to execute the script:");
-          error(e);
-          error("This indicates an implementation error in the script.");
-          process.exit(1);
+          fatal(
+            `Server encountered errors executing a JavaScript file:\n\n${
+              e.message
+            }\n\nFor details check the arangod server logs.`
+          );
+          break;
+        case errors.ERROR_MODULE_SYNTAX_ERROR:
+          fatal(
+            `Server encountered errors trying to parse a JavaScript file:\n\n${
+              e.message
+            }`
+          );
           break;
       }
     }
