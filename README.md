@@ -17,10 +17,6 @@
 To learn more about Foxx, see the
 [official ArangoDB Foxx documentation](https://docs.arangodb.com/3/Manual/Foxx/).
 
-:warning: **NOTE: foxx-cli is not yet ready for production use. This is a
-development release. Please come back later. For details see
-[the project roadmap](./ROADMAP.md).** :warning:
-
 ## Table of Contents
 
 * [Install](#install)
