@@ -24,14 +24,7 @@ const args = [
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args })
-    .options({
-      ...serverArgs,
-      raw: {
-        describe: "Output raw JSON response",
-        type: "boolean",
-        default: false
-      }
-    })
+    .options({ ...serverArgs })
     .example(
       "$0 run /hello send-email",
       'Runs a script "send-email" of the service at the URL "/hello"'

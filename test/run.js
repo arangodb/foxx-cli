@@ -32,26 +32,23 @@ describe("Foxx service run", () => {
   });
 
   it("should pass argv (empty object) to script and return exports", async () => {
-    const resp = await foxx(`run ${mount} echo {}`, true);
-    expect(resp).to.eql([{}]);
+    const resp = await foxx(`run ${mount} echo {}`);
+    expect(JSON.parse(resp)).to.eql([{}]);
   });
 
   it("should pass argv to script and return exports", async () => {
-    const resp = await foxx(
-      `run ${mount} echo {\\"hello\\":\\"world\\"}`,
-      true
-    );
-    expect(resp).to.eql([{ hello: "world" }]);
+    const resp = await foxx(`run ${mount} echo {\\"hello\\":\\"world\\"}`);
+    expect(JSON.parse(resp)).to.eql([{ hello: "world" }]);
   });
 
   it("should treat array script argv like any other script argv", async () => {
-    const resp = await foxx(`run ${mount} echo [\\"yes\\",\\"please\\"]`, true);
-    expect(resp).to.eql([["yes", "please"]]);
+    const resp = await foxx(`run ${mount} echo [\\"yes\\",\\"please\\"]`);
+    expect(JSON.parse(resp)).to.eql([["yes", "please"]]);
   });
 
   it("via alias should pass argv to script and return exports", async () => {
-    const resp = await foxx(`script ${mount} echo {}`, true);
-    expect(resp).to.eql([{}]);
+    const resp = await foxx(`script ${mount} echo {}`);
+    expect(JSON.parse(resp)).to.eql([{}]);
   });
 
   it("non-existing script should not be available", async () => {
@@ -64,39 +61,35 @@ describe("Foxx service run", () => {
   });
 
   it("with alternative server URL should pass argv", async () => {
-    const resp = await foxx(
-      `run ${mount} echo {} --server ${ARANGO_URL}`,
-      true
-    );
-    expect(resp).to.eql([{}]);
+    const resp = await foxx(`run ${mount} echo {} --server ${ARANGO_URL}`);
+    expect(JSON.parse(resp)).to.eql([{}]);
   });
 
   it("with alternative server URL (short option) should pass argv", async () => {
-    const resp = await foxx(`run ${mount} echo {} -H ${ARANGO_URL}`, true);
-    expect(resp).to.eql([{}]);
+    const resp = await foxx(`run ${mount} echo {} -H ${ARANGO_URL}`);
+    expect(JSON.parse(resp)).to.eql([{}]);
   });
 
   it("with alternative database should pass argv", async () => {
-    const resp = await foxx(`run ${mount} echo {} --database _system`, true);
-    expect(resp).to.eql([{}]);
+    const resp = await foxx(`run ${mount} echo {} --database _system`);
+    expect(JSON.parse(resp)).to.eql([{}]);
   });
 
   it("with alternative database (short option) should pass argv", async () => {
-    const resp = await foxx(`run ${mount} echo {} -D _system`, true);
-    expect(resp).to.eql([{}]);
+    const resp = await foxx(`run ${mount} echo {} -D _system`);
+    expect(JSON.parse(resp)).to.eql([{}]);
   });
 
   it("with alternative username should pass argv", async () => {
     const resp = await foxx(
-      `run ${mount} echo {} --username ${ARANGO_USERNAME}`,
-      true
+      `run ${mount} echo {} --username ${ARANGO_USERNAME}`
     );
-    expect(resp).to.eql([{}]);
+    expect(JSON.parse(resp)).to.eql([{}]);
   });
 
   it("with alternative username should pass argv (short option)", async () => {
-    const resp = await foxx(`run ${mount} echo {} -u ${ARANGO_USERNAME}`, true);
-    expect(resp).to.eql([{}]);
+    const resp = await foxx(`run ${mount} echo {} -u ${ARANGO_USERNAME}`);
+    expect(JSON.parse(resp)).to.eql([{}]);
   });
 
   it("should fail when mount is invalid", async () => {
@@ -110,7 +103,7 @@ describe("Foxx service run", () => {
 
   it("should pass argv to script via stdin and return exports", async () => {
     const input = '{"hello":"world"}';
-    const resp = await foxx(`run ${mount} echo @`, true, { input });
-    expect(resp).to.eql([{ hello: "world" }]);
+    const resp = await foxx(`run ${mount} echo @`, false, { input });
+    expect(JSON.parse(resp)).to.eql([{ hello: "world" }]);
   });
 });
