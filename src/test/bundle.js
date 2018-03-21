@@ -7,7 +7,7 @@ const expect = require("chai").expect;
 const os = require("os");
 const fs = require("fs");
 
-const basePath = path.resolve(".", "test", "fixtures");
+const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 const tmpFile = path.resolve(os.tmpdir(), "minimal-working-service.zip");
 
 describe("Foxx service bundle", () => {

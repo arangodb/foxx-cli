@@ -10,10 +10,10 @@ const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
 const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 
-const mount = "/show-test";
-const basePath = path.resolve(".", "test", "fixtures");
+const mount = "/list-test";
+const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 
-describe("Foxx service show", () => {
+describe("Foxx service list", () => {
   const db = new Database({
     url: ARANGO_URL,
     arangoVersion: ARANGO_VERSION
@@ -34,79 +34,100 @@ describe("Foxx service show", () => {
     }
   });
 
-  it("should show information about the service", async () => {
-    const service = await foxx(`show ${mount}`, true);
-    expect(service).to.have.property("name", "minimal-working-manifest");
-    expect(service).to.have.property("version", "0.0.0");
-    expect(service).to.have.property("development", false);
-    expect(service).to.have.property("legacy", false);
+  it("should exclude system services", async () => {
+    const services = await foxx("list", true);
+    expect(services).to.be.instanceOf(Array);
+    expect(services.length).to.equal(1);
   });
 
-  it("should show information about the service via alias", async () => {
-    const service = await foxx(`info ${mount}`, true);
+  it("should include installed service", async () => {
+    const services = await foxx("list", true);
+    expect(services).to.be.instanceOf(Array);
+    expect(services.length).to.equal(1);
+    const service = services.find(service => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
+    expect(service).to.have.property("provides");
+    expect(service.provides).to.eql({});
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
 
   it("with alternative server URL should show information about the service", async () => {
-    const service = await foxx(`show --server ${ARANGO_URL} ${mount}`, true);
+    const services = await foxx(`list --server ${ARANGO_URL}`, true);
+    expect(services).to.be.instanceOf(Array);
+    expect(services.length).to.equal(1);
+    const service = services.find(service => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
+    expect(service).to.have.property("provides");
+    expect(service.provides).to.eql({});
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
 
   it("with alternative server URL (short option) should show information about the service", async () => {
-    const service = await foxx(`show -H ${ARANGO_URL} ${mount}`, true);
+    const services = await foxx(`list -H ${ARANGO_URL}`, true);
+    expect(services).to.be.instanceOf(Array);
+    expect(services.length).to.equal(1);
+    const service = services.find(service => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
+    expect(service).to.have.property("provides");
+    expect(service.provides).to.eql({});
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
 
   it("with alternative database should show information about the service", async () => {
-    const service = await foxx(`show --database _system ${mount}`, true);
+    const services = await foxx(`list --database _system`, true);
+    expect(services).to.be.instanceOf(Array);
+    expect(services.length).to.equal(1);
+    const service = services.find(service => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
+    expect(service).to.have.property("provides");
+    expect(service.provides).to.eql({});
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
 
   it("with alternative database (short option) should show information about the service", async () => {
-    const service = await foxx(`show -D _system ${mount}`, true);
+    const services = await foxx(`list -D _system`, true);
+    expect(services).to.be.instanceOf(Array);
+    expect(services.length).to.equal(1);
+    const service = services.find(service => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
+    expect(service).to.have.property("provides");
+    expect(service.provides).to.eql({});
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
 
   it("with alternative username should show information about the service", async () => {
-    const service = await foxx(
-      `show --username ${ARANGO_USERNAME} ${mount}`,
-      true
-    );
+    const services = await foxx(`list --username ${ARANGO_USERNAME}`, true);
+    expect(services).to.be.instanceOf(Array);
+    expect(services.length).to.equal(1);
+    const service = services.find(service => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
+    expect(service).to.have.property("provides");
+    expect(service.provides).to.eql({});
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
 
   it("with alternative username should show information about the service (short option)", async () => {
-    const service = await foxx(`show -u ${ARANGO_USERNAME} ${mount}`, true);
+    const services = await foxx(`list -u ${ARANGO_USERNAME}`, true);
+    expect(services).to.be.instanceOf(Array);
+    expect(services.length).to.equal(1);
+    const service = services.find(service => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
+    expect(service).to.have.property("provides");
+    expect(service.provides).to.eql({});
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
-  });
-
-  it("should fail when mount is invalid", async () => {
-    try {
-      await foxx("show /dev/null");
-    } catch (e) {
-      return;
-    }
-    expect.fail();
   });
 });

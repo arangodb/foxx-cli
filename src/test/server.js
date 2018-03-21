@@ -12,7 +12,7 @@ const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
 
 const mount = "/server-test";
-const basePath = path.resolve(".", "test", "fixtures");
+const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 
 const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
 

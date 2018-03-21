@@ -1,15 +1,21 @@
 "use strict";
 
 const exec = require("child_process").exec;
+const os = require("os");
 const path = require("path");
+
+const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
 
 module.exports = (command, raw = false, { input, ...options } = {}) =>
   new Promise((resolve, reject) => {
-    const foxx = path.resolve(__dirname, "..", "..", "bin", "foxx");
+    const foxx = path.resolve(__dirname, "..", "..", "..", "bin", "foxx");
     try {
       const proc = exec(
         raw ? `node ${foxx} ${command} --raw` : `node ${foxx} ${command}`,
-        options,
+        {
+          ...options,
+          env: { ...options.env, FORCE_COLOR: "0", FOXXRC_PATH: foxxRcFile }
+        },
         (err, stdout, stderr) => {
           if (err) {
             err.stdout = stdout;

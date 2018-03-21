@@ -1,12 +1,23 @@
 "use strict";
 const extractZip = require("extract-zip");
 const fs = require("fs");
-const { promisify } = require("util");
+const promisify = require("util.promisify");
 const { relative } = require("path");
 const walkdir = require("walkdir");
 
+const promisify2 = fn => (...args) =>
+  new Promise((resolve, reject) => {
+    try {
+      fn(...args, result => {
+        resolve(result);
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+
 exports.extract = promisify(extractZip);
-exports.exists = promisify(fs.exists);
+exports.exists = promisify2(fs.exists);
 exports.readdir = promisify(fs.readdir);
 exports.readFile = promisify(fs.readFile);
 exports.stat = promisify(fs.stat);

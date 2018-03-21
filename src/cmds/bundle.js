@@ -76,40 +76,43 @@ exports.builder = yargs =>
     );
 
 exports.handler = async function handler(argv) {
-  const source = unsplat(argv.source) || process.cwd();
-  let out = unsplat(argv.outfile);
-  if (!out) {
-    if (!argv.stdout && process.stdout.isTTY) {
-      fatal(il`
-        Refusing to write binary data to stdout.
-        Use ${bold("--stdout")} if you really want to do this.
+  try {
+    const source = unsplat(argv.source) || process.cwd();
+    let out = unsplat(argv.outfile);
+    if (!out) {
+      if (!argv.stdout && process.stdout.isTTY) {
+        fatal(il`
+      Refusing to write binary data to stdout.
+      Use ${bold("--stdout")} if you really want to do this.
       `);
-    }
-    out = process.stdout;
-  } else if (argv.stdout) {
-    fatal(il`
-      Can't use both ${bold("--outfile")}
-      and ${bold("--stdout")} at the same time.
+      }
+      out = process.stdout;
+    } else if (argv.stdout) {
+      fatal(il`
+    Can't use both ${bold("--outfile")}
+    and ${bold("--stdout")} at the same time.
     `);
-  } else if (!argv.force) {
-    const stats = await safeStat(out);
-    if (stats) {
-      fatal(`Outfile "${white(source)}" already exists.`);
+    } else if (!argv.force) {
+      const stats = await safeStat(out);
+      if (stats) {
+        fatal(`Outfile "${white(source)}" already exists.`);
+      }
     }
-  }
-  const stats = await safeStat(source);
-  if (!stats) {
-    fatal(`Source directory "${white(source)}" does not exist.`);
-  } else if (!stats.isDirectory()) {
-    fatal(`Source directory "${white(source)}" is not a directory.`);
-  }
-  if (!argv.sloppy && !await exists(resolve(source, "manifest.json"))) {
-    fatal(il`
+    const stats = await safeStat(source);
+    if (!stats) {
+      fatal(`Source directory "${white(source)}" does not exist.`);
+    } else if (!stats.isDirectory()) {
+      fatal(`Source directory "${white(source)}" is not a directory.`);
+    }
+    if (!argv.sloppy) {
+      let path = resolve(source, "manifest.json");
+      if (!await exists(path)) {
+        fatal(il`
       Source directory "${white(source)}" does not contain a manifest file.
       Use ${bold("--sloppy")} if you want to skip this check.
-    `);
-  }
-  try {
+      `);
+      }
+    }
     await bundle(source, out);
   } catch (e) {
     fatal(e);

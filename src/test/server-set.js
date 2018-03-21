@@ -1,4 +1,4 @@
-/* global describe, it, before, beforeEach, after */
+/* global describe, it, beforeEach */
 "use strict";
 
 const path = require("path");
@@ -10,14 +10,6 @@ const fs = require("fs");
 const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
 
 describe("Foxx server set", () => {
-  before(async () => {
-    process.env.FOXXRC_PATH = foxxRcFile;
-  });
-
-  after(async () => {
-    process.env.FOXXRC_PATH = undefined;
-  });
-
   beforeEach(async () => {
     if (fs.existsSync(foxxRcFile)) {
       fs.unlinkSync(foxxRcFile);

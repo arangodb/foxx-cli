@@ -2,7 +2,7 @@
 
 const path = require("path");
 
-const basePath = path.resolve(".", "test", "fixtures");
+const basePath = path.resolve(__dirname, "..", "..", "..", "fixtures");
 
 module.exports.crudCases = () => {
   return [

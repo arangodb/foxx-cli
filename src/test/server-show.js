@@ -1,4 +1,4 @@
-/* global describe, it, before, after */
+/* global describe, it, before */
 "use strict";
 
 const path = require("path");
@@ -11,16 +11,11 @@ const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
 
 describe("Foxx server show", () => {
   before(async () => {
-    process.env.FOXXRC_PATH = foxxRcFile;
     if (fs.existsSync(foxxRcFile)) {
       fs.unlinkSync(foxxRcFile);
     }
     await foxx("server set test1 //localhost:8529");
     await foxx("server set test2 //localhost:8530");
-  });
-
-  after(async () => {
-    process.env.FOXXRC_PATH = undefined;
   });
 
   it("should show added server", async () => {

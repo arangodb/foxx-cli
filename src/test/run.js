@@ -11,7 +11,7 @@ const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
 const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 
 const mount = "/run-test";
-const basePath = path.resolve(".", "test", "fixtures");
+const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 
 describe("Foxx service run", () => {
   const db = new Database({

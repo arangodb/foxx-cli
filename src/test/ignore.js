@@ -96,7 +96,7 @@ describe("Foxx ignore", () => {
     await foxx("ignore test1");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     await foxx(`bundle --outfile ${tmpFile}`);
-    await require("../src/util/fs").extract(tmpFile, {
+    await require("../util/fs").extract(tmpFile, {
       dir: path.resolve(tmpDir, "bundle")
     });
     expect(fs.existsSync(path.resolve(tmpDir, "bundle", "test1"))).to.equal(
@@ -116,7 +116,7 @@ describe("Foxx ignore", () => {
     fs.writeFileSync(path.resolve(tmpDir, "manifest.json"), "{}");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     await foxx(`bundle --outfile ${tmpFile}`);
-    await require("../src/util/fs").extract(tmpFile, {
+    await require("../util/fs").extract(tmpFile, {
       dir: path.resolve(tmpDir, "bundle")
     });
     expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(
@@ -131,7 +131,7 @@ describe("Foxx ignore", () => {
     await foxx("ignore");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     await foxx(`bundle --outfile ${tmpFile}`);
-    await require("../src/util/fs").extract(tmpFile, {
+    await require("../util/fs").extract(tmpFile, {
       dir: path.resolve(tmpDir, "bundle")
     });
     expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(
@@ -146,7 +146,7 @@ describe("Foxx ignore", () => {
     await foxx("ignore -f");
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     await foxx(`bundle --outfile ${tmpFile}`);
-    await require("../src/util/fs").extract(tmpFile, {
+    await require("../util/fs").extract(tmpFile, {
       dir: path.resolve(tmpDir, "bundle")
     });
     expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(

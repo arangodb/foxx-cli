@@ -14,7 +14,7 @@ const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
 const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 
 const mount = "/download-test";
-const basePath = path.resolve(".", "test", "fixtures");
+const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 const tmpFile = path.resolve(os.tmpdir(), "minimal-working-service.zip");
 const tmpDir = path.resolve(os.tmpdir(), "minimal-working-service");
 const tmpServiceDir = path.resolve(tmpDir, "minimal-working-service");
@@ -76,7 +76,7 @@ describe("Foxx service download", () => {
     expect(output).to.match(/^PK\u0003\u0004/);
   });
 
-  it("should output bundle ", async () => {
+  it("should output bundle", async () => {
     const output = await foxx(`download ${mount}`);
     expect(output).to.match(/^PK\u0003\u0004/);
   });

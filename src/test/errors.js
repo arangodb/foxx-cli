@@ -3,7 +3,7 @@
 const http = require("http");
 const expect = require("chai").expect;
 const foxx = require("./util");
-const errors = require("../src/errors");
+const errors = require("../errors");
 
 let HOST;
 let ERROR;
