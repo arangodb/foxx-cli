@@ -127,8 +127,8 @@ exports.builder = yargs =>
     );
 
 exports.handler = async function handler(argv) {
-  const opts = parseServiceOptions(argv);
   try {
+    const opts = parseServiceOptions(argv);
     const server = await resolveServer(argv);
     const source = argv.remote
       ? argv.source

@@ -325,4 +325,12 @@ describe("Foxx service installed", () => {
     expect(dependencies).to.have.property("test1", "/test1");
     expect(dependencies).to.have.property("test2", "/test2");
   });
+
+  it("correctly handles HTTPS URLs", async () => {
+    await foxx(
+      `install ${mount} https://github.com/arangodb-foxx/demo-itzpapalotl/archive/master.zip`
+    );
+    const res = await db.route(`${mount}/Itzpaplotl/summon`).get();
+    expect(res.body).to.eql({ name: "Itzpaplotl", summoned: true });
+  });
 });
