@@ -43,6 +43,7 @@
     "inquirer": "^5.1.0",
     "lodash": "^4.17.4",
     "minimatch": "^3.0.4",
+    "request": "^2.85.0",
     "semver": "^5.4.1",
     "spdx-license-list": "^4.0.0",
     "temp": "^0.8.3",
