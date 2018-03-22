@@ -2,16 +2,16 @@
 const { createBundle } = require("./bundle");
 const { createReadStream } = require("fs");
 const { fatal } = require("./util/log");
-const http = require("http");
-const https = require("https");
+const request = require("request");
 const { parse: parseUrl } = require("url");
 const { safeStat } = require("./util/fs");
 
 function get(path) {
   return new Promise((resolve, reject) => {
-    (path.match(/^https:/) ? https : http)
-      .get(path, res => resolve(res))
-      .on("error", err => reject(err));
+    request(path, { encoding: null }, (err, res) => {
+      if (err) reject(err);
+      else resolve(res);
+    });
   });
 }
 
@@ -30,21 +30,20 @@ module.exports = async function resolveToStream(path) {
   }
   const { protocol } = parseUrl(path);
   if (protocol) {
-    return await downloadToStream(path);
+    return await downloadToBuffer(path);
   }
   fatal(`No such file or directory: "${path}".`);
 };
 
-async function downloadToStream(path) {
+async function downloadToBuffer(path) {
   try {
     const res = await get(path);
     if (res.statusCode >= 400) {
       fatal(
         `Server responded with code ${res.statusCode} while fetching "${path}".`
       );
-      process.exit(1);
     }
-    return res;
+    return res.body;
   } catch (e) {
     fatal(`Failed to resolve URL "${path}".`);
   }
