@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * HTTPS URLs are now resolved correctly
 
-  Foxx CLI now switches between http and https correctly when resolving URLs locally.
+  Foxx CLI now uses the `request` module to download service sources locally.
 
 ## [1.0.0] - 2018-03-21
 
