@@ -3,12 +3,15 @@ const { createBundle } = require("./bundle");
 const { createReadStream } = require("fs");
 const { fatal } = require("./util/log");
 const http = require("http");
+const https = require("https");
 const { parse: parseUrl } = require("url");
 const { safeStat } = require("./util/fs");
 
 function get(path) {
   return new Promise((resolve, reject) => {
-    http.get(path, res => resolve(res)).on("error", err => reject(err));
+    (path.match(/^https:/) ? https : http)
+      .get(path, res => resolve(res))
+      .on("error", err => reject(err));
   });
 }
 
