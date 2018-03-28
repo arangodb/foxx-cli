@@ -8,7 +8,7 @@ const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
 
 module.exports = (command, raw = false, { input, ...options } = {}) =>
   new Promise((resolve, reject) => {
-    const foxx = path.resolve(__dirname, "..", "..", "..", "bin", "foxx");
+    const foxx = path.resolve("bin", "foxx");
     try {
       const proc = exec(
         raw ? `node ${foxx} ${command} --raw` : `node ${foxx} ${command}`,
