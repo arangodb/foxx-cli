@@ -37,12 +37,12 @@ describe("Foxx service run", () => {
   });
 
   it("should pass argv to script and return exports", async () => {
-    const resp = await foxx(`run ${mount} echo {\\"hello\\":\\"world\\"}`);
+    const resp = await foxx(`run ${mount} echo {"hello":"world"}`);
     expect(JSON.parse(resp)).to.eql([{ hello: "world" }]);
   });
 
   it("should treat array script argv like any other script argv", async () => {
-    const resp = await foxx(`run ${mount} echo [\\"yes\\",\\"please\\"]`);
+    const resp = await foxx(`run ${mount} echo ["yes","please"]`);
     expect(JSON.parse(resp)).to.eql([["yes", "please"]]);
   });
 

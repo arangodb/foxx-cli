@@ -266,7 +266,7 @@ describe("Foxx service replaced", () => {
 
   it("with configuration should have one config set", async () => {
     await foxx(
-      `replace --cfg test1=\\"test1\\" ${mount} ${path.resolve(
+      `replace --cfg test1="test1" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`
@@ -278,7 +278,7 @@ describe("Foxx service replaced", () => {
 
   it("with configuration should have two configs set", async () => {
     await foxx(
-      `replace --cfg test1=\\"test1\\" --cfg test2=\\"test2\\" ${mount} ${path.resolve(
+      `replace --cfg test1="test1" --cfg test2="test2" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`
@@ -290,7 +290,7 @@ describe("Foxx service replaced", () => {
 
   it("with configuration should have one config set (short option)", async () => {
     await foxx(
-      `replace -c test1=\\"test1\\" ${mount} ${path.resolve(
+      `replace -c test1="test1" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`
@@ -302,7 +302,7 @@ describe("Foxx service replaced", () => {
 
   it("with configuration should have two configs set (short option)", async () => {
     await foxx(
-      `replace -c test1=\\"test1\\" -c test2=\\"test2\\" ${mount} ${path.resolve(
+      `replace -c test1="test1" -c test2="test2" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`
@@ -314,7 +314,7 @@ describe("Foxx service replaced", () => {
 
   it("with configuration should have two configs set (mixed options)", async () => {
     await foxx(
-      `replace --cfg test1=\\"test1\\" -c test2=\\"test2\\" ${mount} ${path.resolve(
+      `replace --cfg test1="test1" -c test2="test2" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`

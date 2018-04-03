@@ -278,7 +278,7 @@ describe("Foxx service upgraded", () => {
 
   it("with configuration should have one config set", async () => {
     await foxx(
-      `upgrade --cfg test1=\\"test1\\" ${mount} ${path.resolve(
+      `upgrade --cfg test1="test1" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`
@@ -290,7 +290,7 @@ describe("Foxx service upgraded", () => {
 
   it("with configuration should have two configs set", async () => {
     await foxx(
-      `upgrade --cfg test1=\\"test1\\" --cfg test2=\\"test2\\" ${mount} ${path.resolve(
+      `upgrade --cfg test1="test1" --cfg test2="test2" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`
@@ -302,7 +302,7 @@ describe("Foxx service upgraded", () => {
 
   it("with configuration should have one config set (short option)", async () => {
     await foxx(
-      `upgrade -c test1=\\"test1\\" ${mount} ${path.resolve(
+      `upgrade -c test1="test1" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`
@@ -314,7 +314,7 @@ describe("Foxx service upgraded", () => {
 
   it("with configuration should have two configs set (short option)", async () => {
     await foxx(
-      `upgrade -c test1=\\"test1\\" -c test2=\\"test2\\" ${mount} ${path.resolve(
+      `upgrade -c test1="test1" -c test2="test2" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`
@@ -326,7 +326,7 @@ describe("Foxx service upgraded", () => {
 
   it("with configuration should have two configs set (mixed options)", async () => {
     await foxx(
-      `upgrade --cfg test1=\\"test1\\" -c test2=\\"test2\\" ${mount} ${path.resolve(
+      `upgrade --cfg test1="test1" -c test2="test2" ${mount} ${path.resolve(
         basePath,
         "with-configuration.zip"
       )}`

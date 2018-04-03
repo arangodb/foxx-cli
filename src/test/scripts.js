@@ -35,41 +35,38 @@ describe("Foxx service scripts", () => {
   });
 
   it("should all be listed", async () => {
-    const scripts = await foxx(`scripts  ${mount}`, true);
+    const scripts = await foxx(`scripts ${mount}`, true);
     expect(scripts).to.have.property("setup", "Setup");
     expect(scripts).to.have.property("teardown", "Teardown");
   });
 
   it("with alternative server URL should all be listed", async () => {
-    const scripts = await foxx(
-      `scripts  ${mount} --server ${ARANGO_URL}`,
-      true
-    );
+    const scripts = await foxx(`scripts ${mount} --server ${ARANGO_URL}`, true);
     expect(scripts).to.have.property("setup", "Setup");
     expect(scripts).to.have.property("teardown", "Teardown");
   });
 
   it("with alternative server URL (short option) should all be listed", async () => {
-    const scripts = await foxx(`scripts  ${mount} -H ${ARANGO_URL}`, true);
+    const scripts = await foxx(`scripts ${mount} -H ${ARANGO_URL}`, true);
     expect(scripts).to.have.property("setup", "Setup");
     expect(scripts).to.have.property("teardown", "Teardown");
   });
 
   it("with alternative database should all be listed", async () => {
-    const scripts = await foxx(`scripts  ${mount} --database _system`, true);
+    const scripts = await foxx(`scripts ${mount} --database _system`, true);
     expect(scripts).to.have.property("setup", "Setup");
     expect(scripts).to.have.property("teardown", "Teardown");
   });
 
   it("with alternative database (short option) should all be listed", async () => {
-    const scripts = await foxx(`scripts  ${mount} -D _system`, true);
+    const scripts = await foxx(`scripts ${mount} -D _system`, true);
     expect(scripts).to.have.property("setup", "Setup");
     expect(scripts).to.have.property("teardown", "Teardown");
   });
 
   it("with alternative username should all be listed", async () => {
     const scripts = await foxx(
-      `scripts  ${mount} --username ${ARANGO_USERNAME}`,
+      `scripts ${mount} --username ${ARANGO_USERNAME}`,
       true
     );
     expect(scripts).to.have.property("setup", "Setup");
@@ -77,7 +74,7 @@ describe("Foxx service scripts", () => {
   });
 
   it("with alternative username should all be listed (short option)", async () => {
-    const scripts = await foxx(`scripts  ${mount} -u ${ARANGO_USERNAME}`, true);
+    const scripts = await foxx(`scripts ${mount} -u ${ARANGO_USERNAME}`, true);
     expect(scripts).to.have.property("setup", "Setup");
     expect(scripts).to.have.property("teardown", "Teardown");
   });
