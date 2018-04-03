@@ -29,7 +29,7 @@ describe("Foxx service download", () => {
   before(async () => {
     await db.installService(
       mount,
-      path.resolve(basePath, "minimal-working-service.zip")
+      fs.readFileSync(path.resolve(basePath, "minimal-working-service.zip"))
     );
   });
 

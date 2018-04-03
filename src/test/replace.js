@@ -6,6 +6,7 @@ const Database = require("arangojs");
 const expect = require("chai").expect;
 const foxx = require("./util");
 const helper = require("./helper");
+const fs = require("fs");
 
 const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
@@ -25,7 +26,7 @@ describe("Foxx service replaced", () => {
   before(async () => {
     await db.installService(
       serviceServiceMount,
-      path.resolve(basePath, "service-service-service.zip")
+      fs.readFileSync(path.resolve(basePath, "service-service-service.zip"))
     );
     arangoPaths = (await db.route(serviceServiceMount).get()).body;
   });
@@ -42,7 +43,7 @@ describe("Foxx service replaced", () => {
     try {
       await db.installService(
         mount,
-        path.resolve(basePath, "minimal-working-service.zip")
+        fs.readFileSync(path.resolve(basePath, "minimal-working-service.zip"))
       );
     } catch (e) {
       // noop

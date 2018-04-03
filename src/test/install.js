@@ -26,7 +26,7 @@ describe("Foxx service installed", () => {
   before(async () => {
     await db.installService(
       serviceServiceMount,
-      path.resolve(basePath, "service-service-service.zip")
+      fs.readFileSync(path.resolve(basePath, "service-service-service.zip"))
     );
     arangoPaths = (await db.route(serviceServiceMount).get()).body;
   });

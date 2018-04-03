@@ -5,6 +5,7 @@ const path = require("path");
 const Database = require("arangojs");
 const foxx = require("./util");
 const expect = require("chai").expect;
+const fs = require("fs");
 
 const ARANGO_VERSION = Number(process.env.ARANGO_VERSION || 30000);
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
@@ -22,7 +23,9 @@ describe("Foxx service scripts", () => {
   before(async () => {
     await db.installService(
       mount,
-      path.resolve(basePath, "minimal-working-setup-teardown.zip")
+      fs.readFileSync(
+        path.resolve(basePath, "minimal-working-setup-teardown.zip")
+      )
     );
   });
 
