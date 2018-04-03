@@ -6,17 +6,13 @@
   "bin": {
     "foxx": "bin/foxx"
   },
-  "files": [
-    "bin/",
-    "dist/",
-    "templates/",
-    "README.md",
-    "LICENSE"
-  ],
+  "files": ["bin/", "dist/", "templates/", "README.md", "LICENSE"],
   "scripts": {
-    "test": "mocha --growl --reporter spec --require source-map-support/register --timeout 10000 dist/test",
+    "test":
+      "mocha --reporter spec --require source-map-support/register --timeout 10000 dist/test",
     "pretest": "yarn prepare",
-    "ci": "mocha --reporter spec --require source-map-support/register --timeout 10000 lib/cjs/test",
+    "ci":
+      "mocha --reporter spec --require source-map-support/register --timeout 10000 lib/cjs/test",
     "preci": "yarn install",
     "prepare": "babel -d dist src"
   },
