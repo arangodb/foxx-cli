@@ -1,3 +1,4 @@
+/* eslint-disable no-control-regex */
 /* global describe, it, before, beforeEach, after */
 "use strict";
 
