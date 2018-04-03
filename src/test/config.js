@@ -83,7 +83,7 @@ describe("Foxx service configuration", () => {
     expect(config).to.have.property("test2");
   });
 
-  it("with alternative username should be avaiable", async () => {
+  it("with alternative username should be available", async () => {
     const config = await foxx(
       `config --username ${ARANGO_USERNAME} ${mount}`,
       true
@@ -92,7 +92,7 @@ describe("Foxx service configuration", () => {
     expect(config).to.have.property("test2");
   });
 
-  it("with alternative username should be avaiable (short option)", async () => {
+  it("with alternative username should be available (short option)", async () => {
     const config = await foxx(`config -u ${ARANGO_USERNAME} ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config).to.have.property("test2");

@@ -114,7 +114,7 @@ describe("Foxx service installed", () => {
     expect(res.body).to.eql({ hello: "world" });
   });
 
-  it("with alternative username should be avaiable", async () => {
+  it("with alternative username should be available", async () => {
     await foxx(
       `install --username ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
     );
@@ -122,7 +122,7 @@ describe("Foxx service installed", () => {
     expect(res.body).to.eql({ hello: "world" });
   });
 
-  it("with alternative username should be avaiable (short option)", async () => {
+  it("with alternative username should be available (short option)", async () => {
     await foxx(
       `install -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
     );

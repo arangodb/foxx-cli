@@ -119,7 +119,7 @@ describe("Foxx service upgraded", () => {
     expect(res.body).to.eql({ hello: "world" });
   });
 
-  it("with alternative username should be avaiable", async () => {
+  it("with alternative username should be available", async () => {
     await foxx(
       `upgrade --username ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
     );
@@ -127,7 +127,7 @@ describe("Foxx service upgraded", () => {
     expect(res.body).to.eql({ hello: "world" });
   });
 
-  it("with alternative username should be avaiable (short option)", async () => {
+  it("with alternative username should be available (short option)", async () => {
     await foxx(
       `upgrade -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
     );
