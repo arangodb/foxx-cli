@@ -2,6 +2,10 @@
 
 const path = require("path");
 
+const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
+const ARANGO_URL_SELF_REACHABLE =
+  process.env.TEST_ARANGODB_URL_SELF_REACHABLE || ARANGO_URL;
+
 const basePath = path.resolve(__dirname, "..", "..", "..", "fixtures");
 
 module.exports.crudCases = () => {
@@ -44,27 +48,45 @@ module.exports.crudCases = () => {
     },
     {
       name: "localJsURL",
-      source: arangoPaths => arangoPaths.remote.js
+      source: arangoPaths =>
+        arangoPaths.remote.js.replace(ARANGO_URL, ARANGO_URL_SELF_REACHABLE)
     },
     {
       name: "remoteJsURL",
-      source: arangoPaths => `--remote ${arangoPaths.remote.js}`
+      source: arangoPaths =>
+        `--remote ${arangoPaths.remote.js.replace(
+          ARANGO_URL,
+          ARANGO_URL_SELF_REACHABLE
+        )}`
     },
     {
       name: "remoteShortJsURL",
-      source: arangoPaths => `-R ${arangoPaths.remote.js}`
+      source: arangoPaths =>
+        `-R ${arangoPaths.remote.js.replace(
+          ARANGO_URL,
+          ARANGO_URL_SELF_REACHABLE
+        )}`
     },
     {
       name: "localZipURL",
-      source: arangoPaths => arangoPaths.remote.zip
+      source: arangoPaths =>
+        arangoPaths.remote.zip.replace(ARANGO_URL, ARANGO_URL_SELF_REACHABLE)
     },
     {
       name: "remoteZipURL",
-      source: arangoPaths => `--remote ${arangoPaths.remote.zip}`
+      source: arangoPaths =>
+        `--remote ${arangoPaths.remote.zip.replace(
+          ARANGO_URL,
+          ARANGO_URL_SELF_REACHABLE
+        )}`
     },
     {
       name: "remoteShortZipURL",
-      source: arangoPaths => `-R ${arangoPaths.remote.zip}`
+      source: arangoPaths =>
+        `-R ${arangoPaths.remote.zip.replace(
+          ARANGO_URL,
+          ARANGO_URL_SELF_REACHABLE
+        )}`
     }
   ];
 };
