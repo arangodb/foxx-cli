@@ -13,6 +13,8 @@ const SERVER_COMMANDS = [
   "deps",
   "dep",
   "dependencies",
+  "download",
+  "dl",
   "install",
   "i",
   "list",
