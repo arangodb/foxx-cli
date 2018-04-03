@@ -15,6 +15,7 @@ const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 const mount = "/upgrade-test";
 const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 const serviceServiceMount = "/foxx-crud-test-download";
+const servicePath = path.resolve(basePath, "minimal-working-service.zip");
 
 describe("Foxx service upgraded", () => {
   const db = new Database({
@@ -41,10 +42,7 @@ describe("Foxx service upgraded", () => {
 
   beforeEach(async () => {
     try {
-      await db.installService(
-        mount,
-        fs.readFileSync(path.resolve(basePath, "minimal-working-service.zip"))
-      );
+      await db.installService(mount, fs.readFileSync(servicePath));
     } catch (e) {
       // noop
     }
@@ -78,7 +76,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("in development mode should be available", async () => {
-    await foxx(`upgrade --development ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade --development ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -86,7 +84,7 @@ describe("Foxx service upgraded", () => {
   });
 
   it("in development mode (short option) should be available", async () => {
-    await foxx(`upgrade --dev ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade --dev ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -94,43 +92,37 @@ describe("Foxx service upgraded", () => {
   });
 
   it("with alternative server URL should be available", async () => {
-    await foxx(
-      `upgrade --server ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`
-    );
+    await foxx(`upgrade --server ${ARANGO_URL} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative server URL (short option) should be available", async () => {
-    await foxx(`upgrade -H ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade -H ${ARANGO_URL} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database should be available", async () => {
-    await foxx(`upgrade --database _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade --database _system ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database (short option) should be available", async () => {
-    await foxx(`upgrade -D _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`upgrade -D _system ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be available", async () => {
-    await foxx(
-      `upgrade --username ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
-    );
+    await foxx(`upgrade --username ${ARANGO_USERNAME} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be available (short option)", async () => {
-    await foxx(
-      `upgrade -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
-    );
+    await foxx(`upgrade -u ${ARANGO_USERNAME} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });

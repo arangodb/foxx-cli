@@ -15,6 +15,7 @@ const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 const mount = "/replace-test";
 const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 const serviceServiceMount = "/foxx-crud-test-download";
+const servicePath = path.resolve(basePath, "minimal-working-service.zip");
 
 describe("Foxx service replaced", () => {
   const db = new Database({
@@ -69,7 +70,7 @@ describe("Foxx service replaced", () => {
   }
 
   it("in development mode should be available", async () => {
-    await foxx(`replace --development ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace --development ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -77,7 +78,7 @@ describe("Foxx service replaced", () => {
   });
 
   it("in development mode (short option) should be available", async () => {
-    await foxx(`replace --dev ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace --dev ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -85,43 +86,37 @@ describe("Foxx service replaced", () => {
   });
 
   it("with alternative server URL should be available", async () => {
-    await foxx(
-      `replace --server ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`
-    );
+    await foxx(`replace --server ${ARANGO_URL} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative server URL (short option) should be available", async () => {
-    await foxx(`replace -H ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace -H ${ARANGO_URL} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database should be available", async () => {
-    await foxx(`replace --database _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace --database _system ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database (short option) should be available", async () => {
-    await foxx(`replace -D _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`replace -D _system ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be available", async () => {
-    await foxx(
-      `replace --username ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
-    );
+    await foxx(`replace --username ${ARANGO_USERNAME} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be available (short option)", async () => {
-    await foxx(
-      `replace -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
-    );
+    await foxx(`replace -u ${ARANGO_USERNAME} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });

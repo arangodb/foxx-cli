@@ -15,6 +15,7 @@ const ARANGO_USERNAME = process.env.ARANGO_USERNAME || "root";
 const mount = "/install-test";
 const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 const serviceServiceMount = "/foxx-crud-test-download";
+const servicePath = path.resolve(basePath, "minimal-working-service.zip");
 
 describe("Foxx service installed", () => {
   const db = new Database({
@@ -67,13 +68,13 @@ describe("Foxx service installed", () => {
   });
 
   it("via alias should be available", async () => {
-    await foxx(`i ${mount} ${arangoPaths.local.zip}`);
+    await foxx(`i ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("in development mode should be available", async () => {
-    await foxx(`install --development ${mount} ${arangoPaths.local.js}`);
+    await foxx(`install --development ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -81,7 +82,7 @@ describe("Foxx service installed", () => {
   });
 
   it("in development mode (short option) should be available", async () => {
-    await foxx(`install --dev ${mount} ${arangoPaths.local.js}`);
+    await foxx(`install --dev ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
     const info = await db.getService(mount);
@@ -89,43 +90,37 @@ describe("Foxx service installed", () => {
   });
 
   it("with alternative server URL should be available", async () => {
-    await foxx(
-      `install --server ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`
-    );
+    await foxx(`install --server ${ARANGO_URL} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative server URL (short option) should be available", async () => {
-    await foxx(`install -H ${ARANGO_URL} ${mount} ${arangoPaths.local.js}`);
+    await foxx(`install -H ${ARANGO_URL} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database should be available", async () => {
-    await foxx(`install --database _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`install --database _system ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative database (short option) should be available", async () => {
-    await foxx(`install -D _system ${mount} ${arangoPaths.local.js}`);
+    await foxx(`install -D _system ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be available", async () => {
-    await foxx(
-      `install --username ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
-    );
+    await foxx(`install --username ${ARANGO_USERNAME} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
 
   it("with alternative username should be available (short option)", async () => {
-    await foxx(
-      `install -u ${ARANGO_USERNAME} ${mount} ${arangoPaths.local.zip}`
-    );
+    await foxx(`install -u ${ARANGO_USERNAME} ${mount} ${servicePath}`);
     const res = await db.route(mount).get();
     expect(res.body).to.eql({ hello: "world" });
   });
