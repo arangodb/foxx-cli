@@ -48,8 +48,7 @@ module.exports.crudCases = () => {
     },
     {
       name: "localJsURL",
-      source: arangoPaths =>
-        arangoPaths.remote.js.replace(ARANGO_URL, ARANGO_URL_SELF_REACHABLE)
+      source: arangoPaths => arangoPaths.remote.js
     },
     {
       name: "remoteJsURL",
@@ -69,8 +68,7 @@ module.exports.crudCases = () => {
     },
     {
       name: "localZipURL",
-      source: arangoPaths =>
-        arangoPaths.remote.zip.replace(ARANGO_URL, ARANGO_URL_SELF_REACHABLE)
+      source: arangoPaths => arangoPaths.remote.zip
     },
     {
       name: "remoteZipURL",
