@@ -5,16 +5,39 @@ const os = require("os");
 const path = require("path");
 
 const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
+const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
+const SERVER_COMMANDS = [
+  "config",
+  "deps",
+  "install",
+  "list",
+  "replace",
+  "run",
+  "scritps",
+  "server",
+  "set-dev",
+  "set-prod",
+  "show",
+  "test",
+  "uninstall",
+  "upgrade"
+];
 
 module.exports = (command, raw = false, { input, ...options } = {}) =>
   new Promise((resolve, reject) => {
     const foxx = path.resolve(__dirname, "..", "..", "..", "bin", "foxx");
     try {
+      const parts = command.split(" ");
+      if (
+        SERVER_COMMANDS.includes(parts[0]) &&
+        !parts.includes("--server") &&
+        !parts.includes("-H")
+      ) {
+        parts.splice(1, 0, "--server", ARANGO_URL);
+      }
       const proc = execFile(
         "node",
-        raw
-          ? [foxx, ...command.split(" "), "--raw"]
-          : [foxx, ...command.split(" ")],
+        raw ? [foxx, ...parts, "--raw"] : [foxx, ...parts],
         {
           ...options,
           env: { ...options.env, FORCE_COLOR: "0", FOXXRC_PATH: foxxRcFile }
