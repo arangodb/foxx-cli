@@ -8,17 +8,28 @@ const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
 const ARANGO_URL = process.env.TEST_ARANGODB_URL || "http://localhost:8529";
 const SERVER_COMMANDS = [
   "config",
+  "cfg",
+  "configuration",
   "deps",
+  "dep",
+  "dependencies",
   "install",
+  "i",
   "list",
   "replace",
   "run",
+  "script",
   "scritps",
   "set-dev",
+  "set-development",
   "set-prod",
+  "set-production",
   "show",
+  "info",
   "test",
   "uninstall",
+  "remove",
+  "purge",
   "upgrade"
 ];
 
