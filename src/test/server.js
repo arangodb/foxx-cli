@@ -45,7 +45,7 @@ describe("Foxx with server", () => {
   });
 
   it("with alternative server should be available", async () => {
-    await foxx("server set test //localhost:8529");
+    await foxx(`server set test ${ARANGO_URL}`);
     await foxx(
       `install --server test ${mount} ${path.resolve(
         basePath,
