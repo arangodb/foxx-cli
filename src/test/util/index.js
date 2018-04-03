@@ -21,7 +21,7 @@ const SERVER_COMMANDS = [
   "replace",
   "run",
   "script",
-  "scritps",
+  "scripts",
   "set-dev",
   "set-development",
   "set-prod",
