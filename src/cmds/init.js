@@ -79,52 +79,16 @@ exports.handler = async function handler(argv) {
   }
   try {
     const files = await generateFiles(options);
+    if (options.documentCollections || options.edgeCollections) {
+      fs.mkdirSync(path.resolve(cwd, "api"));
+      fs.mkdirSync(path.resolve(cwd, "scripts"));
+    }
     await Promise.all(
       files.map(file =>
         fs.writeFile(path.resolve(cwd, file.name), file.content, () => {})
       )
     );
-    for (const file of files) {
-      console.log();
-      console.log(file.name);
-      console.log("-".repeat(file.name.length));
-      console.log(file.content);
-      console.log();
-    }
-    // console.log(JSON.stringify(options, null, 2));
   } catch (e) {
     fatal(e);
   }
-  // const manifestPath = join(cwd, "manifest.json");
-  // if (await exists(manifestPath)) {
-  //   if (!argv.force) {
-  //     fatal(il`
-  //       Manifest file already exists.
-  //       Use ${bold("--force")} to overwrite.
-  //     `);
-  //   } else if (argv.verbose) {
-  //     warn("Overwriting existing manifest file.");
-  //   }
-  // }
-  // let mainFile = "index.js";
-  // const indexFileExists = !await exists(join(cwd, mainFile));
-  // if (!indexFileExists) {
-  //   const jsFiles = readdir(cwd).filter(
-  //     name => !name.startsWith(".") && name.endsWith(".js")
-  //   );
-  //   if (jsFiles.length) mainFile = jsFiles.sort()[0];
-  // }
-  // if (argv.yes) {
-  //   console.log("TODO", JSON.stringify(argv, null, 2));
-  //   process.exit(0);
-  // }
-
-  // const answers = await wizard({
-  //   cwd,
-  //   mainFile,
-  //   all: argv.all,
-  //   name: basename(cwd),
-  //   version: "0.0.0",
-  //   engineVersion: "^3.0.0"
-  // });
 };

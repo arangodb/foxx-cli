@@ -1,7 +1,12 @@
 'use strict';
 
-<% if (typeof routers !== 'undefined') {
-  routers.forEach(function (router) { -%>
-module.context.use(require('./routers/<%- router.name %>'));
+<% if (typeof documentCollections !== 'undefined') {
+  documentCollections.forEach(function (collection) { -%>
+module.context.use('/<%- collection %>', require('./api/<%- collection %>'));
+<% })
+} -%>
+<% if (typeof edgeCollections !== 'undefined') {
+  edgeCollections.forEach(function (collection) { -%>
+module.context.use('/<%- collection %>', require('./api/<%- collection %>'));
 <% })
 } -%>

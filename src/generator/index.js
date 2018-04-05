@@ -28,10 +28,10 @@ function generateManifest(options) {
   if (options.dependencies) manifest.dependencies = options.dependencies;
   if (options.provides) manifest.provides = options.provides;
 
-  if (options.generateSetup || options.generateTeardown) {
+  if (options.documentCollections || options.edgeCollections) {
     manifest.scripts = {};
-    if (options.generateSetup) manifest.scripts.setup = "setup.js";
-    if (options.generateTeardown) manifest.scripts.teardown = "teardown.js";
+    manifest.scripts.setup = "scripts/setup.js";
+    manifest.scripts.teardown = "scripts/teardown.js";
   }
 
   return JSON.stringify(manifest, null, 2);
@@ -80,41 +80,35 @@ module.exports = async function generateFiles(options) {
       content: await generateLicense(options)
     });
   }
-  if (options.generateExampleRouters) {
-    const collections = [];
-    for (const collection of options.documentCollections) {
-      collections.push([collection, false]);
-    }
-    for (const collection of options.edgeCollections) {
-      collections.push([collection, true]);
-    }
-    for (const [collection, isEdgeCollection] of collections) {
-      let singular = inflect.singularize(collection);
-      if (singular === collection) singular += "Item";
-      let plural = inflect.pluralize(singular);
-      if (plural === singular) plural = collection;
-      files.push({
-        name: `api/${collection}.js`,
-        content: await generateFile("router.js", {
-          collection,
-          isEdgeCollection,
-          singular,
-          plural
-        })
-      });
-    }
-    if (options.generateSetup) {
-      files.push({
-        name: "setup.js",
-        content: await generateFile("setup.js", options)
-      });
-    }
-    if (options.generateTeardown) {
-      files.push({
-        name: "teardown.js",
-        content: await generateFile("teardown.js", options)
-      });
-    }
+  const collections = [];
+  for (const collection of options.documentCollections) {
+    collections.push([collection, false]);
   }
+  for (const collection of options.edgeCollections) {
+    collections.push([collection, true]);
+  }
+  for (const [collection, isEdgeCollection] of collections) {
+    let singular = inflect.singularize(collection);
+    if (singular === collection) singular += "Item";
+    let plural = inflect.pluralize(singular);
+    if (plural === singular) plural = collection;
+    files.push({
+      name: `api/${collection}.js`,
+      content: await generateFile("router.js", {
+        collection,
+        isEdgeCollection,
+        singular,
+        plural
+      })
+    });
+  }
+  files.push({
+    name: "scripts/setup.js",
+    content: await generateFile("setup.js", options)
+  });
+  files.push({
+    name: "scripts/teardown.js",
+    content: await generateFile("teardown.js", options)
+  });
   return files;
 };

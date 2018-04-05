@@ -19,7 +19,7 @@ module.exports = async function wizard(options) {
   answers.configuration = undefined;
   answers.dependencies = undefined;
   answers.provides = undefined;
-
+  /*
   const { defineConfiguration } = await prompt([
     {
       name: "defineConfiguration",
@@ -76,7 +76,7 @@ module.exports = async function wizard(options) {
     }
     console.log();
   }
-
+*/
   return answers;
 };
 
@@ -217,81 +217,6 @@ async function foxxWizard({ cwd, ...options }) {
         }
         return true;
       }
-    },
-    {
-      name: "mainFile",
-      message: "Main entry file",
-      default: options.mainFile,
-      validate: answer =>
-        (answer.length > 3 && answer.endsWith(".js")) ||
-        `Not a valid JavaScript file name: "${red(answer)}"`
-    },
-    {
-      name: "generateMain",
-      message: answers =>
-        existsSync(join(cwd, answers.mainFile))
-          ? `Overwrite existing main entry file (${answers.mainFile})?`
-          : `Generate main entry file (${answers.mainFile})?`,
-      type: "confirm",
-      default: answers => !existsSync(join(cwd, answers.mainFile))
-    },
-    {
-      name: "generateSetup",
-      message: () =>
-        existsSync(join(cwd, "setup.js"))
-          ? `Overwrite existing file "setup.js" with setup script?`
-          : `Generate setup script (setup.js)?`,
-      type: "confirm",
-      default: answers =>
-        !existsSync(join(cwd, "setup.js")) &&
-        Boolean(answers.documentCollections || answers.edgeCollections)
-    },
-    {
-      name: "generateTeardown",
-      message: () =>
-        existsSync(join(cwd, "teardown.js"))
-          ? `Overwrite existing file "teardown.js" with teardown script?`
-          : `Generate teardown script (teardown.js)?`,
-      type: "confirm",
-      default: answers =>
-        !existsSync(join(cwd, "teardown.js")) &&
-        Boolean(answers.documentCollections || answers.edgeCollections)
-    },
-    {
-      name: "generateLicense",
-      message: () =>
-        existsSync(join(cwd, "LICENSE"))
-          ? `Overwrite existing license file (LICENSE)?`
-          : `Generate license template (LICENSE)?`,
-      type: "confirm",
-      default: () => !existsSync(join(cwd, "LICENSE"))
-    },
-    {
-      name: "generateReadMe",
-      message: () =>
-        existsSync(join(cwd, "README.md"))
-          ? `Overwrite existing readme file (README.md)?`
-          : `Generate readme file (README.md)?`,
-      type: "confirm",
-      default: () => !existsSync(join(cwd, "README.md"))
-    },
-    {
-      name: "generateExampleRouters",
-      message: "Generate example REST APIs for the collections?",
-      when: answers =>
-        Boolean(answers.documentCollections || answers.edgeCollections),
-      type: "confirm",
-      default: false
-    },
-    {
-      name: "generateExamples",
-      message: answers =>
-        answers.generateExampleRouters
-          ? "Generate additional example routes?"
-          : "Generate example routes?",
-      when: answers => Boolean(answers.generateMain),
-      type: "confirm",
-      default: false
     }
   ]);
   console.log();
@@ -317,10 +242,10 @@ async function foxxWizard({ cwd, ...options }) {
   if (!confirm.ok) throw new Error("Aborted.");
   if (!answers.documentCollections) answers.documentCollections = [];
   if (!answers.edgeCollections) answers.edgeCollections = [];
-  answers.license = {
-    ...licenses[answers.license],
-    id: answers.license
-  };
+  // answers.license = {
+  //   ...licenses[answers.license],
+  //   id: answers.license
+  // };
   return answers;
 }
 
