@@ -1,5 +1,7 @@
 'use strict';
 
-<% routers.forEach(function (router) { -%>
+<% if (typeof routers !== 'undefined') {
+  routers.forEach(function (router) { -%>
 module.context.use(require('./routers/<%- router.name %>'));
-<% }) -%>
+<% })
+} -%>
