@@ -19,7 +19,9 @@ function generateManifest(options) {
   if (options.name) manifest.name = options.name;
   if (options.version) manifest.version = options.version;
   if (options.license) manifest.license = options.license;
-  if (options.author) manifest.author = options.author;
+  if (options.authorEmail) {
+    manifest.author = `${options.authorName} <${options.authorEmail}>`;
+  } else if (options.authorName) manifest.author = options.authorName;
 
   if (options.description) manifest.description = options.description;
   if (options.configuration) manifest.configuration = options.configuration;
@@ -48,8 +50,8 @@ async function generateLicense(options) {
   let license = JSON.parse(
     readFileSync(path, "utf-8")
   ).standardLicenseTemplate.replace("[yyyy]", new Date().getFullYear());
-  if (options.author) {
-    license = license.replace("[name of copyright owner]", options.author);
+  if (options.authorName) {
+    license = license.replace("[name of copyright owner]", options.authorName);
   }
   return license;
 }
