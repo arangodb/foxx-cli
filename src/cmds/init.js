@@ -51,9 +51,14 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   const cwd = argv.target ? argv.target : process.cwd();
-  const files = readdirSync(cwd);
-  if (files.length > 0) {
-    fatal(`Directory ${cwd} is not empty.`);
+  if (!fs.existsSync(cwd)) {
+    fatal(`Directory '${cwd}' does not exists.`);
+  }
+  if (!fs.lstatSync(cwd).isDirectory()) {
+    fatal(`'${cwd}' is not a directory.`);
+  }
+  if (readdirSync(cwd).length > 0) {
+    fatal(`Directory '${cwd}' is not empty.`);
   }
   let options = {
     cwd,
