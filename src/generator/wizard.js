@@ -97,7 +97,7 @@ async function foxxWizard({ cwd, ...options }) {
     },
     {
       name: "license",
-      message: `License ${gray("(ex: MIT)")}`,
+      message: `License ${gray("(ex: Apache 2)")}`,
       default: options.license,
       filter: answer => licenseMap[answer.toUpperCase()] || answer,
       validate: answer => {

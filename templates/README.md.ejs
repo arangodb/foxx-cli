@@ -3,12 +3,12 @@ name
 -%>
 
 <%-
-description
+typeof description !== 'undefined'
 ? '\n' + description + '\n'
 : ''
 -%>
 <%
-if (provides) {
+if (typeof provides !== 'undefined') {
 %>
 This service provides the following Foxx dependencies:
 <%
@@ -26,7 +26,7 @@ This service provides the following Foxx dependencies:
 }
 -%>
 <%
-if (configuration) {
+if (typeof configuration !== 'undefined') {
 -%>
 
 ## Configuration
@@ -58,7 +58,7 @@ This service has the following configuration options:
 }
 -%>
 <%
-if (dependencies) {
+if (typeof dependencies !== 'undefined') {
 -%>
 
 ## Dependencies
@@ -76,16 +76,16 @@ This service uses the following Foxx dependencies:
 %>:<%-
     dep.version
 %>`<%-
-    dep.multiple
+    typeof dep.multiple !== 'undefined'
     ? ' (multiple)'
     : ''
 %><%-
-    dep.required
+    typeof dep.required !== 'undefined'
     ? ''
     : ' (optional)'
 %>
 <%-
-    dep.description
+    typeof dep.description !== 'undefined'
     ? '\n  ' + dep.description.replace(/\n/g, '\n  ') + '\n'
     : ''
 %>
@@ -97,22 +97,18 @@ This service uses the following Foxx dependencies:
 -%>
 
 ## License
-<%
-if (license) {
-%>
-The <%-
-  license.name
-%>.<%-
-  generateLicense
-  ? ' For more information, see the accompanying LICENSE file.'
-  : ''
-%>
-<%
-} else {
-%>
+
 Copyright (c) <%-
   new Date().getFullYear()
-%> <copyright holders>. All rights reserved.
+%> <%-
+    typeof author !== 'undefinec' ? author : '<copyright holders>'
+%>. All rights reserved.
+<%
+if (typeof license !== 'undefined') {
+%>
+The <%-
+  license
+%> license. For more information, see the accompanying LICENSE file.
 <%
 }
 -%>
