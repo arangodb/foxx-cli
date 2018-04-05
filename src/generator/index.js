@@ -72,10 +72,12 @@ module.exports = async function generateFiles(options) {
     name: "README.md",
     content: await generateFile("README.md", options)
   });
-  files.push({
-    name: "LICENSE",
-    content: await generateLicense(options)
-  });
+  if (options.license) {
+    files.push({
+      name: "LICENSE",
+      content: await generateLicense(options)
+    });
+  }
   if (options.generateExampleRouters) {
     const collections = [];
     for (const collection of options.documentCollections) {
