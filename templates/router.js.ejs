@@ -102,7 +102,7 @@ router.put(':key', function (req, res) {
     meta = <%= plural %>.replace(key, <%= singular %>);
   } catch (e) {
     if (e.isArangoError) {
-      if ( && e.errorNum === ARANGO_NOT_FOUND) {
+      if (e.errorNum === ARANGO_NOT_FOUND) {
         res.throw('not found', e.message);
       } else if (e.errorNum === ARANGO_CONFLICT) {
         res.throw('conflict', e.message);

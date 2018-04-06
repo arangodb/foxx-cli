@@ -63,9 +63,9 @@ exports.handler = async function handler(argv) {
   let options = {
     cwd,
     example: argv.example && !argv.interactive,
-    mainFile: "index.js",
     name: basename(cwd),
     version: "0.0.0",
+    mainFile: "index.js",
     engineVersion: "^3.0.0"
   };
   if (options.example) {
