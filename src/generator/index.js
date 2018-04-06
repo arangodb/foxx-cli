@@ -1,6 +1,4 @@
-import { generate } from "rxjs/observable/generate";
-
-("use strict");
+"use strict";
 const { render } = require("ejs");
 const { join } = require("path");
 const { readFileSync } = require("fs");
@@ -47,13 +45,7 @@ async function generateLicense(options) {
   const path = require.resolve(
     `spdx-license-list/licenses/${options.license}.json`
   );
-  let license = JSON.parse(
-    readFileSync(path, "utf-8")
-  ).standardLicenseTemplate.replace("[yyyy]", new Date().getFullYear());
-  if (options.authorName) {
-    license = license.replace("[name of copyright owner]", options.authorName);
-  }
-  return license;
+  return JSON.parse(readFileSync(path, "utf-8")).standardLicenseTemplate;
 }
 
 module.exports = async function generateFiles(options) {

@@ -97,18 +97,20 @@ This service uses the following Foxx dependencies:
 -%>
 
 ## License
-
-Copyright (c) <%-
-  new Date().getFullYear()
-%> <%-
-    typeof authorName !== 'undefined' ? authorName : '<copyright holders>'
-%>. All rights reserved.
 <%
-if (typeof license !== 'undefined') {
+if (typeof license !== 'undefined' && license) {
 %>
 The <%-
   license
 %> license. For more information, see the accompanying LICENSE file.
+<%
+} else {
+%>
+Copyright (c) <%-
+  new Date().getFullYear()
+%> <%-
+    typeof authorName !== 'undefined' && authorName ? authorName : '<copyright holders>'
+%>. All rights reserved.
 <%
 }
 -%>

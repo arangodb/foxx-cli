@@ -1,7 +1,5 @@
 /*eslint-disable no-console */
 "use strict";
-const { existsSync } = require("fs");
-const { join } = require("path");
 const { red, gray, green } = require("chalk");
 const { prompt } = require("inquirer");
 const { valid: validVersion, validRange } = require("semver");
@@ -19,7 +17,7 @@ module.exports = async function wizard(options) {
   answers.configuration = undefined;
   answers.dependencies = undefined;
   answers.provides = undefined;
-  /*
+
   const { defineConfiguration } = await prompt([
     {
       name: "defineConfiguration",
@@ -76,7 +74,7 @@ module.exports = async function wizard(options) {
     }
     console.log();
   }
-*/
+
   return answers;
 };
 
@@ -242,10 +240,6 @@ async function foxxWizard({ cwd, ...options }) {
   if (!confirm.ok) throw new Error("Aborted.");
   if (!answers.documentCollections) answers.documentCollections = [];
   if (!answers.edgeCollections) answers.edgeCollections = [];
-  // answers.license = {
-  //   ...licenses[answers.license],
-  //   id: answers.license
-  // };
   return answers;
 }
 
