@@ -2,11 +2,11 @@
 
 <% if (typeof documentCollections !== 'undefined') {
   documentCollections.forEach(function (collection) { -%>
-module.context.use('/<%- collection %>', require('./api/<%- collection %>'));
+module.context.use('/<%- collection %>', require('./api/<%- collection %>'), '<%- collection %>');
 <% })
 } -%>
 <% if (typeof edgeCollections !== 'undefined') {
   edgeCollections.forEach(function (collection) { -%>
-module.context.use('/<%- collection %>', require('./api/<%- collection %>'));
+module.context.use('/<%- collection %>', require('./api/<%- collection %>'), '<%- collection %>');
 <% })
 } -%>

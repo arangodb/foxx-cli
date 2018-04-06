@@ -15,8 +15,8 @@ for (const name of documentCollections) {
 }
 
 for (const name of edgeCollections) {
-  if (!module.context.collection(name))
-    const prefixedName = module.context.collectionName(name); {
+  if (!module.context.collection(name)) {
+    const prefixedName = module.context.collectionName(name);
     db._createEdgeCollection(prefixedName);
   }
 }

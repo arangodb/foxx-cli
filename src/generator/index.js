@@ -26,7 +26,10 @@ function generateManifest(options) {
   if (options.dependencies) manifest.dependencies = options.dependencies;
   if (options.provides) manifest.provides = options.provides;
 
-  if (options.documentCollections || options.edgeCollections) {
+  if (
+    (options.documentCollections && options.documentCollections.length) ||
+    (options.edgeCollections && options.edgeCollections.length)
+  ) {
     manifest.scripts = {};
     manifest.scripts.setup = "scripts/setup.js";
     manifest.scripts.teardown = "scripts/teardown.js";
@@ -73,11 +76,15 @@ module.exports = async function generateFiles(options) {
     });
   }
   const collections = [];
-  for (const collection of options.documentCollections) {
-    collections.push([collection, false]);
+  if (options.documentCollections) {
+    for (const collection of options.documentCollections) {
+      collections.push([collection, false]);
+    }
   }
-  for (const collection of options.edgeCollections) {
-    collections.push([collection, true]);
+  if (options.edgeCollections) {
+    for (const collection of options.edgeCollections) {
+      collections.push([collection, true]);
+    }
   }
   for (const [collection, isEdgeCollection] of collections) {
     let singular = inflect.singularize(collection);
@@ -94,13 +101,16 @@ module.exports = async function generateFiles(options) {
       })
     });
   }
-  files.push({
-    name: "scripts/setup.js",
-    content: await generateFile("setup.js", options)
-  });
-  files.push({
-    name: "scripts/teardown.js",
-    content: await generateFile("teardown.js", options)
-  });
+  if (collections.length) {
+    files.push({
+      name: "scripts/setup.js",
+      content: await generateFile("setup.js", options)
+    });
+    files.push({
+      name: "scripts/teardown.js",
+      content: await generateFile("teardown.js", options)
+    });
+  }
+
   return files;
 };

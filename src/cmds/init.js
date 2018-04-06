@@ -69,17 +69,20 @@ exports.handler = async function handler(argv) {
     engineVersion: "^3.0.0"
   };
   if (options.example) {
-    options.name = "Hello World Foxx Service";
+    options.name = "hello-world";
     options.authorName = "ArangoDB GmbH";
     options.license = "Apache-2.0";
     options.description = "A simple Hello Word Foxx service";
   }
   if (argv.interactive) {
-    options = await wizard(options);
+    options = Object.assign(options, await wizard(options));
   }
   try {
     const files = await generateFiles(options);
-    if (options.documentCollections || options.edgeCollections) {
+    if (
+      (options.documentCollections && options.documentCollections.length) ||
+      (options.edgeCollections && options.edgeCollections.length)
+    ) {
       fs.mkdirSync(path.resolve(cwd, "api"));
       fs.mkdirSync(path.resolve(cwd, "scripts"));
     }
