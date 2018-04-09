@@ -16,7 +16,7 @@ const checkFile = (file, content) => {
   ).to.equal(content);
 };
 
-describe.only("Foxx service init", () => {
+describe("Foxx service init", () => {
   describe("called with an non-existing directory", () => {
     beforeEach(async () => {
       if (fs.existsSync(tmpDir)) {
