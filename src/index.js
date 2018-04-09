@@ -18,6 +18,7 @@ const foxx = green(
 common(yargs, { command: "<command>", describe: foxx })
   .wrap(Math.min(160, yargs.terminalWidth()))
   .help("help", "Show this usage information and exit")
+  .command(require("./cmds/add"))
   .command(require("./cmds/bundle"))
   .command(require("./cmds/config"))
   .command(require("./cmds/deps"))

@@ -51,7 +51,7 @@ async function generateLicense(options) {
   return JSON.parse(readFileSync(path, "utf-8")).standardLicenseTemplate;
 }
 
-module.exports = async function generateFiles(options) {
+exports.generateFiles = async options => {
   const files = [];
   files.push({
     name: "manifest.json",
@@ -116,3 +116,5 @@ module.exports = async function generateFiles(options) {
 
   return files;
 };
+
+exports.generateScript = async () => await generateFile("script.js", {});
