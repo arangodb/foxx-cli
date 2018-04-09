@@ -51,9 +51,8 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   const cwd = argv.dest ? argv.dest : process.cwd();
   if (!await fs.exists(cwd)) {
-    fatal(`Directory '${cwd}' does not exists.`);
-  }
-  if (!(await fs.stat(cwd)).isDirectory()) {
+    await fs.mkdir(path.resolve(cwd));
+  } else if (!(await fs.stat(cwd)).isDirectory()) {
     fatal(`'${cwd}' is not a directory.`);
   }
   if ((await fs.readdir(cwd)).length > 0) {
