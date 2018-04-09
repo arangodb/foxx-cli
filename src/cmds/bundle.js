@@ -82,9 +82,9 @@ exports.handler = async function handler(argv) {
     if (!out) {
       if (!argv.stdout && process.stdout.isTTY) {
         fatal(il`
-      Refusing to write binary data to stdout.
-      Use ${bold("--stdout")} if you really want to do this.
-      `);
+          Refusing to write binary data to stdout.
+          Use ${bold("--stdout")} if you really want to do this.
+        `);
       }
       out = process.stdout;
     } else if (argv.stdout) {
@@ -95,7 +95,10 @@ exports.handler = async function handler(argv) {
     } else if (!argv.force) {
       const stats = await safeStat(out);
       if (stats) {
-        fatal(`Outfile "${white(source)}" already exists.`);
+        fatal(il`
+          Outfile "${white(source)}" already exists.
+          Use ${bold("--force")} to overwrite existing file.
+        `);
       }
     }
     const stats = await safeStat(source);
@@ -108,9 +111,9 @@ exports.handler = async function handler(argv) {
       let path = resolve(source, "manifest.json");
       if (!await exists(path)) {
         fatal(il`
-      Source directory "${white(source)}" does not contain a manifest file.
-      Use ${bold("--sloppy")} if you want to skip this check.
-      `);
+          Source directory "${white(source)}" does not contain a manifest file.
+          Use ${bold("--sloppy")} if you want to skip this check.
+        `);
       }
     }
     await bundle(source, out);
