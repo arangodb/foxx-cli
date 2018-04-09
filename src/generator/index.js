@@ -52,7 +52,6 @@ async function generateLicense(options) {
 }
 
 module.exports = async function generateFiles(options) {
-  const inflect = I();
   const files = [];
   files.push({
     name: "manifest.json",
@@ -86,21 +85,24 @@ module.exports = async function generateFiles(options) {
       collections.push([collection, true]);
     }
   }
-  // for (const [collection, isEdgeCollection] of collections) {
-  //   let singular = inflect.singularize(collection);
-  //   if (singular === collection) singular += "Item";
-  //   let plural = inflect.pluralize(singular);
-  //   if (plural === singular) plural = collection;
-  //   files.push({
-  //     name: `api/${collection}.js`,
-  //     content: await generateFile("router.js", {
-  //       collection,
-  //       isEdgeCollection,
-  //       singular,
-  //       plural
-  //     })
-  //   });
-  // }
+  if (options.generateCrudRoutes) {
+    const inflect = I();
+    for (const [collection, isEdgeCollection] of collections) {
+      let singular = inflect.singularize(collection);
+      if (singular === collection) singular += "Item";
+      let plural = inflect.pluralize(singular);
+      if (plural === singular) plural = collection;
+      files.push({
+        name: `api/${collection}.js`,
+        content: await generateFile("router.js", {
+          collection,
+          isEdgeCollection,
+          singular,
+          plural
+        })
+      });
+    }
+  }
   if (collections.length) {
     files.push({
       name: "scripts/setup.js",

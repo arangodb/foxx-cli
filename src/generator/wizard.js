@@ -215,6 +215,13 @@ async function foxxWizard({ cwd, ...options }) {
         }
         return true;
       }
+    },
+    {
+      name: "generateCrudRoutes",
+      message: "Generate CRUD routes for collections",
+      type: "confirm",
+      default: false,
+      when: answers => answers.documentCollections || answers.edgeCollections
     }
   ]);
   console.log();
