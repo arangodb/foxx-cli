@@ -34,6 +34,7 @@ function generateManifest(options) {
     manifest.scripts.setup = "scripts/setup.js";
     manifest.scripts.teardown = "scripts/teardown.js";
   }
+  if (options.tests) manifest.tests = options.tests;
 
   return JSON.stringify(manifest, null, 2);
 }

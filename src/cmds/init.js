@@ -62,7 +62,8 @@ exports.handler = async function handler(argv) {
     name: path.basename(dest),
     version: "0.0.0",
     mainFile: "index.js",
-    engineVersion: "^3.0.0"
+    engineVersion: "^3.0.0",
+    tests: "test/**/*.js"
   };
   if (options.example) {
     options.name = "hello-world";
