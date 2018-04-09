@@ -7,4 +7,6 @@ exports.description = "Generate additional service files";
 const describe = "TODO";
 
 exports.builder = yargs =>
-  common(yargs, { command, describe }).command(require("./add/script"));
+  common(yargs, { command, describe })
+    .command(require("./add/script"))
+    .command(require("./add/router"));

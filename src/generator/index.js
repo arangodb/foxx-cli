@@ -94,7 +94,7 @@ exports.generateFiles = async options => {
       if (plural === singular) plural = collection;
       files.push({
         name: `api/${collection}.js`,
-        content: await generateFile("router.js", {
+        content: await generateFile("crud.js", {
           collection,
           isEdgeCollection,
           singular,
@@ -118,3 +118,7 @@ exports.generateFiles = async options => {
 };
 
 exports.generateScript = async () => await generateFile("script.js", {});
+
+exports.generateRouter = async () => await generateFile("router.js", {});
+
+exports.generateIndex = async () => await generateFile("index.js", {});
