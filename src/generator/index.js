@@ -131,3 +131,5 @@ exports.generateScript = async () => await generateFile("script.js", {});
 exports.generateRouter = async () => await generateFile("router.js", {});
 
 exports.generateIndex = async () => await generateFile("index.js", {});
+
+exports.generateTest = async () => await generateFile("test.js", {});
