@@ -46,19 +46,20 @@ exports.builder = yargs =>
     .example("$0 init --example", "Create a new example Foxx service");
 
 exports.handler = async function handler(argv) {
-  const cwd = argv.dest ? argv.dest : process.cwd();
-  if (!await fs.exists(cwd)) {
-    await fs.mkdir(path.resolve(cwd));
-  } else if (!(await fs.stat(cwd)).isDirectory()) {
-    fatal(`'${cwd}' is not a directory.`);
+  const dest = argv.dest ? argv.dest : process.cwd();
+  const stat = await fs.safeStat(dest);
+  if (!stat) {
+    await fs.mkdir(path.resolve(dest));
+  } else if (!stat.isDirectory()) {
+    fatal(`'${dest}' is not a directory.`);
   }
-  if ((await fs.readdir(cwd)).length > 0) {
-    fatal(`Directory '${cwd}' is not empty.`);
+  if ((await fs.readdir(dest)).length > 0) {
+    fatal(`Directory '${dest}' is not empty.`);
   }
   let options = {
-    cwd,
+    cwd: dest,
     example: argv.example && !argv.interactive,
-    name: path.basename(cwd),
+    name: path.basename(dest),
     version: "0.0.0",
     mainFile: "index.js",
     engineVersion: "^3.0.0"
@@ -74,11 +75,11 @@ exports.handler = async function handler(argv) {
   }
   try {
     const files = await generateFiles(options);
-    await fs.mkdir(path.resolve(cwd, "api"));
-    await fs.mkdir(path.resolve(cwd, "scripts"));
+    await fs.mkdir(path.resolve(dest, "api"));
+    await fs.mkdir(path.resolve(dest, "scripts"));
     await Promise.all(
       files.map(file =>
-        fs.writeFile(path.resolve(cwd, file.name), file.content)
+        fs.writeFile(path.resolve(dest, file.name), file.content)
       )
     );
   } catch (e) {
