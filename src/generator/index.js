@@ -2,7 +2,7 @@
 const { render } = require("ejs");
 const { join } = require("path");
 const { readFileSync } = require("fs");
-const I = require("i");
+const inflect = require("i")();
 
 const TEMPLATE_PATH = join(__dirname, "..", "..", "templates");
 
@@ -86,20 +86,10 @@ exports.generateFiles = async options => {
     }
   }
   if (options.generateCrudRoutes) {
-    const inflect = I();
     for (const [collection, isEdgeCollection] of collections) {
-      let singular = inflect.singularize(collection);
-      if (singular === collection) singular += "Item";
-      let plural = inflect.pluralize(singular);
-      if (plural === singular) plural = collection;
       files.push({
         name: `api/${collection}.js`,
-        content: await generateFile("crud.js", {
-          collection,
-          isEdgeCollection,
-          singular,
-          plural
-        })
+        content: await exports.generateCrud(collection, isEdgeCollection)
       });
     }
   }
@@ -115,6 +105,24 @@ exports.generateFiles = async options => {
   }
 
   return files;
+};
+
+exports.generateCrud = async (
+  collection,
+  isEdgeCollection,
+  prefixed = true
+) => {
+  let singular = inflect.singularize(collection);
+  if (singular === collection) singular += "Item";
+  let plural = inflect.pluralize(singular);
+  if (plural === singular) plural = collection;
+  return await generateFile("crud.js", {
+    collection,
+    isEdgeCollection,
+    singular,
+    plural,
+    prefixed
+  });
 };
 
 exports.generateScript = async () => await generateFile("script.js", {});

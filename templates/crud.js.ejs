@@ -3,6 +3,8 @@ const dd = require('dedent');
 const joi = require('joi');
 const errors = require('@arangodb').errors;
 const createRouter = require('@arangodb/foxx/router');
+<% if (!prefixed) { %>const db = require('@arangodb').db;
+<% } -%>
 
 const <%= singular %>Schema = {
   _key: joi.string(),
@@ -22,7 +24,7 @@ const <%= singular %>PatchSchema = {
   // Describe the attributes the patch route should accept here
 };
 
-const <%= plural %> = module.context.collection('<%= collection %>');
+const <%= plural %> = <%= prefixed ? "module.context.collection" : "db._collection" %>('<%= collection %>');
 const keySchema = joi.string().required()
 .description('The key of the <%= singular %>');
 

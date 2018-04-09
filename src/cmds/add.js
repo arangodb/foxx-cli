@@ -9,4 +9,5 @@ const describe = "TODO";
 exports.builder = yargs =>
   common(yargs, { command, describe })
     .command(require("./add/script"))
-    .command(require("./add/router"));
+    .command(require("./add/router"))
+    .command(require("./add/crud"));
