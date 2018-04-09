@@ -7,24 +7,19 @@ const createRouter = require('@arangodb/foxx/router');
 const <%= singular %>Schema = {
   _key: joi.string(),
   // Describe the attributes for outgoing <%= plural %>
-  str: joi.string(),
-  int: joi.number().integer()
+  // e.g. int: joi.number().integer()
 };
 
 const <%= singular %>IncomingSchema = {
-  // Describe the attributes for incoming <%= plural %>
 <% if (isEdgeCollection) { -%>
   _from: joi.string(),
   _to: joi.string(),
 <% } -%>
-  str: joi.string(),
-  int: joi.number().integer()
+  // Describe the attributes for incoming <%= plural %>
 };
 
 const <%= singular %>PatchSchema = {
   // Describe the attributes the patch route should accept here
-  str: joi.string().optional(),
-  int: joi.number().integer().optional()
 };
 
 const <%= plural %> = module.context.collection('<%= collection %>');
