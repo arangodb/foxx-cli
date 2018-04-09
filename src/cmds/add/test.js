@@ -1,4 +1,5 @@
 "use strict";
+const { white } = require("chalk");
 const { common } = require("../../util/cli");
 const { fatal } = require("../../util/log");
 const { generateTest } = require("../../generator");
@@ -21,7 +22,7 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   const manifestPath = path.resolve(process.cwd(), "manifest.json");
   if (!await fs.exists(manifestPath)) {
-    fatal("manifest.json does not exist.");
+    fatal("Current directory does not contain a manifest file.");
   }
   const tests = path.resolve(process.cwd(), "tests");
   if (!await fs.exists(tests)) {
@@ -29,7 +30,7 @@ exports.handler = async function handler(argv) {
   }
   const test = path.resolve(tests, `${argv.name}.js`);
   if (await fs.exists(test)) {
-    fatal(`Test '${test}' already exists.`);
+    fatal(`Test "${white(test)}" already exists.`);
   }
   await fs.writeFile(test, await generateTest());
   const manifest = JSON.parse(await fs.readFile(manifestPath));
