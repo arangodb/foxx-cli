@@ -34,6 +34,8 @@ exports.handler = async function handler(argv) {
   }
   await fs.writeFile(test, await generateTest());
   const manifest = JSON.parse(await fs.readFile(manifestPath));
-  if (!manifest.tests) manifest.tests = "test/**/*.js";
-  await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
+  if (!manifest.tests) {
+    manifest.tests = "test/**/*.js";
+    await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2));
+  }
 };
