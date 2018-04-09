@@ -1,10 +1,7 @@
 "use strict";
-const { bold } = require("chalk");
-const { basename, join } = require("path");
 const { common } = require("../util/cli");
-const { warn, fatal } = require("../util/log");
-const { inline: il } = require("../util/text");
-const generateFiles = require("../generator");
+const { fatal } = require("../util/log");
+const { generateFiles } = require("../generator");
 const wizard = require("../generator/wizard");
 const fs = require("../util/fs");
 const path = require("path");
@@ -61,7 +58,7 @@ exports.handler = async function handler(argv) {
   let options = {
     cwd,
     example: argv.example && !argv.interactive,
-    name: basename(cwd),
+    name: path.basename(cwd),
     version: "0.0.0",
     mainFile: "index.js",
     engineVersion: "^3.0.0"
