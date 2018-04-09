@@ -24,7 +24,7 @@ exports.handler = async function handler(argv) {
   if (!await fs.exists(manifestPath)) {
     fatal("Current directory does not contain a manifest file.");
   }
-  const tests = path.resolve(process.cwd(), "tests");
+  const tests = path.resolve(process.cwd(), "test");
   if (!await fs.exists(tests)) {
     await fs.mkdir(tests);
   }
