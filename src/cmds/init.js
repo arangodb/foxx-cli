@@ -77,6 +77,7 @@ exports.handler = async function handler(argv) {
     const files = await generateFiles(options);
     await fs.mkdir(path.resolve(dest, "api"));
     await fs.mkdir(path.resolve(dest, "scripts"));
+    await fs.mkdir(path.resolve(dest, "test"));
     await Promise.all(
       files.map(file =>
         fs.writeFile(path.resolve(dest, file.name), file.content)
