@@ -1,4 +1,5 @@
 "use strict";
+const { white } = require("chalk");
 const { common } = require("../../util/cli");
 const { fatal } = require("../../util/log");
 const generator = require("../../generator");
@@ -8,7 +9,7 @@ const path = require("path");
 const command = (exports.command = "crud <collection>");
 exports.description = "Add a CRUD router";
 const describe =
-  'Creates a router file with CRUD operations for the given collection under "api/<collection>.js" and adds it to the main Javascript file of the service.';
+  'Creates a router file with CRUD operations for the given collection under "api/<collection>.js" and adds it to the main JavaScript file of the service.';
 
 const args = [
   ["collection", "Name of the collection for the CRUD operations to be added."]
@@ -47,12 +48,12 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   const manifestPath = path.resolve(process.cwd(), "manifest.json");
   if (!await fs.exists(manifestPath)) {
-    fatal("manifest.json does not exist.");
+    fatal("Current directory does not contain a manifest file.");
   }
   const cruds = path.resolve(process.cwd(), "api");
   const crud = path.resolve(cruds, `${argv.collection}.js`);
   if (await fs.exists(crud)) {
-    fatal(`router '${crud}' already exists.`);
+    fatal(`Router "${white(crud)}" already exists.`);
   }
   const manifest = JSON.parse(await fs.readFile(manifestPath));
   const mainPath = path.resolve(process.cwd(), manifest.main || "index.js");

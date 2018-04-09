@@ -89,9 +89,9 @@ exports.handler = async function handler(argv) {
       out = process.stdout;
     } else if (argv.stdout) {
       fatal(il`
-    Can't use both ${bold("--outfile")}
-    and ${bold("--stdout")} at the same time.
-    `);
+        Can't use both ${bold("--outfile")}
+        and ${bold("--stdout")} at the same time.
+      `);
     } else if (!argv.force) {
       const stats = await safeStat(out);
       if (stats) {
@@ -108,9 +108,9 @@ exports.handler = async function handler(argv) {
       let path = resolve(source, "manifest.json");
       if (!await exists(path)) {
         fatal(il`
-      Source directory "${white(source)}" does not contain a manifest file.
-      Use ${bold("--sloppy")} if you want to skip this check.
-      `);
+          Source directory "${white(source)}" does not contain a manifest file.
+          Use ${bold("--sloppy")} if you want to skip this check.
+        `);
       }
     }
     await bundle(source, out);

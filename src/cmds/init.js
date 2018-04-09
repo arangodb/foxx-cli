@@ -1,4 +1,5 @@
 "use strict";
+const { white } = require("chalk");
 const { common } = require("../util/cli");
 const { fatal } = require("../util/log");
 const { generateFiles } = require("../generator");
@@ -51,10 +52,10 @@ exports.handler = async function handler(argv) {
   if (!stat) {
     await fs.mkdir(path.resolve(dest));
   } else if (!stat.isDirectory()) {
-    fatal(`'${dest}' is not a directory.`);
+    fatal(`Destination "${white(dest)}" is not a directory.`);
   }
   if ((await fs.readdir(dest)).length > 0) {
-    fatal(`Directory '${dest}' is not empty.`);
+    fatal(`Refusing to write to non-empty directory "${white(dest)}".`);
   }
   let options = {
     cwd: dest,
@@ -76,9 +77,11 @@ exports.handler = async function handler(argv) {
   }
   try {
     const files = await generateFiles(options);
-    await fs.mkdir(path.resolve(dest, "api"));
-    await fs.mkdir(path.resolve(dest, "scripts"));
-    await fs.mkdir(path.resolve(dest, "test"));
+    await Promise.all([
+      fs.mkdir(path.resolve(dest, "api")),
+      fs.mkdir(path.resolve(dest, "scripts")),
+      fs.mkdir(path.resolve(dest, "test"))
+    ]);
     await Promise.all(
       files.map(file =>
         fs.writeFile(path.resolve(dest, file.name), file.content)

@@ -5,7 +5,7 @@ const command = (exports.command = "add <command>");
 exports.description = "Generate additional service files";
 
 const describe =
-  "Generates additional files for the local service and adds them, depending on the file, to the manifest.json and/or main Javascript file.";
+  "Generates additional files for the local service and adds them, depending on the file, to the manifest.json and/or main JavaScript file.";
 
 exports.builder = yargs =>
   common(yargs, { command, describe })

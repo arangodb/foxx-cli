@@ -1,4 +1,5 @@
 "use strict";
+const { white } = require("chalk");
 const { common } = require("../../util/cli");
 const { fatal } = require("../../util/log");
 const generator = require("../../generator");
@@ -8,7 +9,7 @@ const path = require("path");
 const command = (exports.command = "router <name>");
 exports.description = "Add a router";
 const describe =
-  'Creates a router file under "api/<name>.js" and adds it to the main Javascript file of the service.';
+  'Creates a router file under "api/<name>.js" and adds it to the main JavaScript file of the service.';
 
 const args = [["name", "Name of the router to add."]];
 
@@ -21,12 +22,12 @@ exports.builder = yargs =>
 exports.handler = async function handler(argv) {
   const manifestPath = path.resolve(process.cwd(), "manifest.json");
   if (!await fs.exists(manifestPath)) {
-    fatal("manifest.json does not exist.");
+    fatal("Current directory does not contain a manifest file.");
   }
   const routers = path.resolve(process.cwd(), "api");
   const router = path.resolve(routers, `${argv.name}.js`);
   if (await fs.exists(router)) {
-    fatal(`router '${router}' already exists.`);
+    fatal(`Router "${white(router)}" already exists.`);
   }
   const manifest = JSON.parse(await fs.readFile(manifestPath));
   const mainPath = path.resolve(process.cwd(), manifest.main || "index.js");
