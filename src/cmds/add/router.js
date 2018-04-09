@@ -8,7 +8,7 @@ const path = require("path");
 const command = (exports.command = "router <name>");
 exports.description = "Add a router";
 const describe =
-  'Creates a router file under "api/<name>.js" and adds it to the index.js.';
+  'Creates a router file under "api/<name>.js" and adds it to the main Javascript file of the service.';
 
 const args = [["name", "Name of the router to add."]];
 

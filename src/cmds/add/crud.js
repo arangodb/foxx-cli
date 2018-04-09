@@ -8,7 +8,7 @@ const path = require("path");
 const command = (exports.command = "crud <collection>");
 exports.description = "Add a CRUD router";
 const describe =
-  'Creates a router file with CRUD operations for the given collection under "api/<collection>.js" and adds it to the index.js.';
+  'Creates a router file with CRUD operations for the given collection under "api/<collection>.js" and adds it to the main Javascript file of the service.';
 
 const args = [
   ["collection", "Name of the collection for the CRUD operations to be added."]
@@ -18,13 +18,14 @@ exports.builder = yargs =>
   common(yargs, { command, describe, args })
     .options({
       edge: {
-        describe: "",
+        describe:
+          "Create CRUD operations for an edge collection (different schema validation)",
         alias: "e",
         type: "boolean",
         default: false
       },
       unprefixed: {
-        describe: "",
+        describe: "Create CRUD operations for an unprefixed collection",
         alias: "u",
         type: "boolean",
         default: false
@@ -32,7 +33,15 @@ exports.builder = yargs =>
     })
     .example(
       "$0 add crud kittens",
-      'Adds a CRUD router "kittens" to the local service'
+      'Adds a CRUD router for the collection "kittens" to the local service'
+    )
+    .example(
+      "$0 add crud kittens -e",
+      'Adds a CRUD router for the edge collection "kittens"'
+    )
+    .example(
+      "$0 add crud kittens -u",
+      'Adds a CRUD router for the unprefixed collection "kittens"'
     );
 
 exports.handler = async function handler(argv) {
