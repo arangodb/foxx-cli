@@ -3,13 +3,14 @@ const dd = require('dedent');
 const joi = require('joi');
 const errors = require('@arangodb').errors;
 const createRouter = require('@arangodb/foxx/router');
-<% if (!prefixed) { %>const db = require('@arangodb').db;
+<% if (!prefixed) { -%>
+const db = require('@arangodb').db;
 <% } -%>
 
 const <%= singular %>Schema = {
   _key: joi.string(),
   // Describe the attributes for outgoing <%= plural %>
-  // e.g. int: joi.number().integer()
+  // e.g. age: joi.number().integer()
 };
 
 const <%= singular %>IncomingSchema = {
@@ -24,7 +25,11 @@ const <%= singular %>PatchSchema = {
   // Describe the attributes the patch route should accept here
 };
 
-const <%= plural %> = <%= prefixed ? "module.context.collection" : "db._collection" %>('<%= collection %>');
+const <%= plural %> = <%=
+  prefixed
+  ? "module.context.collection"
+  : "db._collection"
+%>('<%= collection %>');
 const keySchema = joi.string().required()
 .description('The key of the <%= singular %>');
 

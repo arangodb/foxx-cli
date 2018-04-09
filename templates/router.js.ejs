@@ -1,18 +1,20 @@
 'use strict';
 const joi = require('joi');
-const errors = require('@arangodb').errors;
 const createRouter = require('@arangodb/foxx/router');
+
 const router = createRouter();
 module.exports = router;
 
 router.use((req, res, next) => {
-  //
+  // Manipulate req here before it is handled by a route
+  // e.g. req.session = {}
   next();
-  //
+  // Manipulate res here after it was handled by a route
+  // e.g. res.set('x-session-id', 'keyboardcat')
 });
 
 router.post('/', (req, res) => {
-  //
+  // Handle the request and generate the response
 })
 .body(joi.object(), 'the request body')
 .response(200, joi.object(), 'the response body');
