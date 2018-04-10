@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unpublished]
+## [1.1.0] - 2018-04-10
 
 ### Added
 
@@ -14,11 +14,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 * `foxx add` allows generating various JavaScript files:
 
   * `foxx add script` generates a script and adds it to the manifest
-  
+
   * `foxx add test` generates a test suite
-  
+
   * `foxx add router` generates a router and registers it in the main file
-  
+
   * `foxx add crud` generates a CRUD router for a collection
 
 ## [1.0.1] - 2018-03-22
