@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * `foxx bundle` warning when outfile already exists now shows correct path
 
+* Foxx CLI now follows symlinks when generating the service bundle
+
 ## [1.1.1] - 2018-04-10
 
 ### Fixed
