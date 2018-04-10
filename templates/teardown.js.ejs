@@ -1,6 +1,6 @@
 'use strict';
 const db = require('@arangodb').db;
-const allCollections = <%=
+const allCollections = <%-
   JSON.stringify([
     ...documentCollections.sort(),
     ...edgeCollections.sort()

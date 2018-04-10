@@ -1,0 +1,172 @@
+'use strict';
+const dd = require('dedent');
+const joi = require('joi');
+const errors = require('@arangodb').errors;
+const createRouter = require('@arangodb/foxx/router');
+<% if (!prefixed) { -%>
+const db = require('@arangodb').db;
+<% } -%>
+
+const <%= singular %>Schema = {
+  _key: joi.string(),
+  // Describe the attributes for outgoing <%= plural %>
+  // e.g. age: joi.number().integer()
+};
+
+const <%= singular %>IncomingSchema = {
+<% if (isEdgeCollection) { -%>
+  _from: joi.string(),
+  _to: joi.string(),
+<% } -%>
+  // Describe the attributes for incoming <%= plural %>
+};
+
+const <%= singular %>PatchSchema = {
+  // Describe the attributes the patch route should accept here
+};
+
+const <%= plural %> = <%=
+  prefixed
+  ? "module.context.collection"
+  : "db._collection"
+%>('<%= collection %>');
+const keySchema = joi.string().required()
+.description('The key of the <%= singular %>');
+
+const ARANGO_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
+const ARANGO_DUPLICATE = errors.ERROR_ARANGO_UNIQUE_CONSTRAINT_VIOLATED.code;
+const ARANGO_CONFLICT = errors.ERROR_ARANGO_CONFLICT.code;
+
+const router = createRouter();
+module.exports = router;
+
+router.get(function (req, res) {
+  res.send(<%= plural %>.all());
+}, 'list')
+.response([<%= singular %>Schema], 'A list of <%= plural %>.')
+.summary('List all <%= plural %>')
+.description(dd`
+  Retrieves a list of all <%= plural %>.
+`);
+
+router.post(function (req, res) {
+  const <%= singular %> = req.body;
+  let meta;
+  try {
+    meta = <%= plural %>.save(<%= singular %>);
+  } catch (e) {
+    if (e.isArangoError && e.errorNum === ARANGO_DUPLICATE) {
+      res.throw('conflict', e.message);
+    }
+    res.throw(e);
+  }
+  Object.assign(<%= singular %>, meta);
+  res.status(201);
+  res.set('location', req.makeAbsolute(
+    req.reverse('detail', {key: <%= singular %>._key})
+  ));
+  res.send(<%= singular %>);
+}, 'create')
+.body(<%= singular %>IncomingSchema, 'The <%= singular %> to create.')
+.response(201, <%= singular %>Schema, 'The created <%= singular %>.')
+.error('conflict', 'The <%= singular %> already exists.')
+.summary('Create a new <%= singular %>')
+.description(dd`
+  Creates a new <%= singular %> from the request body and
+  returns the saved <%= singular %>.
+`);
+
+router.get(':key', function (req, res) {
+  const key = req.pathParams.key;
+  let <%= singular %>
+  try {
+    <%= singular %> = <%= plural %>.document(key);
+  } catch (e) {
+    if (e.isArangoError && e.errorNum === ARANGO_NOT_FOUND) {
+      res.throw('not found', e.message);
+    }
+    res.throw(e);
+  }
+  res.send(<%= singular %>);
+}, 'detail')
+.pathParam('key', keySchema)
+.response(<%= singular %>Schema, 'The <%= singular %>.')
+.summary('Fetch a <%= singular %>')
+.description(dd`
+  Retrieves a <%= singular %> by its key.
+`);
+
+router.put(':key', function (req, res) {
+  const key = req.pathParams.key;
+  const <%= singular %> = req.body;
+  let meta;
+  try {
+    meta = <%= plural %>.replace(key, <%= singular %>);
+  } catch (e) {
+    if (e.isArangoError) {
+      if (e.errorNum === ARANGO_NOT_FOUND) {
+        res.throw('not found', e.message);
+      } else if (e.errorNum === ARANGO_CONFLICT) {
+        res.throw('conflict', e.message);
+      }
+    }
+    res.throw(e);
+  }
+  Object.assign(<%= singular %>, meta);
+  res.send(<%= singular %>);
+}, 'replace')
+.pathParam('key', keySchema)
+.body(<%= singular %>IncomingSchema, 'The data to replace the <%= singular %> with.')
+.response(<%= singular %>Schema, 'The new <%= singular %>.')
+.summary('Replace a <%= singular %>')
+.description(dd`
+  Replaces an existing <%= singular %> with the request body and
+  returns the new <%= singular %>.
+`);
+
+router.patch(':key', function (req, res) {
+  const key = req.pathParams.key;
+  const patchData = req.body;
+  let <%= singular %>;
+  try {
+    <%= plural %>.update(key, patchData);
+    <%= singular %> = <%= plural %>.document(key);
+  } catch (e) {
+    if (e.isArangoError) {
+      if (e.errorNum === ARANGO_NOT_FOUND) {
+        res.throw('not found', e.message);
+      }
+      if (e.errorNum === ARANGO_CONFLICT) {
+        res.throw('conflict', e.message);
+      }
+    }
+    res.throw(e);
+  }
+  res.send(<%= singular %>);
+}, 'update')
+.pathParam('key', keySchema)
+.body(<%= singular %>PatchSchema, 'The data to update the <%= singular %> with.')
+.response(<%= singular %>Schema, 'The updated <%= singular %>.')
+.summary('Update a <%= singular %>')
+.description(dd`
+  Patches a <%= singular %> with the request body and
+  returns the updated document.
+`);
+
+router.delete(':key', function (req, res) {
+  const key = req.pathParams.key;
+  try {
+    <%= plural %>.remove(key);
+  } catch (e) {
+    if (e.isArangoError && e.errorNum === ARANGO_NOT_FOUND) {
+      res.throw('not found', e.message);
+    }
+    res.throw(e);
+  }
+}, 'delete')
+.pathParam('key', keySchema)
+.response(null)
+.summary('Remove a <%= singular %>')
+.description(dd`
+  Deletes a <%= singular %> from the database.
+`);

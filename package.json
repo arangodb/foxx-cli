@@ -12,7 +12,7 @@
       "mocha --reporter spec --require source-map-support/register --timeout 10000 dist/test",
     "pretest": "yarn prepare",
     "ci":
-      "mocha --reporter spec --require source-map-support/register --timeout 10000 lib/cjs/test",
+      "mocha --reporter spec --require source-map-support/register --timeout 10000 dist/test",
     "preci": "yarn install",
     "prepare": "babel -d dist src"
   },

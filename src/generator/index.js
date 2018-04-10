@@ -1,113 +1,134 @@
 "use strict";
 const { render } = require("ejs");
 const { join } = require("path");
-const { readFile } = require("fs");
-const I = require("i");
+const { readFileSync } = require("fs");
+const inflect = require("i")();
 
 const TEMPLATE_PATH = join(__dirname, "..", "..", "templates");
 
 function generateManifest(options) {
   const manifest = {
-    name: options.name,
-    version: options.version,
+    main: options.mainFile,
     engines: {
       arangodb: options.engineVersion
-    },
-    main: options.mainFile
+    }
   };
 
-  if (options.license) manifest.license = options.license.id;
-  else if (options.generateLicense) manifest.license = "SEE LICENSE IN LICENSE";
+  if (options.name) manifest.name = options.name;
+  if (options.version) manifest.version = options.version;
+  if (options.license) manifest.license = options.license;
+  if (options.authorEmail) {
+    manifest.author = `${options.authorName} <${options.authorEmail}>`;
+  } else if (options.authorName) manifest.author = options.authorName;
 
   if (options.description) manifest.description = options.description;
   if (options.configuration) manifest.configuration = options.configuration;
   if (options.dependencies) manifest.dependencies = options.dependencies;
   if (options.provides) manifest.provides = options.provides;
 
-  if (options.authorEmail) {
-    manifest.author = `${options.authorName ||
-      options.authorEmail.split("@")[0]} <${options.authorEmail}>`;
-  } else if (options.authorName) manifest.author = options.authorName;
-
-  if (options.generateSetup || options.generateTeardown) {
+  if (
+    (options.documentCollections && options.documentCollections.length) ||
+    (options.edgeCollections && options.edgeCollections.length)
+  ) {
     manifest.scripts = {};
-    if (options.generateSetup) manifest.scripts.setup = "setup.js";
-    if (options.generateTeardown) manifest.scripts.teardown = "teardown.js";
+    manifest.scripts.setup = "scripts/setup.js";
+    manifest.scripts.teardown = "scripts/teardown.js";
   }
+  if (options.tests) manifest.tests = options.tests;
 
   return JSON.stringify(manifest, null, 2);
 }
 
 async function generateFile(name, data) {
-  const template = await readFile(join(TEMPLATE_PATH, `${name}.ejs`), "utf-8");
+  const template = readFileSync(join(TEMPLATE_PATH, `${name}.ejs`), "utf-8");
   return render(template, data);
 }
 
 async function generateLicense(options) {
   if (!options.license) return generateFile("LICENSE", options);
-  const path = require.resolve(
-    `spdx-license-list/licenses/${options.license.id}.txt`
-  );
-  return (await readFile(path, "utf-8"))
-    .replace(/<<var;name=[^;]+;original=([^;]+);match=[^>]+>>/g, "$1")
-    .replace(/<<beginOptional;name=[^>]+>>/g, "")
+  return require(`spdx-license-list/licenses/${options.license}.json`)
+    .standardLicenseTemplate.replace(/<<beginOptional;name=[^>]+>>/g, "")
     .replace(/<<endOptional>>/g, "");
 }
 
-module.exports = async function generateFiles(options) {
-  const inflect = I();
+exports.generateFiles = async options => {
   const files = [];
   files.push({
     name: "manifest.json",
     content: generateManifest(options)
   });
-  if (options.generateReadMe) {
-    files.push({
-      name: "README.md",
-      content: await generateFile("README.md", options)
-    });
-  }
-  if (options.generateLicense) {
+  files.push({
+    name: "index.js",
+    content: await generateFile(
+      options.example ? "example/index.js" : "index.js",
+      options
+    )
+  });
+  files.push({
+    name: "README.md",
+    content: await generateFile("README.md", options)
+  });
+  if (options.license) {
     files.push({
       name: "LICENSE",
       content: await generateLicense(options)
     });
   }
-  if (options.generateExampleRouters) {
-    const collections = [];
+  const collections = [];
+  if (options.documentCollections) {
     for (const collection of options.documentCollections) {
       collections.push([collection, false]);
     }
+  }
+  if (options.edgeCollections) {
     for (const collection of options.edgeCollections) {
       collections.push([collection, true]);
     }
+  }
+  if (options.generateCrudRoutes) {
     for (const [collection, isEdgeCollection] of collections) {
-      let singular = inflect.singularize(collection);
-      if (singular === collection) singular += "Item";
-      let plural = inflect.pluralize(singular);
-      if (plural === singular) plural = collection;
       files.push({
         name: `api/${collection}.js`,
-        content: await generateFile("router.js", {
-          collection,
-          isEdgeCollection,
-          singular,
-          plural
-        })
-      });
-    }
-    if (options.generateSetup) {
-      files.push({
-        name: "setup.js",
-        content: await generateFile("setup.js", options)
-      });
-    }
-    if (options.generateTeardown) {
-      files.push({
-        name: "teardown.js",
-        content: await generateFile("teardown.js", options)
+        content: await exports.generateCrud(collection, isEdgeCollection)
       });
     }
   }
+  if (collections.length) {
+    files.push({
+      name: "scripts/setup.js",
+      content: await generateFile("setup.js", options)
+    });
+    files.push({
+      name: "scripts/teardown.js",
+      content: await generateFile("teardown.js", options)
+    });
+  }
+
   return files;
 };
+
+exports.generateCrud = async (
+  collection,
+  isEdgeCollection,
+  prefixed = true
+) => {
+  let singular = inflect.singularize(collection);
+  if (singular === collection) singular += "Item";
+  let plural = inflect.pluralize(singular);
+  if (plural === singular) plural = collection;
+  return await generateFile("crud.js", {
+    collection,
+    isEdgeCollection,
+    singular,
+    plural,
+    prefixed
+  });
+};
+
+exports.generateScript = async () => await generateFile("script.js", {});
+
+exports.generateRouter = async () => await generateFile("router.js", {});
+
+exports.generateIndex = async () => await generateFile("index.js", {});
+
+exports.generateTest = async () => await generateFile("test.js", {});

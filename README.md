@@ -77,22 +77,21 @@ foxx server --help # Help for the "server" command
 foxx server list --help # Subcommands are supported, too
 ```
 
-<!--
 If you have no prior knowledge of Foxx, you can get started by [installing ArangoDB locally](https://www.arangodb.com/download) and then creating a new Foxx service in the current directory using the `init` command:
 
 ```sh
-foxx init # answer the interactive questions
+foxx init -i # answer the interactive questions
 ```
 
-If you just want an example, you can also run the `init` command non-interactively:
+If you want an example, you can also let `init` create an example service for you:
 
 ```sh
-foxx init -ya # just create an example service please
+foxx init -e # create an example service please
 ```
 
-You can also use `foxx init -y` to create a minimal service without the example code.
+You can also just use `foxx init` to create a minimal service without the example code.
 
-You can inspect the files created by the program and tweak them as necessary. Once you're ready, install the service at a *mount path* using the `install` command:
+You can inspect the files created by the program and tweak them as necessary. Once you're ready, install the service at a _mount path_ using the `install` command:
 
 ```sh
 foxx install /hello-foxx # installs the current directory
@@ -101,7 +100,12 @@ foxx install /hello-foxx # installs the current directory
 You should then be able to view the installed service in your browser at the following URL:
 
 <http://localhost:8529/_db/_system/hello-foxx>
--->
+
+If you continue to work on your Foxx service and want to upgrade the installed version with your local changes use the `upgrade` command to do so.
+
+```sh
+foxx upgrade /hello-foxx # upgrades the server with the current directory
+```
 
 ## Special files
 

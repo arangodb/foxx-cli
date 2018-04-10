@@ -89,9 +89,9 @@ exports.handler = async function handler(argv) {
       out = process.stdout;
     } else if (argv.stdout) {
       fatal(il`
-    Can't use both ${bold("--outfile")}
-    and ${bold("--stdout")} at the same time.
-    `);
+        Can't use both ${bold("--outfile")}
+        and ${bold("--stdout")} at the same time.
+      `);
     } else if (!argv.force) {
       const stats = await safeStat(out);
       if (stats) {
