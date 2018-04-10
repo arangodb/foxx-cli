@@ -46,10 +46,9 @@ async function generateFile(name, data) {
 
 async function generateLicense(options) {
   if (!options.license) return generateFile("LICENSE", options);
-  const path = require.resolve(
-    `spdx-license-list/licenses/${options.license}.json`
-  );
-  return JSON.parse(readFileSync(path, "utf-8")).standardLicenseTemplate;
+  return require(`spdx-license-list/licenses/${options.license}.json`)
+    .standardLicenseTemplate.replace(/<<beginOptional;name=[^>]+>>/g, "")
+    .replace(/<<endOptional>>/g, "");
 }
 
 exports.generateFiles = async options => {

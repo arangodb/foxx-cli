@@ -80,13 +80,13 @@ foxx server list --help # Subcommands are supported, too
 If you have no prior knowledge of Foxx, you can get started by [installing ArangoDB locally](https://www.arangodb.com/download) and then creating a new Foxx service in the current directory using the `init` command:
 
 ```sh
-foxx init # answer the interactive questions
+foxx init -i # answer the interactive questions
 ```
 
-If you want an example, you can also run the `init` command non-interactively:
+If you want an example, you can also let `init` create an example service for you:
 
 ```sh
-foxx init -e # just create an example service please
+foxx init -e # create an example service please
 ```
 
 You can also just use `foxx init` to create a minimal service without the example code.
