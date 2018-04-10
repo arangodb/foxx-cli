@@ -96,7 +96,7 @@ exports.handler = async function handler(argv) {
       const stats = await safeStat(out);
       if (stats) {
         fatal(il`
-          Outfile "${white(source)}" already exists.
+          Outfile "${white(out)}" already exists.
           Use ${bold("--force")} to overwrite existing file.
         `);
       }
