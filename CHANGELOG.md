@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 * `foxx bundle` warning when outfile already exists now shows correct path
 
+* `foxx init -i` only adds routers to `index.js` when generating CRUD routers
+
+  This fixes a bug where defining collections without also generating CRUD routers
+  would still result in the routers being referenced in `index.js` leading to a
+  broken service.
+
 * Foxx CLI now follows symlinks when generating the service bundle
 
 ## [1.1.1] - 2018-04-10
