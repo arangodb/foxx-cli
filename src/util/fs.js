@@ -2,8 +2,7 @@
 const extractZip = require("extract-zip");
 const fs = require("fs");
 const promisify = require("util.promisify");
-const { relative } = require("path");
-const walkdir = require("walkdir");
+const path = require("path");
 
 const promisify2 = fn => (...args) =>
   new Promise((resolve, reject) => {
@@ -24,6 +23,7 @@ exports.readFile = promisify(fs.readFile);
 exports.stat = promisify(fs.stat);
 exports.unlink = promisify(fs.unlink);
 exports.writeFile = promisify(fs.writeFile);
+exports.realpath = promisify(fs.realpath);
 
 exports.safeStat = async function safeStat(path) {
   try {
@@ -34,17 +34,30 @@ exports.safeStat = async function safeStat(path) {
   }
 };
 
-exports.walk = function walk(basepath, shouldIgnore) {
-  return new Promise((resolve, reject) => {
-    const files = [];
-    const walker = walkdir(basepath);
-    walker.on("file", (abspath, stats) => {
-      if (!stats.isFile()) return;
-      const path = relative(basepath, abspath);
-      if (shouldIgnore && shouldIgnore(path)) return;
-      files.push(path);
-    });
-    walker.on("error", e => reject(e));
-    walker.on("end", () => resolve(files));
-  });
+exports.walk = async function walk(basepath, shouldIgnore) {
+  const followed = [await exports.realpath(basepath)];
+  const dirs = [basepath];
+  const files = [];
+  for (const dirpath of dirs) {
+    const names = await exports.readdir(dirpath);
+    await Promise.all(
+      names.map(async name => {
+        const abspath = path.join(dirpath, name);
+        const stats = await exports.safeStat(abspath);
+        if (stats.isDirectory()) {
+          const realpath = await exports.realpath(abspath);
+          if (realpath !== abspath) {
+            if (followed.includes(realpath)) return;
+            followed.push(realpath);
+          }
+          dirs.push(abspath);
+        } else if (stats.isFile()) {
+          const relpath = path.relative(basepath, abspath);
+          if (shouldIgnore && shouldIgnore(relpath)) return;
+          files.push(relpath);
+        }
+      })
+    );
+  }
+  return files;
 };

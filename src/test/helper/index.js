@@ -23,6 +23,10 @@ module.exports.crudCases = () => {
       source: () => path.resolve(basePath, "minimal-working-service")
     },
     {
+      name: "localDirWithSymlink",
+      source: () => path.resolve(basePath, "symlink-service")
+    },
+    {
       name: "remoteJsFile",
       source: arangoPaths => `--remote ${arangoPaths.local.js}`
     },
