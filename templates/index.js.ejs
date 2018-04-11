@@ -1,11 +1,11 @@
 'use strict';
 
-<% if (typeof documentCollections !== 'undefined') {
+<% if (generateCrudRoutes && typeof documentCollections !== 'undefined') {
   documentCollections.forEach(function (collection) { -%>
 module.context.use('/<%- collection %>', require('./api/<%- collection %>'), '<%- collection %>');
 <% })
 } -%>
-<% if (typeof edgeCollections !== 'undefined') {
+<% if (generateCrudRoutes && typeof edgeCollections !== 'undefined') {
   edgeCollections.forEach(function (collection) { -%>
 module.context.use('/<%- collection %>', require('./api/<%- collection %>'), '<%- collection %>');
 <% })
