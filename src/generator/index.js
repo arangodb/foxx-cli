@@ -8,6 +8,7 @@ const TEMPLATE_PATH = join(__dirname, "..", "..", "templates");
 
 function generateManifest(options) {
   const manifest = {
+    $schema: "http://json.schemastore.org/foxx-manifest",
     main: options.mainFile,
     engines: {
       arangodb: options.engineVersion

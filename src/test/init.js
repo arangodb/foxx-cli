@@ -68,6 +68,7 @@ describe("Foxx service init", () => {
       const manifest = JSON.parse(
         fs.readFileSync(path.resolve(tmpDir, "manifest.json"), "utf-8")
       );
+      expect(manifest).to.have.property("$schema", "http://json.schemastore.org/foxx-manifest");
       expect(manifest).to.have.property("name", "test-init-service");
       expect(manifest).to.have.property("main", "index.js");
       expect(manifest).to.have.property("version", "0.0.0");
