@@ -70,7 +70,7 @@ exports.handler = async function handler(argv) {
     options.name = "hello-world";
     options.authorName = "ArangoDB GmbH";
     options.license = "Apache-2.0";
-    options.description = "A simple Hello Word Foxx service";
+    options.description = "A simple Hello World Foxx service";
   }
   if (argv.interactive) {
     options = Object.assign(options, await wizard(options));
