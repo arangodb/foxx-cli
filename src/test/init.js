@@ -93,7 +93,7 @@ describe("Foxx service init", () => {
       );
       checkFile(
         "README.md",
-        "# hello-world\n\nA simple Hello Word Foxx service\n\n## License\n\nThe Apache-2.0 license. For more information, see the accompanying LICENSE file.\n"
+        "# hello-world\n\nA simple Hello World Foxx service\n\n## License\n\nThe Apache-2.0 license. For more information, see the accompanying LICENSE file.\n"
       );
       expect(fs.readdirSync(path.resolve(tmpDir, "api"))).to.be.empty;
       expect(fs.readdirSync(path.resolve(tmpDir, "scripts"))).to.be.empty;
@@ -127,7 +127,7 @@ describe("Foxx service init", () => {
       );
       checkFile(
         "README.md",
-        "# hello-world\n\nA simple Hello Word Foxx service\n\n## License\n\nThe Apache-2.0 license. For more information, see the accompanying LICENSE file.\n"
+        "# hello-world\n\nA simple Hello World Foxx service\n\n## License\n\nThe Apache-2.0 license. For more information, see the accompanying LICENSE file.\n"
       );
       expect(fs.readdirSync(path.resolve(tmpDir, "api"))).to.be.empty;
       expect(fs.readdirSync(path.resolve(tmpDir, "scripts"))).to.be.empty;
