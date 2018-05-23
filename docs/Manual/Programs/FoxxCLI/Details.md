@@ -1,6 +1,4 @@
-# Foxx CLI
-
-CLI for managing and developing ArangoDB Foxx services.
+# Foxx CLI Details
 
 ## Install
 

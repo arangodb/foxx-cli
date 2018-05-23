@@ -15,7 +15,7 @@
 [Foxx services](https://foxx.arangodb.com).
 
 To learn more about Foxx, see the
-[official ArangoDB Foxx documentation](https://docs.arangodb.com/3/Manual/Foxx/).
+[official ArangoDB Foxx documentation](https://docs.arangodb.com/latest/Manual/Foxx/).
 
 ## Table of Contents
 
