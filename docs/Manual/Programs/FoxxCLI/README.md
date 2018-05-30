@@ -5,5 +5,5 @@ Foxx services. It is an optional tool which requires Node.js and
 can be installed via the package managers NPM and Yarn.
 
 It is the successor of `foxx-manager`, which is deprecated and will be
-removed eventually. Also see [Foxx Deployment](../../Foxx/Deployment/README.md)
+removed eventually. Also see [Foxx Deployment](../../Foxx/Deployment.md)
 for additional deployment options.
