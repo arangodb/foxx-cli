@@ -81,4 +81,31 @@ describe("Foxx service scripts", () => {
     expect(scripts).to.have.property("setup", "Setup");
     expect(scripts).to.have.property("teardown", "Teardown");
   });
+
+  describe("with a password file", () => {
+    const user = "testuser";
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd: "1234" // from fixtures/passwordFile
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should all be listed", async () => {
+      const passwordFilePath = path.resolve(basePath, "passwordFile");
+      const scripts = await foxx(
+        `scripts ${mount} --username ${user} --passwordFile ${passwordFilePath}`,
+        true
+      );
+      expect(scripts).to.have.property("setup", "Setup");
+      expect(scripts).to.have.property("teardown", "Teardown");
+    });
+  });
 });

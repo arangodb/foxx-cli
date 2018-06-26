@@ -131,4 +131,38 @@ describe("Foxx service list", () => {
     expect(service).to.have.property("development", false);
     expect(service).to.have.property("legacy", false);
   });
+
+  describe("with a password file", () => {
+    const user = "testuser";
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd: "1234" // from fixtures/passwordFile
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should show information about the service", async () => {
+      const passwordFilePath = path.resolve(basePath, "passwordFile");
+      const services = await foxx(
+        `list --username ${user} --passwordFile ${passwordFilePath}`,
+        true
+      );
+      expect(services).to.be.instanceOf(Array);
+      expect(services.length).to.equal(1);
+      const service = services.find(service => service.mount === mount);
+      expect(service).to.have.property("name", "minimal-working-manifest");
+      expect(service).to.have.property("version", "0.0.0");
+      expect(service).to.have.property("provides");
+      expect(service.provides).to.eql({});
+      expect(service).to.have.property("development", false);
+      expect(service).to.have.property("legacy", false);
+    });
+  });
 });

@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach, afterEach */
+/* global describe, it, before, after, beforeEach, afterEach */
 "use strict";
 
 const path = require("path");
@@ -97,6 +97,34 @@ describe("Foxx service development mode", () => {
     await foxx(`set-dev -u ${ARANGO_USERNAME} ${mount}`);
     const infoAfter = await db.getService(mount);
     expect(infoAfter.development).to.equal(true);
+  });
+
+  describe("with a password file", () => {
+    const user = "testuser";
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd: "1234" // from fixtures/passwordFile
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should be activated", async () => {
+      const passwordFilePath = path.resolve(basePath, "passwordFile");
+      const infoBefore = await db.getService(mount);
+      expect(infoBefore.development).to.equal(false);
+      await foxx(
+        `set-dev --username ${user} --passwordFile ${passwordFilePath} ${mount}`
+      );
+      const infoAfter = await db.getService(mount);
+      expect(infoAfter.development).to.equal(true);
+    });
   });
 
   it("should fail when mount is invalid", async () => {

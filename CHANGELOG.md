@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unpublished]
 
+### Added
+
+* Option `--passwordFile` (alias `-F`) reads the password from a file
+
+  This is an alternative to `--password` which is interactive for security reasons.
+
 ## [1.1.3] - 2018-04-18
 
 ### Fixed

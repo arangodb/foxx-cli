@@ -105,6 +105,36 @@ describe("Foxx service test", () => {
     }
   });
 
+  describe("with a password file", () => {
+    const user = "testuser";
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd: "1234" // from fixtures/passwordFile
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should print test result", async () => {
+      const passwordFilePath = path.resolve(basePath, "passwordFile");
+      try {
+        await foxx(
+          `test ${mount} --username ${user} --passwordFile ${passwordFilePath}`
+        );
+      } catch (e) {
+        const result = e.stdout.toString("utf-8");
+        expect(result).to.has.string("4 passing");
+        expect(result).to.has.string("2 failing");
+      }
+    });
+  });
+
   it("should fail when mount is invalid", async () => {
     try {
       await foxx(`test /dev/null echo`);

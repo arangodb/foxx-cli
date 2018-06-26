@@ -5,6 +5,7 @@ const { load: loadIni } = require("./ini");
 const parseServerUrl = require("./util/parseServerUrl");
 const { prompt } = require("inquirer");
 const { unsplat } = require("./util/array");
+const { readFile } = require("./util/fs");
 
 async function resolve(endpointOrName = "default") {
   if (endpointOrName.match(/^((https?|tcp|ssl):)?\/\//)) {
@@ -31,6 +32,20 @@ module.exports = async function resolveServer(argv) {
       )} as authentication for the same server.`
     );
   }
+  if (argv.passwordFile && argv.token) {
+    fatal(
+      `Can not use both ${bold("passwordFile")} and ${bold(
+        "token"
+      )} as authentication for the same server.`
+    );
+  }
+  if (argv.passwordFile && argv.password) {
+    fatal(
+      `Can not use both ${bold("passwordFile")} and ${bold(
+        "password"
+      )} as authentication for the same server.`
+    );
+  }
   if (argv.username && argv.token) {
     fatal(
       `Can not use both ${bold("username")} and ${bold(
@@ -54,6 +69,10 @@ module.exports = async function resolveServer(argv) {
     delete server.token;
     server.username = unsplat(argv.username);
     server.password = "";
+  }
+  if (argv.passwordFile) {
+    delete server.token;
+    server.password = await readFile(argv.passwordFile, "utf-8");
   }
   if (argv.password) {
     delete server.token;

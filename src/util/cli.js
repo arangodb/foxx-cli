@@ -40,6 +40,11 @@ exports.serverArgs = {
     type: "boolean",
     default: false
   },
+  passwordFile: {
+    describe: "Use a password from a file to authenticate",
+    alias: "F",
+    type: "string"
+  },
   token: {
     describe: "Use bearer token to authenticate",
     alias: "T",

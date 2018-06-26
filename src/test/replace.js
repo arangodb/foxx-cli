@@ -121,6 +121,32 @@ describe("Foxx service replaced", () => {
     expect(res.body).to.eql({ hello: "world" });
   });
 
+  describe("with a password file", () => {
+    const user = "testuser";
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd: "1234" // from fixtures/passwordFile
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should be available", async () => {
+      const passwordFilePath = path.resolve(basePath, "passwordFile");
+      await foxx(
+        `replace --username ${user} --passwordFile ${passwordFilePath} ${mount} ${servicePath}`
+      );
+      const res = await db.route(mount).get();
+      expect(res.body).to.eql({ hello: "world" });
+    });
+  });
+
   it("should run its setup script by default", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
     try {
