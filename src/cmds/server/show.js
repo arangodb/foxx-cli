@@ -9,7 +9,7 @@ const command = (exports.command = "show <name>");
 exports.description = "Show server information";
 const aliases = (exports.aliases = ["info"]);
 
-const describe = `Shows information about a server inlcuding its alias and URL.`;
+const describe = `Shows information about a server including its alias and URL.`;
 
 const args = [["name", "Server name to show details of"]];
 

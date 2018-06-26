@@ -9,7 +9,7 @@ const path = require("path");
 const command = (exports.command = "test <name>");
 exports.detestion = "Add a test";
 const describe =
-  'Creates a test file under "tests/<name>.js" and adds the pattern "test/**/*.js" to the manifest.json if its property "test" is undefinied.';
+  'Creates a test file under "tests/<name>.js" and adds the pattern "test/**/*.js" to the manifest.json if its property "test" is undefined.';
 
 const args = [["name", "Name of the test to add."]];
 
