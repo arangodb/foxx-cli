@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach, afterEach */
+/* global describe, it, before, after, beforeEach, afterEach */
 "use strict";
 
 const path = require("path");
@@ -117,6 +117,37 @@ describe("Foxx service uninstalled", () => {
     } catch (e) {
       expect(e).to.have.property("statusCode", 404);
     }
+  });
+
+  describe("with a password file", () => {
+    const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should not be available", async () => {
+      await foxx(
+        `uninstall --username ${user} --password-file ${passwordFilePath} ${mount}`
+      );
+      try {
+        await db.route(mount).get();
+        expect.fail();
+      } catch (e) {
+        expect(e).to.have.property("statusCode", 404);
+      }
+    });
   });
 
   it("should run its teardown script by default", async () => {

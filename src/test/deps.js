@@ -1,4 +1,4 @@
-/* global describe, it, beforeEach, afterEach */
+/* global describe, it, before, after, beforeEach, afterEach */
 "use strict";
 
 const path = require("path");
@@ -96,6 +96,34 @@ describe("Foxx service dependencies", () => {
     const config = await foxx(`deps -u ${ARANGO_USERNAME} ${mount}`, true);
     expect(config).to.have.property("test1");
     expect(config).to.have.property("test2");
+  });
+
+  describe("with a password file", () => {
+    const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should be available", async () => {
+      const config = await foxx(
+        `deps --username ${user} --password-file ${passwordFilePath} ${mount}`,
+        true
+      );
+      expect(config).to.have.property("test1");
+      expect(config).to.have.property("test2");
+    });
   });
 
   it("empty minimal should be available", async () => {

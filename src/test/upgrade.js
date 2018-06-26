@@ -127,6 +127,33 @@ describe("Foxx service upgraded", () => {
     expect(res.body).to.eql({ hello: "world" });
   });
 
+  describe("with a password file", () => {
+    const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should be available", async () => {
+      await foxx(
+        `upgrade --username ${user} --password-file ${passwordFilePath} ${mount} ${servicePath}`
+      );
+      const res = await db.route(mount).get();
+      expect(res.body).to.eql({ hello: "world" });
+    });
+  });
+
   it("should run its setup script by default", async () => {
     const col = `${mount}_setup_teardown`.replace(/\//, "").replace(/-/g, "_");
     try {

@@ -96,6 +96,32 @@ describe("Foxx service run", () => {
     expect(JSON.parse(resp)).to.eql([{}]);
   });
 
+  describe("with a password file", () => {
+    const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
+    before(async () => {
+      db.route("/_api/user").post({
+        user,
+        passwd
+      });
+      db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
+    });
+    after(async () => {
+      try {
+        db.route(`/_api/user/${user}`).delete();
+      } catch (e) {
+        // noop
+      }
+    });
+    it("should pass argv", async () => {
+      const resp = await foxx(
+        `run ${mount} echo {} --username ${user} --password-file ${passwordFilePath}`
+      );
+      expect(JSON.parse(resp)).to.eql([{}]);
+    });
+  });
+
   it("should fail when mount is invalid", async () => {
     try {
       await foxx(`run /dev/null echo`);
