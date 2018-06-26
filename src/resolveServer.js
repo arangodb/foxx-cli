@@ -72,7 +72,11 @@ module.exports = async function resolveServer(argv) {
   }
   if (argv.passwordFile) {
     delete server.token;
-    server.password = await readFile(argv.passwordFile, "utf-8");
+    try {
+      server.password = await readFile(argv.passwordFile, "utf-8");
+    } catch (e) {
+      fatal(`Error reading password file "${white(argv.passwordFile)}".`);
+    }
   }
   if (argv.password) {
     delete server.token;
@@ -105,6 +109,9 @@ module.exports = async function resolveServer(argv) {
     if (server.password === undefined) {
       server.password = "";
     }
+  }
+  if (server.password) {
+    server.password = server.password.replace(/\r|\n/g, "");
   }
   return server;
 };

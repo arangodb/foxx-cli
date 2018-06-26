@@ -115,10 +115,12 @@ describe("Foxx service download", () => {
 
   describe("with a password file", () => {
     const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd: "1234" // from fixtures/passwordFile
+        passwd
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -130,9 +132,8 @@ describe("Foxx service download", () => {
       }
     });
     it("should output bundle", async () => {
-      const passwordFilePath = path.resolve(basePath, "passwordFile");
       const output = await foxx(
-        `download --username ${user} --passwordFile ${passwordFilePath} ${mount}`
+        `download --username ${user} --password-file ${passwordFilePath} ${mount}`
       );
       expect(output).to.match(/^PK\u0003\u0004/);
     });

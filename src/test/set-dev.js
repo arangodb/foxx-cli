@@ -101,10 +101,12 @@ describe("Foxx service development mode", () => {
 
   describe("with a password file", () => {
     const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd: "1234" // from fixtures/passwordFile
+        passwd
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -116,11 +118,10 @@ describe("Foxx service development mode", () => {
       }
     });
     it("should be activated", async () => {
-      const passwordFilePath = path.resolve(basePath, "passwordFile");
       const infoBefore = await db.getService(mount);
       expect(infoBefore.development).to.equal(false);
       await foxx(
-        `set-dev --username ${user} --passwordFile ${passwordFilePath} ${mount}`
+        `set-dev --username ${user} --password-file ${passwordFilePath} ${mount}`
       );
       const infoAfter = await db.getService(mount);
       expect(infoAfter.development).to.equal(true);

@@ -104,10 +104,12 @@ describe("Foxx service show", () => {
 
   describe("with a password file", () => {
     const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd: "1234" // from fixtures/passwordFile
+        passwd
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -119,9 +121,8 @@ describe("Foxx service show", () => {
       }
     });
     it("should show information about the service", async () => {
-      const passwordFilePath = path.resolve(basePath, "passwordFile");
       const service = await foxx(
-        `show --username ${user} --passwordFile ${passwordFilePath} ${mount}`,
+        `show --username ${user} --password-file ${passwordFilePath} ${mount}`,
         true
       );
       expect(service).to.have.property("name", "minimal-working-manifest");

@@ -98,10 +98,12 @@ describe("Foxx service run", () => {
 
   describe("with a password file", () => {
     const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd: "1234" // from fixtures/passwordFile
+        passwd
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -113,9 +115,8 @@ describe("Foxx service run", () => {
       }
     });
     it("should pass argv", async () => {
-      const passwordFilePath = path.resolve(basePath, "passwordFile");
       const resp = await foxx(
-        `run ${mount} echo {} --username ${user} --passwordFile ${passwordFilePath}`
+        `run ${mount} echo {} --username ${user} --password-file ${passwordFilePath}`
       );
       expect(JSON.parse(resp)).to.eql([{}]);
     });

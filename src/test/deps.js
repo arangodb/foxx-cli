@@ -100,10 +100,12 @@ describe("Foxx service dependencies", () => {
 
   describe("with a password file", () => {
     const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd: "1234" // from fixtures/passwordFile
+        passwd
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -115,9 +117,8 @@ describe("Foxx service dependencies", () => {
       }
     });
     it("should be available", async () => {
-      const passwordFilePath = path.resolve(basePath, "passwordFile");
       const config = await foxx(
-        `deps --username ${user} --passwordFile ${passwordFilePath} ${mount}`,
+        `deps --username ${user} --password-file ${passwordFilePath} ${mount}`,
         true
       );
       expect(config).to.have.property("test1");

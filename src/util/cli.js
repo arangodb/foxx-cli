@@ -40,9 +40,9 @@ exports.serverArgs = {
     type: "boolean",
     default: false
   },
-  passwordFile: {
-    describe: "Use a password from a file to authenticate",
-    alias: "F",
+  "password-file": {
+    describe: "Read a password from a file to authenticate",
+    alias: "p",
     type: "string"
   },
   token: {

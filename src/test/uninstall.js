@@ -121,10 +121,12 @@ describe("Foxx service uninstalled", () => {
 
   describe("with a password file", () => {
     const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd: "1234" // from fixtures/passwordFile
+        passwd
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -136,9 +138,8 @@ describe("Foxx service uninstalled", () => {
       }
     });
     it("should not be available", async () => {
-      const passwordFilePath = path.resolve(basePath, "passwordFile");
       await foxx(
-        `uninstall --username ${user} --passwordFile ${passwordFilePath} ${mount}`
+        `uninstall --username ${user} --password-file ${passwordFilePath} ${mount}`
       );
       try {
         await db.route(mount).get();

@@ -107,10 +107,12 @@ describe("Foxx service test", () => {
 
   describe("with a password file", () => {
     const user = "testuser";
+    const passwordFilePath = path.resolve(basePath, "passwordFile");
+    const passwd = fs.readFileSync(passwordFilePath, "utf-8");
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd: "1234" // from fixtures/passwordFile
+        passwd
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -122,10 +124,9 @@ describe("Foxx service test", () => {
       }
     });
     it("should print test result", async () => {
-      const passwordFilePath = path.resolve(basePath, "passwordFile");
       try {
         await foxx(
-          `test ${mount} --username ${user} --passwordFile ${passwordFilePath}`
+          `test ${mount} --username ${user} --password-file ${passwordFilePath}`
         );
       } catch (e) {
         const result = e.stdout.toString("utf-8");
