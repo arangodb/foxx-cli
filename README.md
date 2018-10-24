@@ -17,6 +17,9 @@
 To learn more about Foxx, see the
 [official ArangoDB Foxx documentation](https://docs.arangodb.com/latest/Manual/Foxx/).
 
+The minimum ArangoDB server version is 3.2.0, which introduced the
+[Foxx HTTP API](https://docs.arangodb.com/latest/HTTP/Foxx/).
+
 ## Table of Contents
 
 * [Install](#install)
