@@ -7,3 +7,6 @@ can be installed via the package managers NPM and Yarn.
 It is the successor of `foxx-manager`, which is deprecated and will be
 removed eventually. Also see [Foxx Deployment](../../Foxx/Deployment.md)
 for additional deployment options.
+
+The minimum ArangoDB server version is 3.2.0, which introduced the
+[Foxx HTTP API](../../../HTTP/Foxx/index.html).
