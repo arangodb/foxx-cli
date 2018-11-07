@@ -56,9 +56,9 @@ exports.fatal = function fatal(err) {
     );
   } else if (err.code === "ECONNREFUSED") {
     exports.error(
-      `Connection refused: ${red.bold(err.address)}:${red.bold(
-        err.port
-      )}\nThis indicates connectivity issues or a server problem. Is the server down?`
+      `Connection refused: ${red.bold(err.address)}${
+        err.port ? `:${red.bold(err.port)}` : ""
+      }\nThis indicates connectivity issues or a server problem. Is the server down?`
     );
   } else if (err.code === "ECONNRESET") {
     exports.error(

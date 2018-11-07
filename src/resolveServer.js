@@ -2,14 +2,13 @@
 const { bold, white } = require("chalk");
 const { fatal } = require("./util/log");
 const { load: loadIni } = require("./ini");
-const parseServerUrl = require("./util/parseServerUrl");
 const { prompt } = require("inquirer");
 const { unsplat } = require("./util/array");
 const { readFile } = require("./util/fs");
 
 async function resolve(endpointOrName = "default") {
-  if (endpointOrName.match(/^((https?|tcp|ssl):)?\/\//)) {
-    return parseServerUrl(endpointOrName);
+  if (endpointOrName.match(/^(unix|(https?|tcp|ssl|tls)(\+unix)?):\/\//)) {
+    return { url: endpointOrName };
   }
   const ini = await loadIni();
   if (ini.server[endpointOrName]) {
