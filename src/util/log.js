@@ -79,11 +79,17 @@ exports.fatal = function fatal(err) {
       `Operation timed out. Server is not responding.\nThis indicates connectivity issues or a server problem.`
     );
   } else if (err.isArangoError) {
-    exports.error(
-      `Unexpected ArangoDB error (Code: ${err.errorNum || "?"}):\n${
-        err.message
-      }`
-    );
+    if (err.errorNum === 11) {
+      exports.error(
+        `Server refused authorization.\nEither your credentials are invalid or the user has insufficient privileges.`
+      );
+    } else {
+      exports.error(
+        `Unexpected ArangoDB error (Code: ${err.errorNum || "?"}):\n${
+          err.message
+        }`
+      );
+    }
   } else if (err.statusCode === 401) {
     exports.error("Authentication failed. Bad username or password?");
   } else if (typeof err.statusCode === "number") {
