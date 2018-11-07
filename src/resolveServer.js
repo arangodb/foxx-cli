@@ -8,6 +8,9 @@ const { readFile } = require("./util/fs");
 const { parse: parseUrl } = require("url");
 
 async function resolve(endpointOrName = "default") {
+  if (endpointOrName.match(/^\/\//)) {
+    return { url: `http:${endpointOrName}` };
+  }
   if (endpointOrName.match(/^(unix|(https?|tcp|ssl|tls)(\+unix)?):\/\//)) {
     return { url: endpointOrName };
   }
