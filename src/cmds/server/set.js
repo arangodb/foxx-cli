@@ -61,6 +61,18 @@ exports.builder = yargs =>
       'If omitted the protocol defaults to "http"'
     )
     .example(
+      "$0 server set dev unix:///tmp/arangod.sock",
+      'Unix sockets work with the unix protocol instead of "http".'
+    )
+    .example(
+      "$0 server set dev https+unix:///tmp/arangod.sock",
+      'For HTTPS over unix sockets, just use the "https+unix" protocol.'
+    )
+    .example(
+      "$0 server set dev http://unix:/tmp/arangod.sock",
+      "The conventional unix socket URL format is also supported."
+    )
+    .example(
       "$0 server set dev http://localhost:8529 -V 3.2.0",
       "Explicitly setting the expected ArangoDB version can be useful when using servers running different versions"
     );
