@@ -57,7 +57,7 @@ describe("Foxx server set", () => {
     await foxx("server set test tcp://localhost:8529");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
-      "[server.test]\nurl=http://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
+      "[server.test]\nurl=tcp://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
     );
   });
 
@@ -65,7 +65,39 @@ describe("Foxx server set", () => {
     await foxx("server set test ssl://localhost:8529");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
-      "[server.test]\nurl=https://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
+      "[server.test]\nurl=ssl://localhost:8529\ndatabase=_system\nusername=root\npassword=\n"
+    );
+  });
+
+  it("should add server with credentials to rc file", async () => {
+    await foxx("server set test http://admin:hunter2@localhost:8529");
+    const content = fs.readFileSync(foxxRcFile, "utf-8");
+    expect(content.replace(/\r\n/g, "\n")).to.equal(
+      "[server.test]\nurl=http://admin:hunter2@localhost:8529\ndatabase=_system\n"
+    );
+  });
+
+  it("should add unix socket server to rc file", async () => {
+    await foxx("server set test unix:///tmp/arangod.sock");
+    const content = fs.readFileSync(foxxRcFile, "utf-8");
+    expect(content.replace(/\r\n/g, "\n")).to.equal(
+      "[server.test]\nurl=unix:///tmp/arangod.sock\ndatabase=_system\nusername=root\npassword=\n"
+    );
+  });
+
+  it("should add http+unix socket server to rc file", async () => {
+    await foxx("server set test http+unix:///tmp/arangod.sock");
+    const content = fs.readFileSync(foxxRcFile, "utf-8");
+    expect(content.replace(/\r\n/g, "\n")).to.equal(
+      "[server.test]\nurl=http+unix:///tmp/arangod.sock\ndatabase=_system\nusername=root\npassword=\n"
+    );
+  });
+
+  it("should add http://unix: socket server to rc file", async () => {
+    await foxx("server set test http://unix:/tmp/arangod.sock");
+    const content = fs.readFileSync(foxxRcFile, "utf-8");
+    expect(content.replace(/\r\n/g, "\n")).to.equal(
+      "[server.test]\nurl=http://unix:/tmp/arangod.sock\ndatabase=_system\nusername=root\npassword=\n"
     );
   });
 
@@ -102,7 +134,7 @@ describe("Foxx server set", () => {
     );
   });
 
-  it("should add server with alternative uesrname to rc file using alias", async () => {
+  it("should add server with alternative username to rc file using alias", async () => {
     await foxx("server set test //localhost:8529 -u test");
     const content = fs.readFileSync(foxxRcFile, "utf-8");
     expect(content.replace(/\r\n/g, "\n")).to.equal(
