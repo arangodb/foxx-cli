@@ -5,6 +5,7 @@ const { load: loadIni } = require("./ini");
 const { prompt } = require("inquirer");
 const { unsplat } = require("./util/array");
 const { readFile } = require("./util/fs");
+const { parse: parseUrl } = require("url");
 
 async function resolve(endpointOrName = "default") {
   if (endpointOrName.match(/^(unix|(https?|tcp|ssl|tls)(\+unix)?):\/\//)) {
@@ -101,7 +102,7 @@ module.exports = async function resolveServer(argv) {
     ]);
     server.token = token;
   }
-  if (server.token === undefined) {
+  if (server.token === undefined && !parseUrl(server.url).auth) {
     if (server.username === undefined) {
       server.username = "root";
     }
