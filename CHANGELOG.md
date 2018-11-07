@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unpublished]
 
+### Changed
+
+* Server endpoint URLs are no longer pre-processed
+
+  URLs are now handed over to arangojs unaltered to rely on arangojs' URL handling
+  logic. When using URLs that include credentials or use the `ssl` and `tcp`
+  alias protocols you may notice that the `server set` command no longer modifies
+  these and the `.foxxrc` file contains the raw URLs.
+
+  Note that when using URLs that include credentials the credentials will therefore
+  be printed in plain text when the URL is displayed by a Foxx CLI command (e.g.
+  `server show` and `server list`).
+
+### Added
+
+* Added support for unix socket URLs
+
+  Unix socket URLs are now supported in the following formats:
+
+  * `unix:///socket/path`
+  * `http+unix:///socket/path` or `https+unix:///socket/path`
+  * `http://unix:/socket/path` or `https://unix:/socket/path`
+  * `tcp://unix:/socket/path` or `ssl://unix:/socket/path`
+
+  Note that unix socket URLs can not include credentials.
+
+### Fixed
+
+* Authorization errors now show a prettier error message
+
+  Previously authorization errors were not handled directly and would indicate
+  a "Code: 11" ArangoError. Now these errors result in a more readable error
+  message with suggestions for solving the problem.
+
 ## [1.2.0] - 2018-06-26
 
 ### Added
