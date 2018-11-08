@@ -55,7 +55,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-* Fixed `foxx init`: generateCrudRoutes is not defined (#27)
+* Fixed `foxx init`: generateCrudRoutes is not defined ([#27](https://github.com/arangodb/foxx-cli/issues/27))
 
 ## [1.1.2] - 2018-04-11
 
