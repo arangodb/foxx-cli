@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* Added support for unix socket URLs
+* Added support for unix socket URLs ([#32](https://github.com/arangodb/foxx-cli/issues/32))
 
   Unix socket URLs are now supported in the following formats:
 
