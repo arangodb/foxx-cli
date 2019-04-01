@@ -60,7 +60,9 @@ describe("Foxx service init", () => {
       checkFile("index.js", "'use strict';\n\n");
       checkFile(
         "README.md",
-        "# test-init-service\n\n## License\n\nCopyright (c) 2018 <copyright holders>. All rights reserved.\n"
+        "# test-init-service\n\n## License\n\nCopyright (c) " +
+          new Date().getFullYear() +
+          " <copyright holders>. All rights reserved.\n"
       );
       expect(fs.readdirSync(path.resolve(tmpDir, "api"))).to.be.empty;
       expect(fs.readdirSync(path.resolve(tmpDir, "scripts"))).to.be.empty;
@@ -68,7 +70,10 @@ describe("Foxx service init", () => {
       const manifest = JSON.parse(
         fs.readFileSync(path.resolve(tmpDir, "manifest.json"), "utf-8")
       );
-      expect(manifest).to.have.property("$schema", "http://json.schemastore.org/foxx-manifest");
+      expect(manifest).to.have.property(
+        "$schema",
+        "http://json.schemastore.org/foxx-manifest"
+      );
       expect(manifest).to.have.property("name", "test-init-service");
       expect(manifest).to.have.property("main", "index.js");
       expect(manifest).to.have.property("version", "0.0.0");

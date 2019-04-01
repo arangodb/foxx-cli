@@ -48,7 +48,7 @@ async function generateFile(name, data) {
 async function generateLicense(options) {
   if (!options.license) return generateFile("LICENSE", options);
   return require(`spdx-license-list/licenses/${options.license}.json`)
-    .standardLicenseTemplate.replace(/<<beginOptional;name=[^>]+>>/g, "")
+    .licenseText.replace(/<<beginOptional;name=[^>]+>>/g, "")
     .replace(/<<endOptional>>/g, "");
 }
 
