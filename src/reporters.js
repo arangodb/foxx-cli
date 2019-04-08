@@ -15,13 +15,13 @@ exports.list = function list(result, minimal = false) {
   } else {
     for (const test of result.tests) {
       if (test.err.stack) {
-        logger.log(red(`${errors.length}) ${test.fullTitle}`));
         errors.push({ stack: test.err.stack, fullTitle: test.fullTitle });
-      } else if (!test.duration !== undefined) {
-        logger.log(green("-"), cyan(test.fullTitle));
+        logger.log(red(`${errors.length}) ${test.fullTitle}`));
+      } else if (typeof test.duration !== "number") {
+        logger.log(cyan("-"), cyan(test.fullTitle));
       } else {
         logger.log(
-          green("․"),
+          green("✓"),
           gray(`${test.fullTitle}:`),
           gray(`${test.duration}ms`)
         );
@@ -50,12 +50,12 @@ function printSuite(suite, logger, errors, title) {
   if (!suite.stats) logger.indent();
   for (const test of suite.tests) {
     if (test.err.stack) {
-      logger.log(red(`${errors.length}) ${test.title}`));
       errors.push({
         stack: test.err.stack,
         fullTitle: [...title, test.title].join(" ")
       });
-    } else if (!test.duration !== undefined) {
+      logger.log(red(`${errors.length}) ${test.title}`));
+    } else if (typeof test.duration !== "number") {
       logger.log(cyan("-"), cyan(test.title));
     } else {
       logger.log(green("✓"), gray(test.title), gray(`(${test.duration}ms)`));
@@ -86,7 +86,7 @@ function printSummaryAndErrors(stats, logger, errors) {
     logger.log();
     for (let i = 0; i < errors.length; i++) {
       const error = errors[i];
-      logger.log(`${i}) ${error.fullTitle}`);
+      logger.log(`${i + 1}) ${error.fullTitle}`);
       const [message, ...stack] = error.stack.split("\n");
       logger.indent();
       logger.log(red(message));
