@@ -9,7 +9,7 @@ const errors = require("../errors");
 const reporters = require("../reporters");
 const resolveServer = require("../resolveServer");
 
-const command = (exports.command = "test <mount>");
+const command = (exports.command = "test <mount> [filter]");
 exports.description = "Run the tests of a mounted service";
 const aliases = (exports.aliases = ["tests", "run-tests"]);
 
@@ -33,7 +33,10 @@ const describe =
     ["xunit", "Jenkins-compatible xUnit-style XML output"]
   );
 
-const args = [["mount", "Mount path of the service"]];
+const args = [
+  ["mount", "Mount path of the service"],
+  ["filter", "Only run tests with full names matching this string"]
+];
 
 exports.builder = yargs =>
   common(yargs, { command, aliases, describe, args })
@@ -71,13 +74,13 @@ exports.handler = async function handler(argv) {
   try {
     const server = await resolveServer(argv);
     const db = client(server);
-    return await runTests(db, argv.mount, argv.reporter);
+    return await runTests(db, argv.mount, argv.reporter, argv.filter);
   } catch (e) {
     fatal(e);
   }
 };
 
-async function runTests(db, mount, cliReporter) {
+async function runTests(db, mount, cliReporter, filter) {
   let apiReporter;
   if (cliReporter === "spec") apiReporter = "suite";
   else if (cliReporter === "json") apiReporter = "default";
@@ -87,7 +90,7 @@ async function runTests(db, mount, cliReporter) {
 
   let result;
   try {
-    result = await db.runServiceTests(mount, { reporter: apiReporter });
+    result = await db.runServiceTests(mount, { reporter: apiReporter, filter });
   } catch (e) {
     if (e.isArangoError) {
       switch (e.errorNum) {
