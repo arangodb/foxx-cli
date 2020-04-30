@@ -12,10 +12,13 @@
 
 **foxx-cli** is a standalone tool for the shell that can be used to talk to
 [ArangoDB](https://www.arangodb.com) servers to manage
-[Foxx services](https://foxx.arangodb.com).
+[Foxx services](https://www.arangodb.com/why-arangodb/foxx/).
 
-To learn more about Foxx, see the
-[official ArangoDB Foxx documentation](https://docs.arangodb.com/latest/Manual/Foxx/).
+To learn more about Foxx, see the official
+[ArangoDB Foxx documentation](https://www.arangodb.com/docs/stable/foxx.html).
+
+_foxx-cli_ relies on the
+[Foxx HTTP API](https://www.arangodb.com/docs/stable/http/foxx.html).
 
 ## Table of Contents
 
@@ -77,7 +80,9 @@ foxx server --help # Help for the "server" command
 foxx server list --help # Subcommands are supported, too
 ```
 
-If you have no prior knowledge of Foxx, you can get started by [installing ArangoDB locally](https://www.arangodb.com/download) and then creating a new Foxx service in the current directory using the `init` command:
+If you have no prior knowledge of Foxx, you can get started by
+[installing ArangoDB locally](https://www.arangodb.com/download)
+and then creating a new Foxx service in the current directory using the `init` command:
 
 ```sh
 foxx init -i # answer the interactive questions
@@ -91,7 +96,8 @@ foxx init -e # create an example service please
 
 You can also just use `foxx init` to create a minimal service without the example code.
 
-You can inspect the files created by the program and tweak them as necessary. Once you're ready, install the service at a _mount path_ using the `install` command:
+You can inspect the files created by the program and tweak them as necessary.
+Once you're ready, install the service at a _mount path_ using the `install` command:
 
 ```sh
 foxx install /hello-foxx # installs the current directory
@@ -101,7 +107,8 @@ You should then be able to view the installed service in your browser at the fol
 
 <http://localhost:8529/_db/_system/hello-foxx>
 
-If you continue to work on your Foxx service and want to upgrade the installed version with your local changes use the `upgrade` command to do so.
+If you continue to work on your Foxx service and want to upgrade the installed
+version with your local changes use the `upgrade` command to do so.
 
 ```sh
 foxx upgrade /hello-foxx # upgrades the server with the current directory
@@ -111,9 +118,8 @@ foxx upgrade /hello-foxx # upgrades the server with the current directory
 
 ### manifest.json
 
-The `manifest.json` or manifest file contains a service's meta-information. For
-more information on the manifest format, see the
-[official ArangoDB documentation](https://docs.arangodb.com/3/Manual/Foxx/Manifest.html).
+The `manifest.json` or manifest file contains a service's meta-information.
+See the [Foxx reference documentation](https://www.arangodb.com/docs/stable/foxx-reference-manifest.html).
 
 The directory containing a service's `manifest.json` file is called the _root
 directory_ of the service.
