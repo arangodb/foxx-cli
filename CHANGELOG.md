@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   This should not affect you unless you're using `foxx-cli` internals directly
   in your own code.
 
+### Fixed
+
+- Options `--legacy` and `--development` are now passed on correctly
+
+  Previously these options had no effect when using `install`, `replace`
+  or `upgrade`.
+
 ## [1.3.0] - 2018-11-07
 
 ### Changed
