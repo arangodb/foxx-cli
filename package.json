@@ -32,23 +32,23 @@
   "homepage": "https://github.com/arangodb/foxx-cli#readme",
   "dependencies": {
     "arangojs": "^6.9.0",
-    "archiver": "^3.0.0",
-    "chalk": "^2.0.0",
-    "cliui": "^4.0.0",
+    "archiver": "^4.0.1",
+    "chalk": "^4.1.0",
+    "cliui": "^6.0.0",
     "dedent": "^0.7.0",
-    "ejs": "^2.5.7",
+    "ejs": "^3.1.3",
     "extract-zip": "^1.6.6",
     "i": "^0.3.6",
     "ini": "^1.3.4",
-    "inquirer": "^6.2.2",
+    "inquirer": "^7.3.0",
     "lodash": "^4.17.4",
     "minimatch": "^3.0.4",
     "request": "^2.85.0",
-    "semver": "^6.0.0",
+    "semver": "^7.3.2",
     "spdx-license-list": "^6.0.0",
     "temp": "^0.9.0",
     "util.promisify": "^1.0.0",
-    "yargs": "^13.2.2"
+    "yargs": "^15.3.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -57,10 +57,10 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
-    "eslint": "6",
+    "eslint": "7.3.1",
     "eslint-config-prettier": "6",
     "eslint-plugin-prettier": "^3.0.1",
-    "mocha": "^6.0.2",
+    "mocha": "^8.0.1",
     "prettier": "^1.8.2",
     "source-map-support": "^0.5.4"
   }
