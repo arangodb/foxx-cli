@@ -2,18 +2,9 @@
 const { createBundle } = require("./bundle");
 const { createReadStream } = require("fs");
 const { fatal } = require("./util/log");
-const request = require("request");
+const got = require("got");
 const { parse: parseUrl } = require("url");
 const { safeStat } = require("./util/fs");
-
-function get(path) {
-  return new Promise((resolve, reject) => {
-    request(path, { encoding: null }, (err, res) => {
-      if (err) reject(err);
-      else resolve(res);
-    });
-  });
-}
 
 module.exports = async function resolveToStream(path) {
   if (path === "@") {
@@ -37,7 +28,7 @@ module.exports = async function resolveToStream(path) {
 
 async function downloadToBuffer(path) {
   try {
-    const res = await get(path);
+    const res = await got(path, { responseType: "buffer" });
     if (res.statusCode >= 400) {
       fatal(
         `Server responded with code ${res.statusCode} while fetching "${path}".`
