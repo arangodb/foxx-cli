@@ -32,7 +32,7 @@
   },
   "homepage": "https://github.com/arangodb/foxx-cli#readme",
   "dependencies": {
-    "arangojs": "^6.9.0",
+    "arangojs": "^7.0.0-",
     "archiver": "^4.0.1",
     "chalk": "^4.1.0",
     "cliui": "^6.0.0",
