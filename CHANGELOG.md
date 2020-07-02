@@ -7,11 +7,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Removed
+
+- Dropped support for Node.js versions older than 12 (LTS)
+
+### Changed
+
+- Changed source directory from `dist` to `lib`
+
+  This should not affect you unless you're using `foxx-cli` internals directly
+  in your own code.
+
 ## [1.3.0] - 2018-11-07
 
 ### Changed
 
-* Server endpoint URLs are no longer pre-processed
+- Server endpoint URLs are no longer pre-processed
 
   URLs are now handed over to arangojs unaltered to rely on arangojs' URL handling
   logic. When using URLs that include credentials or use the `ssl` and `tcp`
@@ -24,20 +35,20 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* Added support for unix socket URLs ([#32](https://github.com/arangodb/foxx-cli/issues/32))
+- Added support for unix socket URLs ([#32](https://github.com/arangodb/foxx-cli/issues/32))
 
   Unix socket URLs are now supported in the following formats:
 
-  * `unix:///socket/path`
-  * `http+unix:///socket/path` or `https+unix:///socket/path`
-  * `http://unix:/socket/path` or `https://unix:/socket/path`
-  * `tcp://unix:/socket/path` or `ssl://unix:/socket/path`
+  - `unix:///socket/path`
+  - `http+unix:///socket/path` or `https+unix:///socket/path`
+  - `http://unix:/socket/path` or `https://unix:/socket/path`
+  - `tcp://unix:/socket/path` or `ssl://unix:/socket/path`
 
   Note that unix socket URLs can not include credentials.
 
 ### Fixed
 
-* Authorization errors now show a prettier error message
+- Authorization errors now show a prettier error message
 
   Previously authorization errors were not handled directly and would indicate
   a "Code: 11" ArangoError. Now these errors result in a more readable error
@@ -47,7 +58,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-* Option `--password-file` (alias `-p`) reads the password from a file
+- Option `--password-file` (alias `-p`) reads the password from a file
 
   This is an alternative to `--password` which is interactive for security reasons.
 
@@ -55,55 +66,55 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-* Fixed `foxx init`: generateCrudRoutes is not defined ([#27](https://github.com/arangodb/foxx-cli/issues/27))
+- Fixed `foxx init`: generateCrudRoutes is not defined ([#27](https://github.com/arangodb/foxx-cli/issues/27))
 
 ## [1.1.2] - 2018-04-11
 
 ### Fixed
 
-* `foxx bundle` warning when outfile already exists now shows correct path
+- `foxx bundle` warning when outfile already exists now shows correct path
 
-* `foxx init -i` only adds routers to `index.js` when generating CRUD routers
+- `foxx init -i` only adds routers to `index.js` when generating CRUD routers
 
   This fixes a bug where defining collections without also generating CRUD routers
   would still result in the routers being referenced in `index.js` leading to a
   broken service.
 
-* Foxx CLI now follows symlinks when generating the service bundle
+- Foxx CLI now follows symlinks when generating the service bundle
 
 ## [1.1.1] - 2018-04-10
 
 ### Fixed
 
-* Re-released on Linux to fix bad linebreaks in `foxx` CLI command
+- Re-released on Linux to fix bad linebreaks in `foxx` CLI command
 
 ## [1.1.0] - 2018-04-10
 
 ### Added
 
-* `foxx init` makes it easy to create boilerplate for a Foxx service.
+- `foxx init` makes it easy to create boilerplate for a Foxx service.
 
-* `foxx add` allows generating various JavaScript files:
+- `foxx add` allows generating various JavaScript files:
 
-  * `foxx add script` generates a script and adds it to the manifest
+  - `foxx add script` generates a script and adds it to the manifest
 
-  * `foxx add test` generates a test suite
+  - `foxx add test` generates a test suite
 
-  * `foxx add router` generates a router and registers it in the main file
+  - `foxx add router` generates a router and registers it in the main file
 
-  * `foxx add crud` generates a CRUD router for a collection
+  - `foxx add crud` generates a CRUD router for a collection
 
 ## [1.0.1] - 2018-03-22
 
 ### Fixed
 
-* HTTPS URLs are now resolved correctly
+- HTTPS URLs are now resolved correctly
 
   Foxx CLI now uses the `request` module to download service sources locally.
 
 ## [1.0.0] - 2018-03-21
 
-* Initial public release
+- Initial public release
 
 [unreleased]: https://github.com/arangodb/foxx-cli/compare/v1.3.0...HEAD
 [1.3.0]: https://github.com/arangodb/foxx-cli/compare/v1.2.0...v1.3.0

@@ -6,19 +6,20 @@
   "bin": {
     "foxx": "bin/foxx"
   },
+  "engines": {
+    "node": ">=12"
+  },
   "files": [
     "bin/",
-    "dist/",
+    "lib/",
     "templates/",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "test": "mocha --reporter spec --require source-map-support/register --timeout 10000 dist/test",
-    "pretest": "yarn prepare",
-    "ci": "mocha --reporter spec --require source-map-support/register --timeout 10000 dist/test",
-    "preci": "yarn install",
-    "prepare": "babel -d dist src"
+    "test": "mocha --reporter spec --require source-map-support/register --timeout 10000 lib/test",
+    "ci": "mocha --reporter spec --require source-map-support/register --timeout 10000 lib/test",
+    "preci": "yarn install"
   },
   "repository": {
     "type": "git",
@@ -51,11 +52,7 @@
     "yargs": "^15.3.1"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^10.0.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
+    "babel-eslint": "^10.1.0",
     "chai": "^4.1.2",
     "eslint": "7.3.1",
     "eslint-config-prettier": "6",
