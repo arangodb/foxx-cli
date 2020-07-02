@@ -19,24 +19,24 @@ const args = [
   [
     "source",
     "File system path of the service directory to bundle",
-    '[default: "."]'
-  ]
+    '[default: "."]',
+  ],
 ];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options({
       stdout: {
         describe: `Write to stdout no matter what stdout is`,
         alias: "O",
         type: "boolean",
-        default: false
+        default: false,
       },
       outfile: {
         describe:
           "Write the zip bundle to this file. If omitted, bundle is written to stdout",
         alias: "o",
-        type: "string"
+        type: "string",
       },
       force: {
         describe: `If ${bold(
@@ -44,14 +44,14 @@ exports.builder = yargs =>
         )} was specified, any existing file will be overwritten.`,
         alias: "f",
         type: "boolean",
-        default: false
+        default: false,
       },
       sloppy: {
         describe:
           "Continue even if no manifest file is present in the source directory",
         type: "boolean",
-        default: false
-      }
+        default: false,
+      },
     })
     .example(
       "$0 bundle",
@@ -109,7 +109,7 @@ exports.handler = async function handler(argv) {
     }
     if (!argv.sloppy) {
       let path = resolve(source, "manifest.json");
-      if (!await exists(path)) {
+      if (!(await exists(path))) {
         fatal(il`
           Source directory "${white(source)}" does not contain a manifest file.
           Use ${bold("--sloppy")} if you want to skip this check.

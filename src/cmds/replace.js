@@ -26,11 +26,11 @@ const args = [
     `URL or file system path of the replacement service. Use ${bold(
       "@"
     )} to pass a zip file from stdin`,
-    '[default: "."]'
-  ]
+    '[default: "."]',
+  ],
 ];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, describe, args })
     .options({
       ...serverArgs,
@@ -39,27 +39,27 @@ exports.builder = yargs =>
           "--no-teardown"
         )} to disable`,
         type: "boolean",
-        default: true
+        default: true,
       },
       setup: {
         describe: `Run the setup script after replacing the service. Use ${bold(
           "--no-setup"
         )} to disable`,
         type: "boolean",
-        default: true
+        default: true,
       },
       development: {
         describe:
           "Install the update in development mode. You can edit the service's files on the server and changes will be reflected automatically",
         alias: "dev",
         type: "boolean",
-        default: false
+        default: false,
       },
       legacy: {
         describe:
           "Install the update in legacy compatibility mode for legacy services written for ArangoDB 2.8 and earlier",
         type: "boolean",
-        default: false
+        default: false,
       },
       remote: {
         describe: `Let the ArangoDB server resolve ${bold(
@@ -67,20 +67,20 @@ exports.builder = yargs =>
         )} instead of resolving it locally`,
         alias: "R",
         type: "boolean",
-        default: false
+        default: false,
       },
       cfg: {
         describe:
           "Pass a configuration option as a name=value pair. This option can be specified multiple times",
         alias: "c",
-        type: "string"
+        type: "string",
       },
       dep: {
         describe:
           "Pass a dependency option as a name=/path pair. This option can be specified multiple times",
         alias: "d",
-        type: "string"
-      }
+        type: "string",
+      },
     })
     .example(
       "$0 replace /hello",
@@ -150,7 +150,7 @@ exports.handler = async function handler(argv) {
     const result = await db.replaceService(argv.mount, source, {
       ...opts,
       setup: argv.setup,
-      teardown: argv.teardown
+      teardown: argv.teardown,
     });
     if (argv.raw) {
       json(result);
@@ -180,23 +180,17 @@ exports.handler = async function handler(argv) {
           break;
         case errors.ERROR_MODULE_NOT_FOUND:
           fatal(
-            `Server encountered errors trying to locate a JavaScript file:\n\n${
-              e.message
-            }\n\nMake sure the service bundle includes all files referenced in the manifest.`
+            `Server encountered errors trying to locate a JavaScript file:\n\n${e.message}\n\nMake sure the service bundle includes all files referenced in the manifest.`
           );
           break;
         case errors.ERROR_MODULE_FAILURE:
           fatal(
-            `Server encountered errors executing a JavaScript file:\n\n${
-              e.message
-            }\n\nFor details check the arangod server logs.`
+            `Server encountered errors executing a JavaScript file:\n\n${e.message}\n\nFor details check the arangod server logs.`
           );
           break;
         case errors.ERROR_MODULE_SYNTAX_ERROR:
           fatal(
-            `Server encountered errors trying to parse a JavaScript file:\n\n${
-              e.message
-            }`
+            `Server encountered errors trying to parse a JavaScript file:\n\n${e.message}`
           );
           break;
       }

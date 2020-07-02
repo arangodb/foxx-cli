@@ -20,7 +20,7 @@ When running ArangoDB in a cluster with multiple coordinators note that changes 
 
 const args = [["mount", "Mount path of the service"]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options(serverArgs)
     .example(

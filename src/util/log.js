@@ -19,7 +19,7 @@ exports.indentable = function indentable(start = 0) {
     },
     dedent(level = 1) {
       this.level -= level;
-    }
+    },
   };
 };
 

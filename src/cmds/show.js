@@ -17,15 +17,15 @@ const describe = `Shows detailed information about the service installed at the 
 
 const args = [["mount", "Mount path of the service"]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options({
       ...serverArgs,
       raw: {
         describe: "Output raw JSON response",
         type: "boolean",
-        default: false
-      }
+        default: false,
+      },
     })
     .example(
       "$0 show /hello",

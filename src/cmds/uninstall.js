@@ -17,7 +17,7 @@ const describe = `Removes the service at the given ${bold(
 
 const args = [["mount", "Mount path of the service"]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options({
       ...serverArgs,
@@ -26,8 +26,8 @@ exports.builder = yargs =>
           "--no-teardown"
         )} to disable`,
         type: "boolean",
-        default: true
-      }
+        default: true,
+      },
     })
     .example(
       "$0 uninstall /hello",

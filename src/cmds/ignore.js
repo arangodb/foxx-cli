@@ -13,15 +13,15 @@ const describe =
 
 const args = [["patterns", "Patterns to add to the .foxxignore file"]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options({
       force: {
         describe: "Overwrite existing patterns (including defaults)",
         alias: "f",
         type: "boolean",
-        default: false
-      }
+        default: false,
+      },
     })
     .example(
       "$0 ignore",

@@ -13,7 +13,7 @@ const comment = `Created with foxx-cli v${version} (https://foxx.arangodb.com)`;
 function append(zipstream, basepath, name) {
   return new Promise((resolve, reject) => {
     const stream = createReadStream(resolvePath(basepath, name));
-    stream.on("error", e => reject(e));
+    stream.on("error", (e) => reject(e));
     stream.on("close", () => resolve());
     zipstream.append(stream, { name });
   });
@@ -33,9 +33,9 @@ exports.zip = function zip(basepath, files, dest) {
       filename = filestream.path;
     }
     filestream.on("close", () => resolve(filename));
-    filestream.on("error", e => reject(e));
+    filestream.on("error", (e) => reject(e));
     const zipstream = archiver("zip", { comment });
-    zipstream.on("error", e => reject(e));
+    zipstream.on("error", (e) => reject(e));
     zipstream.pipe(filestream);
     for (const name of files) {
       await append(zipstream, basepath, name);

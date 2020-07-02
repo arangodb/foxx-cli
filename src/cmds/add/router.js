@@ -13,7 +13,7 @@ const describe =
 
 const args = [["name", "Name of the router to add."]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, describe, args }).example(
     "$0 add router kittens",
     'Adds a router "kittens" to the local service'
@@ -21,7 +21,7 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   const manifestPath = path.resolve(process.cwd(), "manifest.json");
-  if (!await fs.exists(manifestPath)) {
+  if (!(await fs.exists(manifestPath))) {
     fatal("Current directory does not contain a manifest file.");
   }
   const routers = path.resolve(process.cwd(), "api");
@@ -31,10 +31,10 @@ exports.handler = async function handler(argv) {
   }
   const manifest = JSON.parse(await fs.readFile(manifestPath));
   const mainPath = path.resolve(process.cwd(), manifest.main || "index.js");
-  if (!await fs.exists(mainPath)) {
+  if (!(await fs.exists(mainPath))) {
     await fs.writeFile(mainPath, await generator.generateIndex());
   }
-  if (!await fs.exists(routers)) {
+  if (!(await fs.exists(routers))) {
     await fs.mkdir(routers);
   }
   await fs.writeFile(router, await generator.generateRouter());

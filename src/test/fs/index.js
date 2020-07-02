@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 
-module.exports.rmDir = path => {
+module.exports.rmDir = (path) => {
   if (fs.existsSync(path)) {
     const files = fs.readdirSync(path);
     for (const file of files) {

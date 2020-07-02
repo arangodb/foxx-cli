@@ -7,7 +7,7 @@ exports.description = "Generate additional service files";
 const describe =
   "Generates additional files for the local service and adds them, depending on the file, to the manifest.json and/or main JavaScript file.";
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, describe })
     .command(require("./add/script"))
     .command(require("./add/router"))

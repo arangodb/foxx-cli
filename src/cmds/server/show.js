@@ -13,7 +13,7 @@ const describe = `Shows information about a server including its alias and URL.`
 
 const args = [["name", "Server name to show details of"]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, sub: "server", aliases, describe, args })
     .describe("verbose", "Include passwords and tokens")
     .example(
@@ -35,7 +35,7 @@ exports.handler = async function handler(argv) {
     if (!servers.includes(argv.name)) {
       fatal(il`
         No such server: "${white(argv.name)}".
-        Known servers: ${comma(servers.sort().map(name => bold(name)))}
+        Known servers: ${comma(servers.sort().map((name) => bold(name)))}
       `);
     }
     const server = ini.server[argv.name];

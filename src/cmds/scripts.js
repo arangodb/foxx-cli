@@ -16,15 +16,15 @@ const describe =
 
 const args = [["mount", "Mount path of the service"]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, describe, args })
     .options({
       ...serverArgs,
       raw: {
         describe: "Output raw JSON response",
         type: "boolean",
-        default: false
-      }
+        default: false,
+      },
     })
     .example(
       "$0 scripts /hello",
@@ -48,7 +48,7 @@ exports.handler = async function handler(argv) {
     if (argv.raw) {
       json(scripts);
     } else if (names.length) {
-      info(group(...names.map(name => [name, scripts[name]])));
+      info(group(...names.map((name) => [name, scripts[name]])));
     } else if (argv.verbose) {
       detail("No scripts available.");
     }

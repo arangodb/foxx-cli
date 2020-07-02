@@ -12,83 +12,83 @@ module.exports.crudCases = () => {
   return [
     {
       name: "localJsFile",
-      source: () => path.resolve(basePath, "minimal-working-service.js")
+      source: () => path.resolve(basePath, "minimal-working-service.js"),
     },
     {
       name: "localZipFile",
-      source: () => path.resolve(basePath, "minimal-working-service.zip")
+      source: () => path.resolve(basePath, "minimal-working-service.zip"),
     },
     {
       name: "localDir",
-      source: () => path.resolve(basePath, "minimal-working-service")
+      source: () => path.resolve(basePath, "minimal-working-service"),
     },
     {
       name: "localDirWithSymlink",
-      source: () => path.resolve(basePath, "symlink-service")
+      source: () => path.resolve(basePath, "symlink-service"),
     },
     {
       name: "remoteJsFile",
-      source: arangoPaths => `--remote ${arangoPaths.local.js}`
+      source: (arangoPaths) => `--remote ${arangoPaths.local.js}`,
     },
     {
       name: "remoteZipFile",
-      source: arangoPaths => `--remote ${arangoPaths.local.zip}`
+      source: (arangoPaths) => `--remote ${arangoPaths.local.zip}`,
     },
     {
       name: "remoteDir",
-      source: arangoPaths => `--remote ${arangoPaths.local.dir}`
+      source: (arangoPaths) => `--remote ${arangoPaths.local.dir}`,
     },
     {
       name: "remoteShortJsFile",
-      source: arangoPaths => `-R ${arangoPaths.local.js}`
+      source: (arangoPaths) => `-R ${arangoPaths.local.js}`,
     },
     {
       name: "remoteShortZipFile",
-      source: arangoPaths => `-R ${arangoPaths.local.zip}`
+      source: (arangoPaths) => `-R ${arangoPaths.local.zip}`,
     },
     {
       name: "remoteShortDir",
-      source: arangoPaths => `-R ${arangoPaths.local.dir}`
+      source: (arangoPaths) => `-R ${arangoPaths.local.dir}`,
     },
     {
       name: "localJsURL",
-      source: arangoPaths => arangoPaths.remote.js
+      source: (arangoPaths) => arangoPaths.remote.js,
     },
     {
       name: "remoteJsURL",
-      source: arangoPaths =>
+      source: (arangoPaths) =>
         `--remote ${arangoPaths.remote.js.replace(
           ARANGO_URL,
           ARANGO_URL_SELF_REACHABLE
-        )}`
+        )}`,
     },
     {
       name: "remoteShortJsURL",
-      source: arangoPaths =>
+      source: (arangoPaths) =>
         `-R ${arangoPaths.remote.js.replace(
           ARANGO_URL,
           ARANGO_URL_SELF_REACHABLE
-        )}`
+        )}`,
     },
     {
       name: "localZipURL",
-      source: arangoPaths => arangoPaths.remote.zip
+      source: (arangoPaths) => arangoPaths.remote.zip,
     },
     {
       name: "remoteZipURL",
-      source: arangoPaths =>
+      source: (arangoPaths) =>
         `--remote ${arangoPaths.remote.zip.replace(
           ARANGO_URL,
           ARANGO_URL_SELF_REACHABLE
-        )}`
+        )}`,
     },
     {
       name: "remoteShortZipURL",
-      source: arangoPaths =>
+      source: (arangoPaths) =>
         `-R ${arangoPaths.remote.zip.replace(
           ARANGO_URL,
           ARANGO_URL_SELF_REACHABLE
-        )}`
-    }
+        )}`,
+    },
   ];
 };

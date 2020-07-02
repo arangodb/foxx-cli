@@ -28,17 +28,17 @@ const describe =
     ["tap", "Output suitable for Test-Anything-Protocol consumers"],
     [
       "stream",
-      'Line-delimited JSON stream of "events" beginning with a single "start", followed by "pass" or "fail" for each test and ending with a single "end"'
+      'Line-delimited JSON stream of "events" beginning with a single "start", followed by "pass" or "fail" for each test and ending with a single "end"',
     ],
     ["xunit", "Jenkins-compatible xUnit-style XML output"]
   );
 
 const args = [
   ["mount", "Mount path of the service"],
-  ["filter", "Only run tests with full names matching this string"]
+  ["filter", "Only run tests with full names matching this string"],
 ];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options({
       ...serverArgs,
@@ -46,8 +46,8 @@ exports.builder = yargs =>
         describe: "Reporter to use for result data",
         alias: "R",
         choices: ["spec", "list", "min", "json", "tap", "stream", "xunit"],
-        default: "spec"
-      }
+        default: "spec",
+      },
     })
     .example(
       "$0 test /hello",
@@ -106,23 +106,17 @@ async function runTests(db, mount, cliReporter, filter) {
           break;
         case errors.ERROR_MODULE_NOT_FOUND:
           fatal(
-            `Server encountered errors trying to locate a JavaScript file:\n\n${
-              e.message
-            }\n\nMake sure the service bundle includes all files referenced in the manifest.`
+            `Server encountered errors trying to locate a JavaScript file:\n\n${e.message}\n\nMake sure the service bundle includes all files referenced in the manifest.`
           );
           break;
         case errors.ERROR_MODULE_FAILURE:
           fatal(
-            `Server encountered errors executing a JavaScript file:\n\n${
-              e.message
-            }\n\nMake sure all tests are specified via the manifest, not loaded directly from another test file. For details check the arangod server logs.`
+            `Server encountered errors executing a JavaScript file:\n\n${e.message}\n\nMake sure all tests are specified via the manifest, not loaded directly from another test file. For details check the arangod server logs.`
           );
           break;
         case errors.ERROR_MODULE_SYNTAX_ERROR:
           fatal(
-            `Server encountered errors trying to parse a JavaScript file:\n\n${
-              e.message
-            }`
+            `Server encountered errors trying to parse a JavaScript file:\n\n${e.message}`
           );
           break;
       }
@@ -148,7 +142,7 @@ async function runTests(db, mount, cliReporter, filter) {
   if (cliReporter === "stream") {
     info(result);
     const lines = result.split("\n");
-    process.exit(lines.filter(line => line.startsWith('["fail",')).length);
+    process.exit(lines.filter((line) => line.startsWith('["fail",')).length);
   }
 
   if (cliReporter === "list" || cliReporter === "min") {

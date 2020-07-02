@@ -27,35 +27,35 @@ exports.serverArgs = {
     describe: "ArangoDB server URL or alias",
     alias: "H",
     type: "string",
-    default: "default"
+    default: "default",
   },
   username: {
     describe: "Username to authenticate with",
     alias: "u",
-    type: "string"
+    type: "string",
   },
   password: {
     describe: "Use password to authenticate",
     alias: "P",
     type: "boolean",
-    default: false
+    default: false,
   },
   "password-file": {
     describe: "Read a password from a file to authenticate",
     alias: "p",
-    type: "string"
+    type: "string",
   },
   token: {
     describe: "Use bearer token to authenticate",
     alias: "T",
     type: "boolean",
-    default: false
+    default: false,
   },
   database: {
     describe: "ArangoDB database name",
     alias: "D",
-    type: "string"
-  }
+    type: "string",
+  },
 };
 
 exports.parseServiceOptions = function parseServiceOptions(argv) {

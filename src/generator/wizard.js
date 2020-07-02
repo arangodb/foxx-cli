@@ -23,8 +23,8 @@ module.exports = async function wizard(options) {
       name: "defineConfiguration",
       message: "Define configuration options?",
       type: "confirm",
-      default: false
-    }
+      default: false,
+    },
   ]);
 
   if (defineConfiguration) {
@@ -42,8 +42,8 @@ module.exports = async function wizard(options) {
       name: "defineDependencies",
       message: "Define Foxx dependencies used by this service?",
       type: "confirm",
-      default: false
-    }
+      default: false,
+    },
   ]);
 
   if (defineDependencies) {
@@ -61,8 +61,8 @@ module.exports = async function wizard(options) {
       name: "defineProvided",
       message: "Define Foxx dependencies provided by this service?",
       type: "confirm",
-      default: false
-    }
+      default: false,
+    },
   ]);
 
   if (defineProvided) {
@@ -83,29 +83,29 @@ async function foxxWizard({ cwd, ...options }) {
     {
       name: "name",
       message: "Name",
-      default: options.name
+      default: options.name,
     },
     {
       name: "version",
       message: "Version",
       default: options.version,
-      validate: answer =>
+      validate: (answer) =>
         Boolean(validVersion(answer)) ||
-        `Not a valid semver version: "${red(answer)}"`
+        `Not a valid semver version: "${red(answer)}"`,
     },
     {
       name: "license",
       message: `License ${gray("(ex: Apache-2.0)")}`,
       default: options.license,
-      filter: answer => licenseMap[answer.toUpperCase()] || answer,
-      validate: answer => {
+      filter: (answer) => licenseMap[answer.toUpperCase()] || answer,
+      validate: (answer) => {
         if (!answer) return true;
         const licenseKey = answer.toUpperCase();
         if (hasOwnProperty.call(licenseMap, licenseKey)) return true;
         const matches = Object.keys(licenseMap)
-          .filter(key => key.includes(licenseKey))
+          .filter((key) => key.includes(licenseKey))
           .sort()
-          .map(key => green(licenseMap[key]));
+          .map((key) => green(licenseMap[key]));
         if (matches.length) {
           return `Not a valid SPDX license: "${red(answer)}". Did you mean ${
             matches.length > 1
@@ -118,53 +118,53 @@ async function foxxWizard({ cwd, ...options }) {
         return `Not a valid SPDX license: "${red(
           answer
         )}". Leave empty for "all rights reserved".`;
-      }
+      },
     },
     {
       name: "authorEmail",
       message: `Author e-mail ${gray("(ex: jd@example.com)")}`,
-      default: options.authorEmail
+      default: options.authorEmail,
     },
     {
       name: "authorName",
       message: `Author name ${gray("(ex: John Doe)")}`,
-      default: answers =>
+      default: (answers) =>
         options.authorName ||
         (answers.authorEmail
           ? answers.authorEmail.split("@")[0]
-          : options.authorName)
+          : options.authorName),
     },
     {
       name: "engineVersion",
       message: "ArangoDB version",
       default: options.engineVersion,
-      validate: answer =>
+      validate: (answer) =>
         Boolean(validRange(answer)) ||
-        `Not a valid semver range: "${red(answer)}"`
+        `Not a valid semver range: "${red(answer)}"`,
     },
     {
       name: "description",
       message: "Description",
-      default: options.description
+      default: options.description,
     },
     {
       name: "documentCollections",
       message: `Document collection names ${gray("(ex: foo, bar)")}`,
       default: options.documentCollections,
-      filter: answer => {
+      filter: (answer) => {
         const names = uniq(
           answer
             .split(",")
-            .map(name => name.replace(/(^\s+|\s+$)/, ""))
+            .map((name) => name.replace(/(^\s+|\s+$)/, ""))
             .filter(Boolean)
         );
         return names.length ? names : "";
       },
-      validate: answer => {
+      validate: (answer) => {
         if (!answer) return true;
         const bad = answer
-          .filter(name => !/^[_a-z][_a-z0-9]+$/i.test(name))
-          .map(name => `"${red(name)}"`);
+          .filter((name) => !/^[_a-z][_a-z0-9]+$/i.test(name))
+          .map((name) => `"${red(name)}"`);
         if (bad.length === 1) {
           return `The name ${bad[0]} is not a valid collection name.`;
         }
@@ -174,17 +174,17 @@ async function foxxWizard({ cwd, ...options }) {
           } are not valid collection names.`;
         }
         return true;
-      }
+      },
     },
     {
       name: "edgeCollections",
       message: `Edge collection names ${gray("(ex: qux, baz)")}`,
       default: options.edgeCollections,
-      filter: answer => {
+      filter: (answer) => {
         const names = uniq(
           answer
             .split(",")
-            .map(name => name.replace(/(^\s+|\s+$)/, ""))
+            .map((name) => name.replace(/(^\s+|\s+$)/, ""))
             .filter(Boolean)
         );
         return names.length ? names : "";
@@ -192,8 +192,8 @@ async function foxxWizard({ cwd, ...options }) {
       validate: (answer, answers) => {
         if (!answer || !answers.documentCollections) return true;
         const bad = answer
-          .filter(name => !/^[_a-z][_a-z0-9]+$/i.test(name))
-          .map(name => `"${red(name)}"`);
+          .filter((name) => !/^[_a-z][_a-z0-9]+$/i.test(name))
+          .map((name) => `"${red(name)}"`);
         if (bad.length === 1) {
           return `The name ${bad[0]} is not a valid collection name.`;
         }
@@ -203,8 +203,8 @@ async function foxxWizard({ cwd, ...options }) {
           } are not valid collection names.`;
         }
         const dupes = answer
-          .filter(name => answers.documentCollections.includes(name))
-          .map(name => `"${red(name)}"`);
+          .filter((name) => answers.documentCollections.includes(name))
+          .map((name) => `"${red(name)}"`);
         if (dupes.length === 1) {
           return `The collection ${dupes[0]} is already a document collection.`;
         }
@@ -214,15 +214,15 @@ async function foxxWizard({ cwd, ...options }) {
           } are already document collections.`;
         }
         return true;
-      }
+      },
     },
     {
       name: "generateCrudRoutes",
       message: "Generate CRUD routes for collections",
       type: "confirm",
       default: false,
-      when: answers => answers.documentCollections || answers.edgeCollections
-    }
+      when: (answers) => answers.documentCollections || answers.edgeCollections,
+    },
   ]);
   console.log();
   const confirm = await prompt([
@@ -230,15 +230,15 @@ async function foxxWizard({ cwd, ...options }) {
       name: "ok",
       message: "Is this information correct?",
       type: "confirm",
-      default: true
+      default: true,
     },
     {
       name: "retry",
       message: "Try again?",
-      when: answers => !answers.ok,
+      when: (answers) => !answers.ok,
       type: "confirm",
-      default: false
-    }
+      default: false,
+    },
   ]);
   console.log();
   if (confirm.retry) {
@@ -256,21 +256,22 @@ async function configWizard(configs = {}) {
     {
       name: "name",
       message: "Name",
-      filter: answer => answer.replace(/(^\s+|\s+$)/g, "").replace(/\s+/g, "_"),
-      validate: answer =>
+      filter: (answer) =>
+        answer.replace(/(^\s+|\s+$)/g, "").replace(/\s+/g, "_"),
+      validate: (answer) =>
         answer && hasOwnProperty.call(configs, answer)
           ? `An option with the name "${red(answer)}" already exists.`
-          : true
+          : true,
     },
     {
       name: "description",
       message: "Description",
-      when: answers => Boolean(answers.name)
+      when: (answers) => Boolean(answers.name),
     },
     {
       name: "type",
       message: "Type",
-      when: answers => Boolean(answers.name),
+      when: (answers) => Boolean(answers.name),
       type: "rawlist",
       choices: [
         { value: "boolean", name: "Boolean" },
@@ -278,14 +279,14 @@ async function configWizard(configs = {}) {
         { value: "password", name: "Password (masked)" },
         { value: "number", name: "Number (decimal)" },
         { value: "integer", name: "Number (integer)" },
-        { value: "json", name: "JSON expression" }
-      ]
+        { value: "json", name: "JSON expression" },
+      ],
     },
     {
       name: "default",
       message: "Default value (JSON)",
-      when: answers => Boolean(answers.name),
-      validate: answer => {
+      when: (answers) => Boolean(answers.name),
+      validate: (answer) => {
         try {
           if (answer) JSON.parse(answer);
         } catch (e) {
@@ -294,15 +295,15 @@ async function configWizard(configs = {}) {
           )}\nDid you mean ${green(JSON.stringify(answer))}?`;
         }
         return true;
-      }
+      },
     },
     {
       name: "required",
       message: "Required?",
-      when: answers => Boolean(answers.name) && !answers.default,
+      when: (answers) => Boolean(answers.name) && !answers.default,
       type: "confirm",
-      default: true
-    }
+      default: true,
+    },
   ]);
   if (!name) return configs;
   if (!config.required) config.required = false;
@@ -318,53 +319,54 @@ async function depsWizard(deps = {}) {
     {
       name: "alias",
       message: "Local alias",
-      filter: answer => answer.replace(/(^\s+|\s+$)/g, "").replace(/\s+/g, "_"),
-      validate: answer =>
+      filter: (answer) =>
+        answer.replace(/(^\s+|\s+$)/g, "").replace(/\s+/g, "_"),
+      validate: (answer) =>
         answer && hasOwnProperty.call(deps, answer)
           ? `A dependency with the alias "${red(answer)}" already exists.`
-          : true
+          : true,
     },
     {
       name: "name",
       message: `Dependency name ${gray("(ex: @foxx/sessions)")}`,
-      when: answers => Boolean(answers.alias),
+      when: (answers) => Boolean(answers.alias),
       default: "*",
-      validate: answer => {
+      validate: (answer) => {
         if (!answer) return "Dependency name can not be empty.";
         if (answer.includes(":"))
           return "Dependency name must not contain colon.";
         return true;
-      }
+      },
     },
     {
       name: "version",
       message: `Dependency version range ${gray("(ex: ^1.0.0)")}`,
-      when: answers => Boolean(answers.alias),
+      when: (answers) => Boolean(answers.alias),
       default: "*",
-      validate: answer =>
+      validate: (answer) =>
         answer === "*" ||
         Boolean(validRange(answer)) ||
-        `Not a valid semver range: "${red(answer)}"`
+        `Not a valid semver range: "${red(answer)}"`,
     },
     {
       name: "description",
       message: "Description",
-      when: answers => Boolean(answers.alias)
+      when: (answers) => Boolean(answers.alias),
     },
     {
       name: "required",
       message: "Required?",
-      when: answers => Boolean(answers.alias),
+      when: (answers) => Boolean(answers.alias),
       type: "confirm",
-      default: true
+      default: true,
     },
     {
       name: "multiple",
       message: "Allow multiple?",
-      when: answers => Boolean(answers.alias),
+      when: (answers) => Boolean(answers.alias),
       type: "confirm",
-      default: false
-    }
+      default: false,
+    },
   ]);
   if (!alias) return deps;
   if (!dep.required) dep.required = false;
@@ -380,7 +382,7 @@ async function providedWizard(provided = {}) {
     {
       name: "name",
       message: `Dependency name ${gray("(ex: @foxx/sessions)")}`,
-      validate: answer => {
+      validate: (answer) => {
         if (!answer) return true;
         if (hasOwnProperty.call(provided, answer)) {
           return `The service already provides "${red(answer)}".`;
@@ -389,16 +391,16 @@ async function providedWizard(provided = {}) {
           return "Dependency name must not contain colon.";
         }
         return true;
-      }
+      },
     },
     {
       name: "version",
       message: `Dependency version ${gray("(ex: 1.0.0)")}`,
-      when: answers => Boolean(answers.name),
-      validate: answer =>
+      when: (answers) => Boolean(answers.name),
+      validate: (answer) =>
         Boolean(validVersion(answer)) ||
-        `Not a valid semver version: "${red(answer)}"`
-    }
+        `Not a valid semver version: "${red(answer)}"`,
+    },
   ]);
   if (!name) return provided;
   provided[name] = version;

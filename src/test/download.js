@@ -24,7 +24,7 @@ const manifest = path.resolve(tmpServiceDir, "manifest.json");
 describe("Foxx service download", () => {
   const db = new Database({
     url: ARANGO_URL,
-    arangoVersion: ARANGO_VERSION
+    arangoVersion: ARANGO_VERSION,
   });
 
   before(async () => {
@@ -120,7 +120,7 @@ describe("Foxx service download", () => {
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd
+        passwd,
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -233,7 +233,7 @@ describe("Foxx service download", () => {
   it("should extract in cwd when no outfile set", async () => {
     if (!fs.existsSync(tmpDir)) fs.mkdirSync(tmpDir);
     const output = await foxx(`download --extract ${mount}`, false, {
-      cwd: tmpDir
+      cwd: tmpDir,
     });
     expect(output).to.equal("");
     expect(fs.existsSync(manifest)).to.equal(true);

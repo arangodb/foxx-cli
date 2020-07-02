@@ -16,13 +16,13 @@ const describe =
 
 const args = [
   ["name", "Server name to define"],
-  ["server", "URL of the ArangoDB server"]
+  ["server", "URL of the ArangoDB server"],
 ];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, sub: "server", aliases, describe, args })
     .options({
-      ...omit(serverArgs, ["server"])
+      ...omit(serverArgs, ["server"]),
     })
     .example(
       "$0 server set dev http://localhost:8529",

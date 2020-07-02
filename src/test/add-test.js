@@ -8,7 +8,7 @@ const os = require("os");
 const fs = require("fs");
 const rmDir = require("./fs").rmDir;
 const tmpDir = path.resolve(os.tmpdir(), "test-init-service");
-const foxx = command => foxxUtil(command, false, { cwd: tmpDir });
+const foxx = (command) => foxxUtil(command, false, { cwd: tmpDir });
 
 const checkFile = (file, content) => {
   const filePath = path.resolve(tmpDir, file);

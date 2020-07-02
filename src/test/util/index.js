@@ -32,7 +32,7 @@ const SERVER_COMMANDS = [
   "uninstall",
   "remove",
   "purge",
-  "upgrade"
+  "upgrade",
 ];
 
 module.exports = (command, raw = false, { input, ...options } = {}) =>
@@ -52,7 +52,7 @@ module.exports = (command, raw = false, { input, ...options } = {}) =>
         raw ? [foxx, ...parts, "--raw"] : [foxx, ...parts],
         {
           ...options,
-          env: { ...options.env, FORCE_COLOR: "0", FOXXRC_PATH: foxxRcFile }
+          env: { ...options.env, FORCE_COLOR: "0", FOXXRC_PATH: foxxRcFile },
         },
         (err, stdout, stderr) => {
           if (err) {

@@ -4,10 +4,10 @@ const fs = require("fs");
 const promisify = require("util.promisify");
 const path = require("path");
 
-const promisify2 = fn => (...args) =>
+const promisify2 = (fn) => (...args) =>
   new Promise((resolve, reject) => {
     try {
-      fn(...args, result => {
+      fn(...args, (result) => {
         resolve(result);
       });
     } catch (e) {
@@ -41,7 +41,7 @@ exports.walk = async function walk(basepath, shouldIgnore) {
   for (const dirpath of dirs) {
     const names = await exports.readdir(dirpath);
     await Promise.all(
-      names.map(async name => {
+      names.map(async (name) => {
         const abspath = path.join(dirpath, name);
         const stats = await exports.safeStat(abspath);
         if (stats.isDirectory()) {

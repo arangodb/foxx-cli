@@ -23,7 +23,7 @@ When development mode is enabled, this always creates a new bundle. Otherwise th
 
 const args = [["mount", "Mount path of the service"]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options({
       ...serverArgs,
@@ -31,19 +31,19 @@ exports.builder = yargs =>
         describe: `Write to stdout no matter what stdout is`,
         alias: "O",
         type: "boolean",
-        default: false
+        default: false,
       },
       outfile: {
         describe:
           "Write or extract the bundle to this path. If omitted, bundle will be written to stdout or extracted to the current working directory",
         alias: "o",
-        type: "string"
+        type: "string",
       },
       extract: {
         describe: "Extract zip bundle instead of just downloading it",
         alias: "x",
         type: "boolean",
-        default: false
+        default: false,
       },
       force: {
         describe: `If ${bold("--outfile")} and/or ${bold(
@@ -51,8 +51,8 @@ exports.builder = yargs =>
         )} were specified, any existing files will be overwritten.`,
         alias: "f",
         type: "boolean",
-        default: false
-      }
+        default: false,
+      },
     })
     .example(
       "$0 download /hello",
@@ -148,7 +148,7 @@ exports.handler = async function handler(argv) {
           } else if (argv.verbose) {
             info(`Creating "${entry.fileName}" …`);
           }
-        }
+        },
       });
       if (argv.verbose) {
         info("Done.");

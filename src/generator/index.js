@@ -11,8 +11,8 @@ function generateManifest(options) {
     $schema: "http://json.schemastore.org/foxx-manifest",
     main: options.mainFile,
     engines: {
-      arangodb: options.engineVersion
-    }
+      arangodb: options.engineVersion,
+    },
   };
 
   if (options.name) manifest.name = options.name;
@@ -52,27 +52,27 @@ async function generateLicense(options) {
     .replace(/<<endOptional>>/g, "");
 }
 
-exports.generateFiles = async options => {
+exports.generateFiles = async (options) => {
   const files = [];
   files.push({
     name: "manifest.json",
-    content: generateManifest(options)
+    content: generateManifest(options),
   });
   files.push({
     name: "index.js",
     content: await generateFile(
       options.example ? "example/index.js" : "index.js",
       options
-    )
+    ),
   });
   files.push({
     name: "README.md",
-    content: await generateFile("README.md", options)
+    content: await generateFile("README.md", options),
   });
   if (options.license) {
     files.push({
       name: "LICENSE",
-      content: await generateLicense(options)
+      content: await generateLicense(options),
     });
   }
   const collections = [];
@@ -90,18 +90,18 @@ exports.generateFiles = async options => {
     for (const [collection, isEdgeCollection] of collections) {
       files.push({
         name: `api/${collection}.js`,
-        content: await exports.generateCrud(collection, isEdgeCollection)
+        content: await exports.generateCrud(collection, isEdgeCollection),
       });
     }
   }
   if (collections.length) {
     files.push({
       name: "scripts/setup.js",
-      content: await generateFile("setup.js", options)
+      content: await generateFile("setup.js", options),
     });
     files.push({
       name: "scripts/teardown.js",
-      content: await generateFile("teardown.js", options)
+      content: await generateFile("teardown.js", options),
     });
   }
 
@@ -122,7 +122,7 @@ exports.generateCrud = async (
     isEdgeCollection,
     singular,
     plural,
-    prefixed
+    prefixed,
   });
 };
 

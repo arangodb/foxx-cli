@@ -11,7 +11,7 @@ const rmDir = require("./fs").rmDir;
 const tmpDir = path.resolve(os.tmpdir(), "foxx-ignore-test");
 const ignoreFile = path.resolve(tmpDir, ".foxxignore");
 
-const foxx = command => foxxUtil(command, false, { cwd: tmpDir });
+const foxx = (command) => foxxUtil(command, false, { cwd: tmpDir });
 const defaults = `.git/
 .svn/
 .hg/
@@ -97,7 +97,7 @@ describe("Foxx ignore", () => {
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     await foxx(`bundle --outfile ${tmpFile}`);
     await require("../util/fs").extract(tmpFile, {
-      dir: path.resolve(tmpDir, "bundle")
+      dir: path.resolve(tmpDir, "bundle"),
     });
     expect(fs.existsSync(path.resolve(tmpDir, "bundle", "test1"))).to.equal(
       false
@@ -117,7 +117,7 @@ describe("Foxx ignore", () => {
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     await foxx(`bundle --outfile ${tmpFile}`);
     await require("../util/fs").extract(tmpFile, {
-      dir: path.resolve(tmpDir, "bundle")
+      dir: path.resolve(tmpDir, "bundle"),
     });
     expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(
       false
@@ -132,7 +132,7 @@ describe("Foxx ignore", () => {
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     await foxx(`bundle --outfile ${tmpFile}`);
     await require("../util/fs").extract(tmpFile, {
-      dir: path.resolve(tmpDir, "bundle")
+      dir: path.resolve(tmpDir, "bundle"),
     });
     expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(
       false
@@ -147,7 +147,7 @@ describe("Foxx ignore", () => {
     const tmpFile = path.resolve(tmpDir, "bundle.zip");
     await foxx(`bundle --outfile ${tmpFile}`);
     await require("../util/fs").extract(tmpFile, {
-      dir: path.resolve(tmpDir, "bundle")
+      dir: path.resolve(tmpDir, "bundle"),
     });
     expect(fs.existsSync(path.resolve(tmpDir, "bundle", ".git"))).to.equal(
       true

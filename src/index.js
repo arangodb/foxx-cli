@@ -43,13 +43,13 @@ common(yargs, { command: "<command>", describe: foxx })
       describe: "Show version information and exit",
       alias: "V",
       type: "boolean",
-      default: false
+      default: false,
     },
     verbose: {
       describe: "More output",
       alias: "v",
-      type: "count"
-    }
+      type: "count",
+    },
   })
   .global("verbose")
   .group(["version", "help", "verbose"], "General options:");

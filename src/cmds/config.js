@@ -26,11 +26,11 @@ const args = [
     "options",
     `Key-value pairs to apply to the configuration. Use ${bold(
       "@"
-    )} to pass a JSON file from stdin`
-  ]
+    )} to pass a JSON file from stdin`,
+  ],
 ];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options({
       ...serverArgs,
@@ -42,18 +42,18 @@ exports.builder = yargs =>
         `,
         alias: "f",
         type: "boolean",
-        default: false
+        default: false,
       },
       raw: {
         describe: "Output service configuration as raw JSON",
         type: "boolean",
-        default: false
+        default: false,
       },
       minimal: {
         describe: "Print minimal output",
         type: "boolean",
-        default: false
-      }
+        default: false,
+      },
     })
     .example(
       "$0 config /myfoxx",

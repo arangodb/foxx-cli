@@ -10,27 +10,27 @@ let ERROR;
 const server = http.createServer((req, res) => {
   res.writeHead(500, {
     server: "Fake ArangoDB",
-    "content-type": "application/json"
+    "content-type": "application/json",
   });
   res.end(
     JSON.stringify({
       error: true,
       code: 500,
       errorNum: ERROR,
-      errorMessage: "Something went wrong"
+      errorMessage: "Something went wrong",
     })
   );
 });
 
 describe("Error handling", () => {
-  before(done => {
-    server.listen(e => {
+  before((done) => {
+    server.listen((e) => {
       if (!e) HOST = `tcp://localhost:${server.address().port}`;
       done(e);
     });
   });
-  after(done => {
-    server.close(e => {
+  after((done) => {
+    server.close((e) => {
       done(e);
     });
   });

@@ -20,7 +20,7 @@ const servicePath = path.resolve(basePath, "minimal-working-service.zip");
 describe("Foxx service installed", () => {
   const db = new Database({
     url: ARANGO_URL,
-    arangoVersion: ARANGO_VERSION
+    arangoVersion: ARANGO_VERSION,
   });
 
   let arangoPaths;
@@ -132,7 +132,7 @@ describe("Foxx service installed", () => {
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd
+        passwd,
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });

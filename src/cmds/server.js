@@ -7,7 +7,7 @@ const aliases = (exports.aliases = ["remote"]);
 
 const describe = `The server commands allow defining server aliases that can be used instead of URLs to avoid passing the same credentials to every command.`;
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe })
     .command(require("./server/list"))
     .command(require("./server/remove"))

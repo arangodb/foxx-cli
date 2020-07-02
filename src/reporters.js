@@ -52,7 +52,7 @@ function printSuite(suite, logger, errors, title) {
     if (test.err.stack) {
       errors.push({
         stack: test.err.stack,
-        fullTitle: [...title, test.title].join(" ")
+        fullTitle: [...title, test.title].join(" "),
       });
       logger.log(red(`${errors.length}) ${test.title}`));
     } else if (typeof test.duration !== "number") {

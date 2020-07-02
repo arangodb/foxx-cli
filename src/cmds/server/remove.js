@@ -11,7 +11,7 @@ const describe = "Removes a server from the list of known servers.";
 
 const args = [["name", "Server name to forget"]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, sub: "server", aliases, describe, args }).example(
     "$0 server remove dev",
     'Removes the server named "dev"'

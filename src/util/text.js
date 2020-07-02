@@ -42,7 +42,7 @@ exports.inline = function inline(strings, ...values) {
   return strb
     .join("")
     .replace(/([ \t]+\n|\n[ \t]+)/g, "\n")
-    .replace(/\n\n+/g, match => match.replace(/\n/g, "\0"))
+    .replace(/\n\n+/g, (match) => match.replace(/\n/g, "\0"))
     .replace(/\n/g, " ")
     .replace(/\0/g, "\n")
     .replace(/(^\s|\s$)/g, "");

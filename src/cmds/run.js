@@ -19,10 +19,10 @@ const describe = `Runs the given script for the service at the given ${bold(
 const args = [
   ["mount", "Mount path of the service"],
   ["name", "Name of the script to execute"],
-  ["options", "Arguments that will be passed to the script"]
+  ["options", "Arguments that will be passed to the script"],
 ];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe, args })
     .options({ ...serverArgs })
     .example(
@@ -89,23 +89,17 @@ exports.handler = async function handler(argv) {
           break;
         case errors.ERROR_MODULE_NOT_FOUND:
           fatal(
-            `Server encountered errors trying to locate a JavaScript file:\n\n${
-              e.message
-            }\n\nMake sure the service bundle includes all files referenced in the manifest.`
+            `Server encountered errors trying to locate a JavaScript file:\n\n${e.message}\n\nMake sure the service bundle includes all files referenced in the manifest.`
           );
           break;
         case errors.ERROR_MODULE_FAILURE:
           fatal(
-            `Server encountered errors executing a JavaScript file:\n\n${
-              e.message
-            }\n\nFor details check the arangod server logs.`
+            `Server encountered errors executing a JavaScript file:\n\n${e.message}\n\nFor details check the arangod server logs.`
           );
           break;
         case errors.ERROR_MODULE_SYNTAX_ERROR:
           fatal(
-            `Server encountered errors trying to parse a JavaScript file:\n\n${
-              e.message
-            }`
+            `Server encountered errors trying to parse a JavaScript file:\n\n${e.message}`
           );
           break;
       }

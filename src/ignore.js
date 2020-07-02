@@ -30,9 +30,9 @@ exports.buildMatcher = function buildMatcher(lines) {
     else pattern = pattern.slice(1);
     list.push(new Minimatch(pattern, { dot: true, nonegate: true }));
   }
-  return path =>
-    whitelist.every(matcher => !matcher.match(path)) &&
-    blacklist.some(matcher => matcher.match(path));
+  return (path) =>
+    whitelist.every((matcher) => !matcher.match(path)) &&
+    blacklist.some((matcher) => matcher.match(path));
 };
 
 exports.save = async function save(file, values, overwrite) {

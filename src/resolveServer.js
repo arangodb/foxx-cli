@@ -18,7 +18,7 @@ async function resolve(endpointOrName = "default") {
   if (ini.server[endpointOrName]) {
     return {
       ...ini.server[endpointOrName],
-      name: endpointOrName
+      name: endpointOrName,
     };
   }
   if (endpointOrName === "default") {
@@ -87,8 +87,8 @@ module.exports = async function resolveServer(argv) {
       {
         message: "Password",
         name: "password",
-        type: "password"
-      }
+        type: "password",
+      },
     ]);
     server.password = password;
   }
@@ -100,8 +100,8 @@ module.exports = async function resolveServer(argv) {
         message: "Token",
         name: "token",
         type: "password",
-        validate: Boolean
-      }
+        validate: Boolean,
+      },
     ]);
     server.token = token;
   }

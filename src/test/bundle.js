@@ -152,7 +152,7 @@ describe("Foxx service bundle", () => {
 
   it("should output bundle of cwd", async () => {
     const output = await foxx("bundle", false, {
-      cwd: path.resolve(basePath, "minimal-working-service")
+      cwd: path.resolve(basePath, "minimal-working-service"),
     });
     expect(output).to.match(/^PK\u0003\u0004/);
   });

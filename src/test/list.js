@@ -17,7 +17,7 @@ const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 describe("Foxx service list", () => {
   const db = new Database({
     url: ARANGO_URL,
-    arangoVersion: ARANGO_VERSION
+    arangoVersion: ARANGO_VERSION,
   });
 
   before(async () => {
@@ -45,7 +45,7 @@ describe("Foxx service list", () => {
     const services = await foxx("list", true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
-    const service = services.find(service => service.mount === mount);
+    const service = services.find((service) => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("provides");
@@ -58,7 +58,7 @@ describe("Foxx service list", () => {
     const services = await foxx(`list --server ${ARANGO_URL}`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
-    const service = services.find(service => service.mount === mount);
+    const service = services.find((service) => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("provides");
@@ -71,7 +71,7 @@ describe("Foxx service list", () => {
     const services = await foxx(`list -H ${ARANGO_URL}`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
-    const service = services.find(service => service.mount === mount);
+    const service = services.find((service) => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("provides");
@@ -84,7 +84,7 @@ describe("Foxx service list", () => {
     const services = await foxx(`list --database _system`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
-    const service = services.find(service => service.mount === mount);
+    const service = services.find((service) => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("provides");
@@ -97,7 +97,7 @@ describe("Foxx service list", () => {
     const services = await foxx(`list -D _system`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
-    const service = services.find(service => service.mount === mount);
+    const service = services.find((service) => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("provides");
@@ -110,7 +110,7 @@ describe("Foxx service list", () => {
     const services = await foxx(`list --username ${ARANGO_USERNAME}`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
-    const service = services.find(service => service.mount === mount);
+    const service = services.find((service) => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("provides");
@@ -123,7 +123,7 @@ describe("Foxx service list", () => {
     const services = await foxx(`list -u ${ARANGO_USERNAME}`, true);
     expect(services).to.be.instanceOf(Array);
     expect(services.length).to.equal(1);
-    const service = services.find(service => service.mount === mount);
+    const service = services.find((service) => service.mount === mount);
     expect(service).to.have.property("name", "minimal-working-manifest");
     expect(service).to.have.property("version", "0.0.0");
     expect(service).to.have.property("provides");
@@ -139,7 +139,7 @@ describe("Foxx service list", () => {
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd
+        passwd,
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });
@@ -157,7 +157,7 @@ describe("Foxx service list", () => {
       );
       expect(services).to.be.instanceOf(Array);
       expect(services.length).to.equal(1);
-      const service = services.find(service => service.mount === mount);
+      const service = services.find((service) => service.mount === mount);
       expect(service).to.have.property("name", "minimal-working-manifest");
       expect(service).to.have.property("version", "0.0.0");
       expect(service).to.have.property("provides");

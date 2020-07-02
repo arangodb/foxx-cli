@@ -10,7 +10,7 @@ const aliases = (exports.aliases = ["ls"]);
 
 const describe = `List all known servers by their aliases.`;
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, sub: "server", aliases, describe })
     .describe("verbose", "Include URLs")
     .example("$0 server list", "Shows all known servers")
@@ -22,7 +22,7 @@ exports.handler = async function handler(argv) {
     const servers = Object.keys(ini.server);
     if (!servers) return;
     if (argv.verbose) {
-      info(group(...servers.map(name => [name, ini.server[name].url])));
+      info(group(...servers.map((name) => [name, ini.server[name].url])));
     } else {
       for (const name of servers) {
         info(name);

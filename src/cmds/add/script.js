@@ -13,7 +13,7 @@ const describe =
 
 const args = [["name", "Name of the script to add."]];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, describe, args }).example(
     "$0 add script send-email",
     'Adds a script "send-email" to the local service'
@@ -21,11 +21,11 @@ exports.builder = yargs =>
 
 exports.handler = async function handler(argv) {
   const manifestPath = path.resolve(process.cwd(), "manifest.json");
-  if (!await fs.exists(manifestPath)) {
+  if (!(await fs.exists(manifestPath))) {
     fatal("Current directory does not contain a manifest file.");
   }
   const scripts = path.resolve(process.cwd(), "scripts");
-  if (!await fs.exists(scripts)) {
+  if (!(await fs.exists(scripts))) {
     await fs.mkdir(scripts);
   }
   const script = path.resolve(scripts, `${argv.name}.js`);

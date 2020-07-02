@@ -17,7 +17,7 @@ const basePath = path.resolve(__dirname, "..", "..", "fixtures");
 describe("Foxx service show", () => {
   const db = new Database({
     url: ARANGO_URL,
-    arangoVersion: ARANGO_VERSION
+    arangoVersion: ARANGO_VERSION,
   });
 
   before(async () => {
@@ -109,7 +109,7 @@ describe("Foxx service show", () => {
     before(async () => {
       db.route("/_api/user").post({
         user,
-        passwd
+        passwd,
       });
       db.route(`/_api/user/${user}/database/_system`).put({ grant: "rw" });
     });

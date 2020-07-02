@@ -1,7 +1,7 @@
 "use strict";
 const { Database } = require("arangojs");
 
-module.exports = function(server) {
+module.exports = function (server) {
   const db = new Database({ url: server.url });
   if (server.database !== "_system") {
     db.useDatabase(server.database);

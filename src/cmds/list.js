@@ -13,7 +13,7 @@ const aliases = (exports.aliases = ["ls"]);
 
 const describe = "Shows an overview of all installed services.";
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, aliases, describe })
     .options({
       ...serverArgs,
@@ -21,13 +21,13 @@ exports.builder = yargs =>
         describe: "Include system services",
         alias: "a",
         type: "boolean",
-        default: false
+        default: false,
       },
       raw: {
         describe: "Output raw JSON responses",
         type: "boolean",
-        default: false
-      }
+        default: false,
+      },
     })
     .example(
       "$0 list",
@@ -52,16 +52,16 @@ exports.handler = async function handler(argv) {
     const db = client(server);
     let services = await db.listServices();
     if (!argv.all) {
-      services = services.filter(service => !service.mount.startsWith("/_"));
+      services = services.filter((service) => !service.mount.startsWith("/_"));
     }
     if (argv.raw) {
       json(services);
     } else if (services.length) {
       info(
         group(
-          ...services.map(service => [
+          ...services.map((service) => [
             service.development ? bold(service.mount) : service.mount,
-            prettyVersion(service)
+            prettyVersion(service),
           ])
         )
       );

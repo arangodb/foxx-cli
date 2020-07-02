@@ -19,7 +19,7 @@ const foxxRcFile = path.resolve(os.tmpdir(), ".foxxrc");
 describe("Foxx with server", () => {
   const db = new Database({
     url: ARANGO_URL,
-    arangoVersion: ARANGO_VERSION
+    arangoVersion: ARANGO_VERSION,
   });
 
   before(async () => {

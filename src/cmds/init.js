@@ -13,24 +13,24 @@ exports.description = "Create a new Foxx service";
 const describe = "Creates a new Foxx service in the given file system path.";
 
 const args = [
-  ["dest", "File system path of the service to create.", '[default: "."]']
+  ["dest", "File system path of the service to create.", '[default: "."]'],
 ];
 
-exports.builder = yargs =>
+exports.builder = (yargs) =>
   common(yargs, { command, describe, args })
     .options({
       example: {
         describe: "Generate example code",
         alias: "e",
         type: "boolean",
-        default: false
+        default: false,
       },
       interactive: {
         describe: "Prompt for input instead of using default values",
         alias: "i",
         type: "boolean",
-        default: false
-      }
+        default: false,
+      },
     })
     .example(
       "$0 init",
@@ -64,7 +64,7 @@ exports.handler = async function handler(argv) {
     version: "0.0.0",
     mainFile: "index.js",
     engineVersion: "^3.0.0",
-    tests: "test/**/*.js"
+    tests: "test/**/*.js",
   };
   if (options.example) {
     options.name = "hello-world";
@@ -80,10 +80,10 @@ exports.handler = async function handler(argv) {
     await Promise.all([
       fs.mkdir(path.resolve(dest, "api")),
       fs.mkdir(path.resolve(dest, "scripts")),
-      fs.mkdir(path.resolve(dest, "test"))
+      fs.mkdir(path.resolve(dest, "test")),
     ]);
     await Promise.all(
-      files.map(file =>
+      files.map((file) =>
         fs.writeFile(path.resolve(dest, file.name), file.content)
       )
     );

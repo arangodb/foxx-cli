@@ -12,10 +12,10 @@ function getRcFilePath() {
 
 exports.load = async function load() {
   const defaults = {
-    server: {}
+    server: {},
   };
   const rcfile = getRcFilePath();
-  if (!await exists(rcfile)) {
+  if (!(await exists(rcfile))) {
     return defaults;
   }
   const data = await readFile(rcfile, "utf-8");
