@@ -15,7 +15,7 @@ const promisify2 = (fn) => (...args) =>
     }
   });
 
-exports.extract = promisify(extractZip);
+exports.extract = extractZip;
 exports.exists = promisify2(fs.exists);
 exports.mkdir = promisify(fs.mkdir);
 exports.readdir = promisify(fs.readdir);
