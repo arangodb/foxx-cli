@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   This should not affect you unless you're using `foxx-cli` internals directly
   in your own code.
 
+### Added
+
+- Added support for `--force` to `upgrade` and `replace`
+
+  Using the `--force` flag allows falling back to `install` if the service
+  does not currently exist.
+
 ### Fixed
 
 - Options `--legacy` and `--development` are now passed on correctly
