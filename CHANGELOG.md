@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed `Cannot read property 'isDirectory' of null` ([#34](https://github.com/arangodb/foxx-cli/issues/34))
+
 ## [2.0.0] - 2020-07-02
 
 ### Removed
